@@ -62,6 +62,7 @@ import java.util.regex.Pattern;
 import static com.azure.ai.formrecognizer.FormRecognizerClientTestBase.PrebuiltType.BUSINESS_CARD;
 import static com.azure.ai.formrecognizer.FormRecognizerClientTestBase.PrebuiltType.INVOICE;
 import static com.azure.ai.formrecognizer.FormRecognizerClientTestBase.PrebuiltType.RECEIPT;
+import static com.azure.ai.formrecognizer.FormTrainingClientTestBase.AZURE_FORM_RECOGNIZER_API_KEY;
 import static com.azure.ai.formrecognizer.FormTrainingClientTestBase.AZURE_FORM_RECOGNIZER_ENDPOINT;
 import static com.azure.ai.formrecognizer.FormTrainingClientTestBase.FORM_RECOGNIZER_MULTIPAGE_TRAINING_BLOB_CONTAINER_SAS_URL;
 import static com.azure.ai.formrecognizer.FormTrainingClientTestBase.FORM_RECOGNIZER_SELECTION_MARK_BLOB_CONTAINER_SAS_URL;
@@ -157,7 +158,8 @@ public abstract class FormRecognizerClientTestBase extends TestBase {
         if (getTestMode() == TestMode.PLAYBACK) {
             builder.credential(new AzureKeyCredential(INVALID_KEY));
         } else {
-            builder.credential(new DefaultAzureCredentialBuilder().build());
+            // builder.credential(new DefaultAzureCredentialBuilder().build());
+            builder.credential(new AzureKeyCredential(AZURE_FORM_RECOGNIZER_API_KEY));
         }
         return builder;
     }
@@ -173,7 +175,8 @@ public abstract class FormRecognizerClientTestBase extends TestBase {
         if (getTestMode() == TestMode.PLAYBACK) {
             builder.credential(new AzureKeyCredential(INVALID_KEY));
         } else {
-            builder.credential(new DefaultAzureCredentialBuilder().build());
+            // builder.credential(new DefaultAzureCredentialBuilder().build());
+            builder.credential(new AzureKeyCredential(AZURE_FORM_RECOGNIZER_API_KEY));
         }
         return builder;
     }
