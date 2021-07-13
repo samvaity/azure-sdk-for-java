@@ -7,8 +7,8 @@ package com.azure.ai.formrecognizer.implementation.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Defines values for OperationStatus. */
-public enum OperationStatus {
+/** Defines values for AnalyzeResultOperationStatus. */
+public enum AnalyzeResultOperationStatus {
     /** Enum value notStarted. */
     NOT_STARTED("notStarted"),
 
@@ -19,28 +19,25 @@ public enum OperationStatus {
     FAILED("failed"),
 
     /** Enum value succeeded. */
-    SUCCEEDED("succeeded"),
+    SUCCEEDED("succeeded");
 
-    /** Enum value canceled. */
-    CANCELED("canceled");
-
-    /** The actual serialized value for a OperationStatus instance. */
+    /** The actual serialized value for a AnalyzeResultOperationStatus instance. */
     private final String value;
 
-    OperationStatus(String value) {
+    AnalyzeResultOperationStatus(String value) {
         this.value = value;
     }
 
     /**
-     * Parses a serialized value to a OperationStatus instance.
+     * Parses a serialized value to a AnalyzeResultOperationStatus instance.
      *
      * @param value the serialized value to parse.
-     * @return the parsed OperationStatus object, or null if unable to parse.
+     * @return the parsed AnalyzeResultOperationStatus object, or null if unable to parse.
      */
     @JsonCreator
-    public static OperationStatus fromString(String value) {
-        OperationStatus[] items = OperationStatus.values();
-        for (OperationStatus item : items) {
+    public static AnalyzeResultOperationStatus fromString(String value) {
+        AnalyzeResultOperationStatus[] items = AnalyzeResultOperationStatus.values();
+        for (AnalyzeResultOperationStatus item : items) {
             if (item.toString().equalsIgnoreCase(value)) {
                 return item;
             }

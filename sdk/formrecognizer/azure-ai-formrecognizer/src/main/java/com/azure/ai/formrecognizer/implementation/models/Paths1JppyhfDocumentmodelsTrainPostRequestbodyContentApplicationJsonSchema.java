@@ -7,9 +7,9 @@ package com.azure.ai.formrecognizer.implementation.models;
 import com.azure.core.annotation.Fluent;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Model info. */
+/** Request body to train a new custom model. */
 @Fluent
-public class ModelInfo {
+public final class Paths1JppyhfDocumentmodelsTrainPostRequestbodyContentApplicationJsonSchema {
     /*
      * Unique model name.
      */
@@ -23,10 +23,10 @@ public class ModelInfo {
     private String description;
 
     /*
-     * Date and time (UTC) when the model was created.
+     * Training data.
      */
-    @JsonProperty(value = "createdDateTime", required = true)
-    private String createdDateTime;
+    @JsonProperty(value = "trainSource", required = true)
+    private ContentSource trainSource;
 
     /**
      * Get the modelId property: Unique model name.
@@ -41,9 +41,9 @@ public class ModelInfo {
      * Set the modelId property: Unique model name.
      *
      * @param modelId the modelId value to set.
-     * @return the ModelInfo object itself.
+     * @return the Paths1JppyhfDocumentmodelsTrainPostRequestbodyContentApplicationJsonSchema object itself.
      */
-    public ModelInfo setModelId(String modelId) {
+    public Paths1JppyhfDocumentmodelsTrainPostRequestbodyContentApplicationJsonSchema setModelId(String modelId) {
         this.modelId = modelId;
         return this;
     }
@@ -61,30 +61,32 @@ public class ModelInfo {
      * Set the description property: Model description.
      *
      * @param description the description value to set.
-     * @return the ModelInfo object itself.
+     * @return the Paths1JppyhfDocumentmodelsTrainPostRequestbodyContentApplicationJsonSchema object itself.
      */
-    public ModelInfo setDescription(String description) {
+    public Paths1JppyhfDocumentmodelsTrainPostRequestbodyContentApplicationJsonSchema setDescription(
+            String description) {
         this.description = description;
         return this;
     }
 
     /**
-     * Get the createdDateTime property: Date and time (UTC) when the model was created.
+     * Get the trainSource property: Training data.
      *
-     * @return the createdDateTime value.
+     * @return the trainSource value.
      */
-    public String getCreatedDateTime() {
-        return this.createdDateTime;
+    public ContentSource getTrainSource() {
+        return this.trainSource;
     }
 
     /**
-     * Set the createdDateTime property: Date and time (UTC) when the model was created.
+     * Set the trainSource property: Training data.
      *
-     * @param createdDateTime the createdDateTime value to set.
-     * @return the ModelInfo object itself.
+     * @param trainSource the trainSource value to set.
+     * @return the Paths1JppyhfDocumentmodelsTrainPostRequestbodyContentApplicationJsonSchema object itself.
      */
-    public ModelInfo setCreatedDateTime(String createdDateTime) {
-        this.createdDateTime = createdDateTime;
+    public Paths1JppyhfDocumentmodelsTrainPostRequestbodyContentApplicationJsonSchema setTrainSource(
+            ContentSource trainSource) {
+        this.trainSource = trainSource;
         return this;
     }
 }

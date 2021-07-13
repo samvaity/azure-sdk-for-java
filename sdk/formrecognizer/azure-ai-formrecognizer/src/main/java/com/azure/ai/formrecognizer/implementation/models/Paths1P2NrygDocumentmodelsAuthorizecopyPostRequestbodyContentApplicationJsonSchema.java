@@ -7,9 +7,9 @@ package com.azure.ai.formrecognizer.implementation.models;
 import com.azure.core.annotation.Fluent;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Model info. */
+/** Request body to authorize model copy. */
 @Fluent
-public class ModelInfo {
+public final class Paths1P2NrygDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema {
     /*
      * Unique model name.
      */
@@ -21,12 +21,6 @@ public class ModelInfo {
      */
     @JsonProperty(value = "description")
     private String description;
-
-    /*
-     * Date and time (UTC) when the model was created.
-     */
-    @JsonProperty(value = "createdDateTime", required = true)
-    private String createdDateTime;
 
     /**
      * Get the modelId property: Unique model name.
@@ -41,9 +35,10 @@ public class ModelInfo {
      * Set the modelId property: Unique model name.
      *
      * @param modelId the modelId value to set.
-     * @return the ModelInfo object itself.
+     * @return the Paths1P2NrygDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema object itself.
      */
-    public ModelInfo setModelId(String modelId) {
+    public Paths1P2NrygDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema setModelId(
+            String modelId) {
         this.modelId = modelId;
         return this;
     }
@@ -61,30 +56,11 @@ public class ModelInfo {
      * Set the description property: Model description.
      *
      * @param description the description value to set.
-     * @return the ModelInfo object itself.
+     * @return the Paths1P2NrygDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema object itself.
      */
-    public ModelInfo setDescription(String description) {
+    public Paths1P2NrygDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema setDescription(
+            String description) {
         this.description = description;
-        return this;
-    }
-
-    /**
-     * Get the createdDateTime property: Date and time (UTC) when the model was created.
-     *
-     * @return the createdDateTime value.
-     */
-    public String getCreatedDateTime() {
-        return this.createdDateTime;
-    }
-
-    /**
-     * Set the createdDateTime property: Date and time (UTC) when the model was created.
-     *
-     * @param createdDateTime the createdDateTime value to set.
-     * @return the ModelInfo object itself.
-     */
-    public ModelInfo setCreatedDateTime(String createdDateTime) {
-        this.createdDateTime = createdDateTime;
         return this;
     }
 }

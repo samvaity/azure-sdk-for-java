@@ -4,68 +4,61 @@
 
 package com.azure.ai.formrecognizer.implementation.models;
 
+import com.azure.core.util.ExpandableStringEnum;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.Collection;
 
 /** Defines values for FieldValueType. */
-public enum FieldValueType {
-    /** Enum value string. */
-    STRING("string"),
+public final class FieldValueType extends ExpandableStringEnum<FieldValueType> {
+    /** Static value string for FieldValueType. */
+    public static final FieldValueType STRING = fromString("string");
 
-    /** Enum value date. */
-    DATE("date"),
+    /** Static value date for FieldValueType. */
+    public static final FieldValueType DATE = fromString("date");
 
-    /** Enum value time. */
-    TIME("time"),
+    /** Static value time for FieldValueType. */
+    public static final FieldValueType TIME = fromString("time");
 
-    /** Enum value phoneNumber. */
-    PHONE_NUMBER("phoneNumber"),
+    /** Static value phoneNumber for FieldValueType. */
+    public static final FieldValueType PHONE_NUMBER = fromString("phoneNumber");
 
-    /** Enum value number. */
-    NUMBER("number"),
+    /** Static value number for FieldValueType. */
+    public static final FieldValueType NUMBER = fromString("number");
 
-    /** Enum value integer. */
-    INTEGER("integer"),
+    /** Static value integer for FieldValueType. */
+    public static final FieldValueType INTEGER = fromString("integer");
 
-    /** Enum value array. */
-    ARRAY("array"),
+    /** Static value selectionMark for FieldValueType. */
+    public static final FieldValueType SELECTION_MARK = fromString("selectionMark");
 
-    /** Enum value object. */
-    OBJECT("object"),
+    /** Static value countryRegion for FieldValueType. */
+    public static final FieldValueType COUNTRY_REGION = fromString("countryRegion");
 
-    /** Enum value selectionMark. */
-    SELECTION_MARK("selectionMark"),
+    /** Static value currency for FieldValueType. */
+    public static final FieldValueType CURRENCY = fromString("currency");
 
-    /** Enum value countryRegion. */
-    COUNTRY_REGION("countryRegion");
+    /** Static value signature for FieldValueType. */
+    public static final FieldValueType SIGNATURE = fromString("signature");
 
-    /** The actual serialized value for a FieldValueType instance. */
-    private final String value;
+    /** Static value array for FieldValueType. */
+    public static final FieldValueType ARRAY = fromString("array");
 
-    FieldValueType(String value) {
-        this.value = value;
-    }
+    /** Static value object for FieldValueType. */
+    public static final FieldValueType OBJECT = fromString("object");
 
     /**
-     * Parses a serialized value to a FieldValueType instance.
+     * Creates or finds a FieldValueType from its string representation.
      *
-     * @param value the serialized value to parse.
-     * @return the parsed FieldValueType object, or null if unable to parse.
+     * @param name a name to look for.
+     * @return the corresponding FieldValueType.
      */
     @JsonCreator
-    public static FieldValueType fromString(String value) {
-        FieldValueType[] items = FieldValueType.values();
-        for (FieldValueType item : items) {
-            if (item.toString().equalsIgnoreCase(value)) {
-                return item;
-            }
-        }
-        return null;
+    public static FieldValueType fromString(String name) {
+        return fromString(name, FieldValueType.class);
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return this.value;
+    /** @return known FieldValueType values. */
+    public static Collection<FieldValueType> values() {
+        return values(FieldValueType.class);
     }
 }
