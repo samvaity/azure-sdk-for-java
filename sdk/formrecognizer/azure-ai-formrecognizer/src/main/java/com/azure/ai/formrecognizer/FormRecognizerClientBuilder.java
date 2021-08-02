@@ -130,13 +130,33 @@ public final class FormRecognizerClientBuilder {
             pipeline = buildHttpPipeline(clientOptions, httpLogOptions, buildConfiguration,
                 retryPolicy, credential, tokenCredential, perCallPolicies, perRetryPolicies, httpClient);
         }
-        final FormRecognizerClientImpl formRecognizerAPI = new FormRecognizerClientImplBuilder()
-                                                               .endpoint(endpoint)
-                                                               .apiVersion(serviceVersion.getVersion())
-                                                               .pipeline(pipeline)
-                                                               .buildClient();
+        ;
 
-        return new FormRecognizerAsyncClient(formRecognizerAPI, serviceVersion);
+        if (FormRecognizerServiceVersion.V2_1.equals(serviceVersion)) {
+            final FormRecognizerClientImpl formRecognizerAPI = new FormRecognizerClientImplBuilder()
+                .endpoint(endpoint)
+                .apiVersion(serviceVersion.getVersion())
+                .pipeline(pipeline)
+                .buildClient();
+            return new FormRecognizerAsyncClient(formRecognizerAPI, serviceVersion);
+
+        } else if (FormRecognizerServiceVersion.V3_0.equals(serviceVersion)){
+            com.azure.ai.formrecognizer.v3.implementation.FormRecognizerClientImpl formRecognizerAPI
+                = new com.azure.ai.formrecognizer.v3.implementation.FormRecognizerClientImplBuilder()
+                .endpoint(endpoint)
+                .apiVersion(serviceVersion.getVersion())
+                .pipeline(pipeline)
+                .buildClient();
+            return new FormRecognizerAsyncClient(formRecognizerAPI, serviceVersion);
+        } else {
+            com.azure.ai.formrecognizer.v3.implementation.FormRecognizerClientImpl formRecognizerAPI
+                = new com.azure.ai.formrecognizer.v3.implementation.FormRecognizerClientImplBuilder()
+                .endpoint(endpoint)
+                .apiVersion(serviceVersion.getVersion())
+                .pipeline(pipeline)
+                .buildClient();
+            return new FormRecognizerAsyncClient(formRecognizerAPI, serviceVersion);
+        }
     }
 
     /**

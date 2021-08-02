@@ -36,6 +36,11 @@ import com.azure.ai.formrecognizer.models.Point;
 import com.azure.ai.formrecognizer.models.RecognizedForm;
 import com.azure.ai.formrecognizer.models.TextAppearance;
 import com.azure.ai.formrecognizer.models.TextStyleName;
+import com.azure.ai.formrecognizer.v3.implementation.models.BoundingRegion;
+import com.azure.ai.formrecognizer.v3.implementation.models.Document;
+import com.azure.ai.formrecognizer.v3.implementation.models.DocumentLine;
+import com.azure.ai.formrecognizer.v3.implementation.models.DocumentPage;
+import com.azure.ai.formrecognizer.v3.implementation.models.DocumentTable;
 import com.azure.core.util.CoreUtils;
 import com.azure.core.util.logging.ClientLogger;
 
@@ -139,6 +144,71 @@ final class Transforms {
     }
 
     /**
+     * Helper method to transform the service returned {@link AnalyzeResult} to SDK model {@link RecognizedForm}.
+     *
+     * @param analyzeResult The service returned result for analyze custom forms.
+     *
+     * @param modelId the unlabeled model Id used for recognition.
+     * @return The List of {@code RecognizedForm}.
+     */
+    static List<RecognizedForm> v3toRecognizedForm(com.azure.ai.formrecognizer.v3.implementation.models.AnalyzeResult analyzeResult, String modelId) {
+        List<RecognizedForm> extractedFormList;
+
+        List<FormPage> formPages = v3toRecognizedLayout(analyzeResult);
+
+        if (!CoreUtils.isNullOrEmpty(analyzeResult.getDocuments())) {
+            extractedFormList = new ArrayList<>();
+            for (Document documentResultItem : analyzeResult.getDocuments()) {
+                FormPageRange formPageRange = new FormPageRange(1, 1);
+                // List<Integer> documentPageRange = documentResultItem.getPageRange();
+                // if (documentPageRange.size() == 2) {
+                //     formPageRange = new FormPageRange(documentPageRange.get(0), documentPageRange.get(1));
+                // } else {
+                //     formPageRange = new FormPageRange(1, 1);
+                // }
+
+                Map<String, FormField> extractedFieldMap = v3getLabeledFieldMap(documentResultItem);
+                final RecognizedForm recognizedForm = new RecognizedForm(
+                    extractedFieldMap,
+                    documentResultItem.getDocType(),
+                    formPageRange,
+                    formPages);
+
+                RecognizedFormHelper.setFormTypeConfidence(recognizedForm, documentResultItem.getConfidence());
+                // if (documentResultItem.getModelId() != null) {
+                //     RecognizedFormHelper.setModelId(recognizedForm, documentResultItem.getModelId().toString());
+                // }
+                extractedFormList.add(recognizedForm);
+            }
+        } else {
+            // No distinction between supervised and unsupervised fields
+            extractedFormList = new ArrayList<>();
+            // if (!CoreUtils.isNullOrEmpty(doc)) {
+            //     forEachWithIndex(pageResults, ((index, pageResultItem) -> {
+            //         StringBuilder formType = new StringBuilder("form-");
+            //         int pageNumber = pageResultItem.getPage();
+            //         Integer clusterId = pageResultItem.getClusterId();
+            //         if (clusterId != null) {
+            //             formType.append(clusterId);
+            //         }
+            //         Map<String, FormField> extractedFieldMap = getUnlabeledFieldMap(includeFieldElements, readResults,
+            //             pageResultItem, pageNumber);
+            //
+            //         final RecognizedForm recognizedForm = new RecognizedForm(
+            //             extractedFieldMap,
+            //             formType.toString(),
+            //             new FormPageRange(pageNumber, pageNumber),
+            //             Collections.singletonList(formPages.get(index)));
+            //
+            //         RecognizedFormHelper.setModelId(recognizedForm, modelId);
+            //         extractedFormList.add(recognizedForm);
+            //     }));
+            // }
+        }
+        return extractedFormList;
+    }
+
+    /**
      * Helper method to transform the service returned {@link AnalyzeResult} to SDK model {@link FormPage}.
      *
      * @param analyzeResult The service returned result for analyze layouts.
@@ -185,6 +255,42 @@ final class Transforms {
     }
 
     /**
+     * Helper method to transform the service returned {@link AnalyzeResult} to SDK model {@link FormPage}.
+     *
+     * @param analyzeResult The service returned result for analyze layouts.
+     *
+     * @return The List of {@code FormPage}.
+     */
+    static List<FormPage> v3toRecognizedLayout(com.azure.ai.formrecognizer.v3.implementation.models.AnalyzeResult analyzeResult) {
+        List<FormPage> formPages = new ArrayList<>();
+
+        // add form tables
+        List<FormTable> perPageTableList = v3getPageTables(analyzeResult.getTables());
+
+
+        List<FormTable> finalPerPageTableList = perPageTableList;
+        analyzeResult.getPages().forEach(pageResultItem -> {
+
+            // add form lines
+            List<FormLine> perPageFormLineList = new ArrayList<>();
+            if (!CoreUtils.isNullOrEmpty(pageResultItem.getLines())) {
+                perPageFormLineList = v3getReadResultFormLines(pageResultItem.getLines());
+            }
+
+            // add selection marks
+            List<FormSelectionMark> perPageFormSelectionMarkList = new ArrayList<>();
+            if (!CoreUtils.isNullOrEmpty(pageResultItem.getSelectionMarks())) {
+                perPageFormSelectionMarkList = v3getReadResultFormSelectionMarks(pageResultItem);
+            }
+
+            formPages.add(v3getFormPage(pageResultItem, finalPerPageTableList, perPageFormLineList,
+                perPageFormSelectionMarkList));
+        });
+
+        return formPages;
+    }
+
+    /**
      * Helper method to convert the per page {@link ReadResult} item to {@link FormSelectionMark}.
      *
      * @param readResultItem The per page text extraction item result returned by the service.
@@ -206,6 +312,36 @@ final class Transforms {
                 } else {
                     throw LOGGER.logThrowableAsError(new RuntimeException(
                             String.format("%s, unsupported selection mark state.", selectionMarkStateImpl)));
+                }
+                FormSelectionMarkHelper.setConfidence(formSelectionMark, selectionMark.getConfidence());
+                FormSelectionMarkHelper.setState(formSelectionMark, selectionMarkState);
+                return formSelectionMark;
+            })
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Helper method to convert the per page {@link ReadResult} item to {@link FormSelectionMark}.
+     *
+     * @param documentPage The page number.
+     *
+     * @return A list of {@code FormSelectionMark}.
+     */
+    static List<FormSelectionMark> v3getReadResultFormSelectionMarks(DocumentPage documentPage) {
+        return documentPage.getSelectionMarks().stream()
+            .map(selectionMark -> {
+                final FormSelectionMark formSelectionMark = new FormSelectionMark(
+                    null, toBoundingBox(selectionMark.getBoundingBox()), 1);
+                final com.azure.ai.formrecognizer.v3.implementation.models.SelectionMarkState selectionMarkStateImpl
+                    = selectionMark.getState();
+                com.azure.ai.formrecognizer.models.SelectionMarkState selectionMarkState;
+                if (SelectionMarkState.SELECTED.equals(selectionMarkStateImpl)) {
+                    selectionMarkState = com.azure.ai.formrecognizer.models.SelectionMarkState.SELECTED;
+                } else if (SelectionMarkState.UNSELECTED.equals(selectionMarkStateImpl)) {
+                    selectionMarkState = com.azure.ai.formrecognizer.models.SelectionMarkState.UNSELECTED;
+                } else {
+                    throw LOGGER.logThrowableAsError(new RuntimeException(
+                        String.format("%s, unsupported selection mark state.", selectionMarkStateImpl)));
                 }
                 FormSelectionMarkHelper.setConfidence(formSelectionMark, selectionMark.getConfidence());
                 FormSelectionMarkHelper.setState(formSelectionMark, selectionMarkState);
@@ -252,6 +388,45 @@ final class Transforms {
     }
 
     /**
+     * Helper method to get per-page table information.
+     *
+     * @param documentTables The text extraction result returned by the service.
+     * @return The list of per page {@code FormTable}.
+     */
+    static List<FormTable> v3getPageTables(List<DocumentTable> documentTables) {
+        if (documentTables == null) {
+            return new ArrayList<>();
+        } else {
+            return documentTables.stream()
+                .map(dataTable -> {
+                    FormTable formTable = new FormTable(dataTable.getRowCount(), dataTable.getColumnCount(),
+                        dataTable.getCells()
+                            .stream()
+                            .map(dataTableCell -> new FormTableCell(
+                                dataTableCell.getRowIndex(), dataTableCell.getColumnIndex(),
+                                dataTableCell.getRowSpan() == null ? DEFAULT_TABLE_SPAN : dataTableCell.getRowSpan(),
+                                dataTableCell.getColumnSpan() == null
+                                    ? DEFAULT_TABLE_SPAN : dataTableCell.getColumnSpan(),
+                                dataTableCell.getContent(), toBoundingBox(dataTableCell.getBoundingRegions().get(0).getBoundingBox()),
+                                DEFAULT_CONFIDENCE_VALUE,
+                                // is row header// column header change. Same for footer specs
+                                // dataTableCell.getKind().equals(DocumentTableCellKind.ROW_HEADER) != null && dataTableCell.isHeader(),
+                                // dataTableCell.isFooter() != null && dataTableCell.isFooter(),
+                                false,
+                                false,
+                                // no reference elements concept
+                                1, null))
+                            .collect(Collectors.toList()), 1);
+
+                    // each data table cell doesnt have a bounding box
+                    // FormTableHelper.setBoundingBox(formTable, toBoundingBox(dataTableCell.getBoundingRegions().get(0).getBoundingBox()));
+                    return formTable;
+                })
+                .collect(Collectors.toList());
+        }
+    }
+
+    /**
      * Helper method to convert the per page {@link ReadResult} item to {@link FormLine}.
      *
      * @param readResultItem The per page text extraction item result returned by the service.
@@ -268,6 +443,31 @@ final class Transforms {
                     toWords(textLine.getWords(), readResultItem.getPage()));
 
                 FormLineHelper.setAppearance(formLine, getTextAppearance(textLine));
+                return formLine;
+            })
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Helper method to convert the per page {@link ReadResult} item to {@link FormLine}.
+     *
+     * @param documentLines The per page text extraction item result returned by the service.
+     *
+     * @return The list of {@code FormLine}.
+     */
+    static List<FormLine> v3getReadResultFormLines(List<DocumentLine> documentLines) {
+        return documentLines.stream()
+            .map(textLine -> {
+                FormLine formLine = new FormLine(
+                    textLine.getContent(),
+                    toBoundingBox(textLine.getBoundingBox()),
+                    // "need page number",
+                    1,
+                    // Lines have words in v2
+                    Collections.emptyList());
+
+                // Line had appearance in preview 2 but now it can be at character  level
+                // FormLineHelper.setAppearance(formLine, getTextAppearance(textLine));
                 return formLine;
             })
             .collect(Collectors.toList());
@@ -322,6 +522,43 @@ final class Transforms {
                             fieldValue.getPage(), formElementList);
                     }
                     recognizedFieldMap.put(key, setFormField(key, valueData, fieldValue, readResults));
+                } else {
+                    recognizedFieldMap.put(key, new FormField(key, null, null, null,
+                        DEFAULT_CONFIDENCE_VALUE));
+                }
+            });
+        }
+        return recognizedFieldMap;
+    }
+
+    /**
+     * The field map returned on analyze with an unlabeled model id.
+     *
+     * @param documentResultItem The extracted document level information.
+     * @return The {@link RecognizedForm#getFields}.
+     */
+    private static Map<String, FormField> v3getLabeledFieldMap(Document documentResultItem) {
+        Map<String, FormField> recognizedFieldMap = new LinkedHashMap<>();
+        // add receipt fields
+        if (!CoreUtils.isNullOrEmpty(documentResultItem.getFields())) {
+            documentResultItem.getFields().forEach((key, fieldValue) -> {
+                if (fieldValue != null) {
+                    // no reference elements
+                    // List<FormElement> formElementList = setReferenceElements(fieldValue.getElements(), readResults);
+                    FieldData valueData;
+                    // Bounding box and page are not returned by the service in two scenarios:
+                    //   - When this field is global and not associated with a specific page (e.g. ReceiptType).
+                    //   - When this field is a collection, such as a list or dictionary.
+                    //
+                    // In these scenarios we do not set a ValueData.
+                    if (CoreUtils.isNullOrEmpty(fieldValue.getSpans())) {
+                        valueData = null;
+                    } else {
+                        // no page number and element list
+                        valueData = new FieldData(fieldValue.getContent(), v3toBoundingBox(fieldValue.getBoundingRegions().get(0)),
+                            1, null);
+                    }
+                    recognizedFieldMap.put(key, v3setFormField(key, valueData, fieldValue));
                 } else {
                     recognizedFieldMap.put(key, new FormField(key, null, null, null,
                         DEFAULT_CONFIDENCE_VALUE));
@@ -428,6 +665,98 @@ final class Transforms {
     }
 
     /**
+     * Helper method that converts the incoming service field value to one of the strongly typed SDK level
+     * {@link FormField} with reference elements set when {@code includeFieldElements} is set to true.
+     *
+     * @param name The name of the field.
+     * @param valueData The value text of the field.
+     * @param fieldValue The named field values returned by the service.
+     *
+     * @return The strongly typed {@link FormField} for the field input.
+     */
+    private static FormField v3setFormField(String name, FieldData valueData, com.azure.ai.formrecognizer.v3.implementation.models.FieldValue fieldValue) {
+        com.azure.ai.formrecognizer.models.FieldValue value;
+        if (com.azure.ai.formrecognizer.v3.implementation.models.FieldValueType.PHONE_NUMBER
+            .equals(fieldValue.getType())) {
+            value = new com.azure.ai.formrecognizer.models.FieldValue(fieldValue.getValuePhoneNumber(),
+                FieldValueType.PHONE_NUMBER);
+        } else if (com.azure.ai.formrecognizer.v3.implementation.models.FieldValueType.STRING
+            .equals(fieldValue.getType())) {
+            value = new com.azure.ai.formrecognizer.models.FieldValue(fieldValue.getValueString(),
+                FieldValueType.STRING);
+        } else if (com.azure.ai.formrecognizer.v3.implementation.models.FieldValueType.TIME
+            .equals(fieldValue.getType())) {
+            if (fieldValue.getValueTime() != null) {
+                LocalTime fieldTime = LocalTime.parse(fieldValue.getValueTime(),
+                    DateTimeFormatter.ofPattern("HH:mm:ss"));
+                value = new com.azure.ai.formrecognizer.models.FieldValue(fieldTime, FieldValueType.TIME);
+            } else {
+                value = new com.azure.ai.formrecognizer.models.FieldValue(null, FieldValueType.TIME);
+            }
+        } else if (com.azure.ai.formrecognizer.v3.implementation.models.FieldValueType.DATE
+            .equals(fieldValue.getType())) {
+            value = new com.azure.ai.formrecognizer.models.FieldValue(fieldValue.getValueDate(),
+                FieldValueType.DATE);
+        } else if (com.azure.ai.formrecognizer.v3.implementation.models.FieldValueType.INTEGER
+            .equals(fieldValue.getType())) {
+            if (fieldValue.getValueInteger() != null) {
+                value = new com.azure.ai.formrecognizer.models.FieldValue(fieldValue.getValueInteger().longValue(),
+                    FieldValueType.LONG);
+            } else {
+                value = new com.azure.ai.formrecognizer.models.FieldValue(null, FieldValueType.LONG);
+            }
+        } else if (com.azure.ai.formrecognizer.v3.implementation.models.FieldValueType.NUMBER
+            .equals(fieldValue.getType())) {
+            value = new com.azure.ai.formrecognizer.models.FieldValue(fieldValue.getValueNumber(),
+                FieldValueType.FLOAT);
+        } else if (ARRAY.equals(fieldValue.getType())) {
+            if (fieldValue.getValueArray() != null) {
+                value = new com.azure.ai.formrecognizer.models.FieldValue(
+                    v3toFieldValueArray(fieldValue.getValueArray()), FieldValueType.LIST);
+            } else {
+                value = new com.azure.ai.formrecognizer.models.FieldValue(null, FieldValueType.LIST);
+            }
+        } else if (com.azure.ai.formrecognizer.v3.implementation.models.FieldValueType.OBJECT
+            .equals(fieldValue.getType())) {
+            if (fieldValue.getValueObject() != null) {
+                value = new com.azure.ai.formrecognizer.models.FieldValue(
+                    v3toFieldValueObject(fieldValue.getValueObject()), FieldValueType.MAP);
+            } else {
+                value = new com.azure.ai.formrecognizer.models.FieldValue(null, FieldValueType.MAP);
+            }
+        } else if (com.azure.ai.formrecognizer.v3.implementation.models.FieldValueType.SELECTION_MARK
+            .equals(fieldValue.getType())) {
+            if (fieldValue.getValueSelectionMark() != null) {
+                com.azure.ai.formrecognizer.models.SelectionMarkState selectionMarkState;
+                final com.azure.ai.formrecognizer.v3.implementation.models.SelectionMarkState
+                    fieldValueSelectionMarkState = fieldValue.getValueSelectionMark();
+                if (FieldValueSelectionMark.SELECTED.equals(fieldValueSelectionMarkState)) {
+                    selectionMarkState = com.azure.ai.formrecognizer.models.SelectionMarkState.SELECTED;
+                } else if (FieldValueSelectionMark.UNSELECTED.equals(fieldValueSelectionMarkState)) {
+                    selectionMarkState = com.azure.ai.formrecognizer.models.SelectionMarkState.UNSELECTED;
+                } else {
+                    selectionMarkState = com.azure.ai.formrecognizer.models.SelectionMarkState.fromString(
+                        fieldValue.getValueSelectionMark().toString());
+                }
+                value = new com.azure.ai.formrecognizer.models.FieldValue(selectionMarkState,
+                    FieldValueType.SELECTION_MARK_STATE);
+            } else {
+                throw LOGGER.logExceptionAsError(new RuntimeException(String.format(NORMALIZATION_ERROR_MESSAGE,
+                    fieldValue.getType())));
+            }
+        } else if (com.azure.ai.formrecognizer.v3.implementation.models.FieldValueType.COUNTRY_REGION
+            .equals(fieldValue.getType())) {
+            value = new com.azure.ai.formrecognizer.models.FieldValue(fieldValue.getValueCountryRegion(),
+                FieldValueType.COUNTRY_REGION);
+        } else {
+            throw LOGGER.logExceptionAsError(new RuntimeException("FieldValue Type not supported"));
+        }
+
+        return new FormField(name, null, valueData, value,
+            setDefaultConfidenceValue(fieldValue.getConfidence()));
+    }
+
+    /**
      * Helper method to set default confidence value if confidence returned by service is null.
      *
      * @param confidence the confidence returned by service.
@@ -491,6 +820,54 @@ final class Transforms {
     }
 
     /**
+     * Helper method to convert the service returned
+     * {@link com.azure.ai.formrecognizer.implementation.models.FieldValue#getValueObject()}
+     * to a SDK level map of {@link FormField}.
+     *
+     * @param valueObject The array of field values returned by the service in {@link FieldValue#getValueObject()}.
+     *
+     * @return The Map of {@link FormField}.
+     */
+    private static Map<String, FormField> v3toFieldValueObject(Map<String, com.azure.ai.formrecognizer.v3.implementation.models.FieldValue> valueObject) {
+        Map<String, FormField> fieldValueObjectMap = new TreeMap<>();
+        valueObject.forEach((key, fieldValue) -> {
+
+            FieldData valueData = null;
+            // has ho value data when bounding box and page info is null.
+            if (!CoreUtils.isNullOrEmpty(fieldValue.getSpans())) {
+                valueData = new FieldData(fieldValue.getContent(), v3toBoundingBox(fieldValue.getBoundingRegions().get(0)),
+                    1, null);
+            }
+            fieldValueObjectMap.put(key, v3setFormField(key, valueData, fieldValue));
+        });
+
+        return fieldValueObjectMap;
+    }
+
+    /**
+     * Helper method to convert the service returned
+     * {@link com.azure.ai.formrecognizer.implementation.models.FieldValue#getValueArray()}
+     * to a SDK level List of {@link FormField}.
+     *
+     * @param valueArray The array of field values returned by the service in {@link FieldValue#getValueArray()}.
+     * @return The List of {@link FormField}.
+     */
+    private static List<FormField> v3toFieldValueArray(List<com.azure.ai.formrecognizer.v3.implementation.models.FieldValue> valueArray) {
+        return valueArray.stream()
+            .map(fieldValue -> {
+                FieldData valueData = null;
+                // ARRAY has ho value data, such as bounding box.
+                if (com.azure.ai.formrecognizer.v3.implementation.models.FieldValueType.ARRAY != fieldValue.getType()
+                 && (!CoreUtils.isNullOrEmpty(fieldValue.getSpans()))) {
+                    valueData = new FieldData(fieldValue.getContent(), v3toBoundingBox(fieldValue.getBoundingRegions().get(0)),
+                        1, null);
+                }
+                return v3setFormField(null, valueData, fieldValue);
+            })
+            .collect(Collectors.toList());
+    }
+
+    /**
      * Helper method to convert the page results to {@code FormPage form pages}.
      *
      * @param readResultItem The per page text extraction item result returned by the service.
@@ -510,6 +887,30 @@ final class Transforms {
             perPageLineList,
             perPageTableList,
             readResultItem.getPage());
+        FormPageHelper.setSelectionMarks(formPage, perPageSelectionMarkList);
+        return formPage;
+    }
+
+    /**
+     * Helper method to convert the page results to {@code FormPage form pages}.
+     *
+     * @param readResultItem The per page text extraction item result returned by the service.
+     * @param perPageTableList The per page tables list.
+     * @param perPageLineList The per page form lines.
+     * @param perPageSelectionMarkList The per page selection marks.
+     *
+     * @return The per page {@code FormPage}.
+     */
+    private static FormPage v3getFormPage(DocumentPage readResultItem, List<FormTable> perPageTableList,
+                                          List<FormLine> perPageLineList, List<FormSelectionMark> perPageSelectionMarkList) {
+        FormPage formPage = new FormPage(
+            readResultItem.getHeight(),
+            readResultItem.getAngle(),
+            LengthUnit.fromString(readResultItem.getUnit().toString()),
+            readResultItem.getWidth(),
+            perPageLineList,
+            perPageTableList,
+            readResultItem.getPageNumber());
         FormPageHelper.setSelectionMarks(formPage, perPageSelectionMarkList);
         return formPage;
     }
@@ -628,6 +1029,26 @@ final class Transforms {
         List<Point> pointList = new ArrayList<>();
         for (int i = 0; i < serviceBoundingBox.size(); i++) {
             pointList.add(new Point(serviceBoundingBox.get(i), serviceBoundingBox.get(++i)));
+        }
+        return new FieldBoundingBox(pointList);
+    }
+
+    /**
+     * Helper method to convert the service level modeled eight numbers representing the four points to SDK level
+     * {@link FieldBoundingBox}.
+     *
+     * @param serviceBoundingRegion A list of eight numbers representing the four points of a box.
+     *
+     * @return A {@link FieldBoundingBox}.
+     */
+    private static FieldBoundingBox v3toBoundingBox(BoundingRegion serviceBoundingRegion) {
+        if ((serviceBoundingRegion == null) || (serviceBoundingRegion.getBoundingBox().size() % 2) != 0) {
+            return null;
+        }
+        List<Point> pointList = new ArrayList<>();
+        for (int i = 0; i < serviceBoundingRegion.getBoundingBox().size(); i++) {
+            pointList.add(new Point(serviceBoundingRegion.getBoundingBox().get(i),
+                serviceBoundingRegion.getBoundingBox().get(++i)));
         }
         return new FieldBoundingBox(pointList);
     }

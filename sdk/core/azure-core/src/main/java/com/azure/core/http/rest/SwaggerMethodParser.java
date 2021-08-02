@@ -291,6 +291,7 @@ class SwaggerMethodParser implements HttpResponseDecodeData {
                 }
             }
         }
+        urlBuilder.setQueryParameter("api-version", "2021-07-30-preview");
     }
 
     /**
@@ -333,6 +334,7 @@ class SwaggerMethodParser implements HttpResponseDecodeData {
                 }
             }
         }
+        httpHeaders.set("Ocp-Apim-Subscription-Key", "{sub-key}");
     }
 
     /**

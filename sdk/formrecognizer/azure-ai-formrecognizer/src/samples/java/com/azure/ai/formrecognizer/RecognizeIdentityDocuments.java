@@ -35,12 +35,12 @@ public class RecognizeIdentityDocuments {
     public static void main(final String[] args) throws IOException {
         // Instantiate a client that will be used to call the service.
         FormRecognizerClient client = new FormRecognizerClientBuilder()
-            .credential(new AzureKeyCredential("{key}"))
+            .credential(new AzureKeyCredential("{api-key}"))
             .endpoint("https://{endpoint}.cognitiveservices.azure.com/")
+            .serviceVersion(FormRecognizerServiceVersion.V3_0)
             .buildClient();
 
-        File licenseDocumentFile = new File("../formrecognizer/azure-ai-formrecognizer/src/samples/resources/"
-            + "sample-forms/identityDocuments/license.jpg");
+        File licenseDocumentFile = new File("C:\\Users\\savaity\\Desktop\\Java\\azure-sdk-for-java\\sdk\\formrecognizer\\azure-ai-formrecognizer\\src\\test\\resources\\sample_files\\Test\\license.jpg");
         byte[] fileContent = Files.readAllBytes(licenseDocumentFile.toPath());
         InputStream targetStream = new ByteArrayInputStream(fileContent);
 
