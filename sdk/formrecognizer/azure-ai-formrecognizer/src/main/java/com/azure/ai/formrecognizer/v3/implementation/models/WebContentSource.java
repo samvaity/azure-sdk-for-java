@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /** Publicly accessible Internet content. */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "kind")
-@JsonTypeName("local")
+@JsonTypeName("web")
 @Fluent
 public final class WebContentSource extends ContentSource {
     /*

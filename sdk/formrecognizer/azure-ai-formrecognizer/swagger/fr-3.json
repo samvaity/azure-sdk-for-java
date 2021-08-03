@@ -153,34 +153,13 @@
         ],
         "parameters": [
           {
-            "name": "modelId",
-            "description": "Unique model name.",
-            "required": true,
-            "type": "string",
-            "format": "[a-zA-Z0-9][a-zA-Z0-9._~:-]{1,63}",
-            "in": "path"
+            "$ref": "#/parameters/PathModelId"
           },
           {
-            "name": "api-version",
-            "description": "Requested API version.",
-            "required": true,
-            "type": "string",
-            "in": "query",
-            "enum": [
-              "2021-07-30-preview"
-            ],
-            "x-ms-enum": {
-              "name": "ApiVersion",
-              "modelAsString": true
-            },
-            "x-ms-parameter-location": "client"
+            "$ref": "#/parameters/PathResultId"
           },
           {
-            "name": "resultId",
-            "description": "Analyze operation result ID.",
-            "required": true,
-            "type": "string",
-            "in": "path"
+            "$ref": "#/parameters/QueryApiVersion"
           }
         ],
         "responses": {
@@ -212,19 +191,7 @@
         ],
         "parameters": [
           {
-            "name": "api-version",
-            "description": "Requested API version.",
-            "required": true,
-            "type": "string",
-            "in": "query",
-            "enum": [
-              "2021-07-30-preview"
-            ],
-            "x-ms-enum": {
-              "name": "ApiVersion",
-              "modelAsString": true
-            },
-            "x-ms-parameter-location": "client"
+            "$ref": "#/parameters/QueryApiVersion"
           },
           {
             "name": "buildRequest",
@@ -290,19 +257,7 @@
         ],
         "parameters": [
           {
-            "name": "api-version",
-            "description": "Requested API version.",
-            "required": true,
-            "type": "string",
-            "in": "query",
-            "enum": [
-              "2021-07-30-preview"
-            ],
-            "x-ms-enum": {
-              "name": "ApiVersion",
-              "modelAsString": true
-            },
-            "x-ms-parameter-location": "client"
+            "$ref": "#/parameters/QueryApiVersion"
           },
           {
             "name": "composeRequest",
@@ -375,19 +330,7 @@
         ],
         "parameters": [
           {
-            "name": "api-version",
-            "description": "Requested API version.",
-            "required": true,
-            "type": "string",
-            "in": "query",
-            "enum": [
-              "2021-07-30-preview"
-            ],
-            "x-ms-enum": {
-              "name": "ApiVersion",
-              "modelAsString": true
-            },
-            "x-ms-parameter-location": "client"
+            "$ref": "#/parameters/QueryApiVersion"
           },
           {
             "name": "authorizeCopyRequest",
@@ -439,27 +382,10 @@
         ],
         "parameters": [
           {
-            "name": "modelId",
-            "description": "Unique model name.",
-            "required": true,
-            "type": "string",
-            "format": "[a-zA-Z0-9][a-zA-Z0-9._~:-]{1,63}",
-            "in": "path"
+            "$ref": "#/parameters/PathModelId"
           },
           {
-            "name": "api-version",
-            "description": "Requested API version.",
-            "required": true,
-            "type": "string",
-            "in": "query",
-            "enum": [
-              "2021-07-30-preview"
-            ],
-            "x-ms-enum": {
-              "name": "ApiVersion",
-              "modelAsString": true
-            },
-            "x-ms-parameter-location": "client"
+            "$ref": "#/parameters/QueryApiVersion"
           },
           {
             "name": "copyToRequest",
@@ -501,19 +427,7 @@
         ],
         "parameters": [
           {
-            "name": "api-version",
-            "description": "Requested API version.",
-            "required": true,
-            "type": "string",
-            "in": "query",
-            "enum": [
-              "2021-07-30-preview"
-            ],
-            "x-ms-enum": {
-              "name": "ApiVersion",
-              "modelAsString": true
-            },
-            "x-ms-parameter-location": "client"
+            "$ref": "#/parameters/QueryApiVersion"
           }
         ],
         "responses": {
@@ -563,45 +477,34 @@
         ],
         "parameters": [
           {
-            "name": "operationId",
-            "description": "Unique model name.",
-            "required": true,
-            "type": "string",
-            "format": "[a-zA-Z0-9][a-zA-Z0-9._~:-]{1,63}",
-            "in": "path"
+            "$ref": "#/parameters/PathOperationId"
           },
           {
-            "name": "api-version",
-            "description": "Requested API version.",
-            "required": true,
-            "type": "string",
-            "in": "query",
-            "enum": [
-              "2021-07-30-preview"
-            ],
-            "x-ms-enum": {
-              "name": "ApiVersion",
-              "modelAsString": true
-            },
-            "x-ms-parameter-location": "client"
+            "$ref": "#/parameters/QueryApiVersion"
           }
         ],
         "responses": {
           "200": {
             "description": "OK.",
             "schema": {
-              "$ref": "#/definitions/OperationInfo",
-              "type": "object",
-              "properties": {
-                "error": {
-                  "description": "Encountered error.",
-                  "$ref": "#/definitions/Error"
+              "allOf": [
+                {
+                  "$ref": "#/definitions/OperationInfo"
                 },
-                "result": {
-                  "description": "Operation result upon success.",
+                {
+                  "properties": {
+                    "error": {
+                      "$ref": "#/definitions/Error",
+                      "description": "Encountered error."
+                    },
+                    "result": {
+                      "description": "Operation result upon success.",
+                      "type": "object"
+                    }
+                  },
                   "type": "object"
                 }
-              }
+              ]
             }
           },
           "default": {
@@ -624,19 +527,7 @@
         ],
         "parameters": [
           {
-            "name": "api-version",
-            "description": "Requested API version.",
-            "required": true,
-            "type": "string",
-            "in": "query",
-            "enum": [
-              "2021-07-30-preview"
-            ],
-            "x-ms-enum": {
-              "name": "ApiVersion",
-              "modelAsString": true
-            },
-            "x-ms-parameter-location": "client"
+            "$ref": "#/parameters/QueryApiVersion"
           }
         ],
         "responses": {
@@ -686,27 +577,10 @@
         ],
         "parameters": [
           {
-            "name": "modelId",
-            "description": "Unique model name.",
-            "required": true,
-            "type": "string",
-            "format": "[a-zA-Z0-9][a-zA-Z0-9._~:-]{1,63}",
-            "in": "path"
+            "$ref": "#/parameters/PathModelId"
           },
           {
-            "name": "api-version",
-            "description": "Requested API version.",
-            "required": true,
-            "type": "string",
-            "in": "query",
-            "enum": [
-              "2021-07-30-preview"
-            ],
-            "x-ms-enum": {
-              "name": "ApiVersion",
-              "modelAsString": true
-            },
-            "x-ms-parameter-location": "client"
+            "$ref": "#/parameters/QueryApiVersion"
           }
         ],
         "responses": {
@@ -734,27 +608,10 @@
         ],
         "parameters": [
           {
-            "name": "modelId",
-            "description": "Unique model name.",
-            "required": true,
-            "type": "string",
-            "format": "[a-zA-Z0-9][a-zA-Z0-9._~:-]{1,63}",
-            "in": "path"
+            "$ref": "#/parameters/PathModelId"
           },
           {
-            "name": "api-version",
-            "description": "Requested API version.",
-            "required": true,
-            "type": "string",
-            "in": "query",
-            "enum": [
-              "2021-07-30-preview"
-            ],
-            "x-ms-enum": {
-              "name": "ApiVersion",
-              "modelAsString": true
-            },
-            "x-ms-parameter-location": "client"
+            "$ref": "#/parameters/QueryApiVersion"
           }
         ],
         "responses": {
@@ -835,17 +692,6 @@
         "modelAsString": true
       }
     },
-    "ErrorResponse": {
-      "type": "object",
-      "required": [
-        "error"
-      ],
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/ErrorInformation"
-        }
-      }
-    },
     "ErrorInformation": {
       "type": "object",
       "required": [
@@ -863,15 +709,19 @@
     },
     "Error": {
       "description": "Error info.",
-      "type": "object",
-      "required": [
-        "code",
-        "message"
-      ],
       "properties": {
         "code": {
           "description": "Error code.",
           "type": "string"
+        },
+        "details": {
+          "items": {
+            "$ref": "#/definitions/Error"
+          },
+          "type": "array"
+        },
+        "innererror": {
+          "$ref": "#/definitions/InnerError"
         },
         "message": {
           "description": "Error message.",
@@ -881,7 +731,44 @@
           "description": "Target of the error.",
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "type": "object"
+    },
+    "ErrorResponse": {
+      "description": "Error response object.",
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/Error"
+        }
+      },
+      "required": [
+        "error"
+      ],
+      "type": "object"
+    },
+    "InnerError": {
+      "description": "Detailed error.",
+      "properties": {
+        "code": {
+          "description": "Error code.",
+          "type": "string"
+        },
+        "innererror": {
+          "$ref": "#/definitions/InnerError"
+        },
+        "message": {
+          "description": "Error message.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code"
+      ],
+      "type": "object"
     },
     "ContentSource": {
       "description": "Content data or location specification.",
@@ -978,7 +865,7 @@
     },
     "WebContentSource": {
       "description": "Publicly accessible Internet content.",
-      "x-ms-discriminator-value": "local",
+      "x-ms-discriminator-value": "web",
       "allOf": [
         {
           "$ref": "#/definitions/ContentSource"
@@ -1111,41 +998,48 @@
       }
     },
     "ModelInfo": {
-      "description": "Model info.",
-      "type": "object",
-      "$ref": "#/definitions/ModelSummary",
-      "properties": {
-        "docTypes": {
-          "description": "Supported document types.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "object",
-            "required": [
-              "fieldSchema"
-            ],
-            "properties": {
-              "description": {
-                "$ref": "#/definitions/ModelDescription"
+      "allOf": [
+        {
+          "$ref": "#/definitions/ModelSummary"
+        },
+        {
+          "properties": {
+            "docTypes": {
+              "additionalProperties": {
+                "properties": {
+                  "description": {
+                    "$ref": "#/definitions/ModelDescription"
+                  },
+                  "fieldConfidence": {
+                    "additionalProperties": {
+                      "maximum": 1,
+                      "minimum": 0,
+                      "type": "number"
+                    },
+                    "description": "Estimated confidence for each field.",
+                    "type": "object"
+                  },
+                  "fieldSchema": {
+                    "$ref": "#/definitions/DocTypeSchema"
+                  },
+                  "technique": {
+                    "$ref": "#/definitions/DocumentModelBuildTechnique"
+                  }
+                },
+                "required": [
+                  "fieldSchema"
+                ],
+                "type": "object"
               },
-              "technique": {
-                "$ref": "#/definitions/DocumentModelBuildTechnique"
-              },
-              "fieldSchema": {
-                "$ref": "#/definitions/DocTypeSchema"
-              },
-              "fieldConfidence": {
-                "description": "Estimated confidence for each field.",
-                "type": "object",
-                "additionalProperties": {
-                  "type": "number",
-                  "minimum": 0,
-                  "maximum": 1
-                }
-              }
+              "description": "Supported document types.",
+              "type": "object"
             }
-          }
+          },
+          "type": "object"
         }
-      }
+      ],
+      "description": "Model info.",
+      "type": "object"
     },
     "DocTypeSchema": {
       "description": "Description of the document semantic schema using a JSON Schema style syntax.",

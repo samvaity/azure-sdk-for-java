@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
     @JsonSubTypes.Type(name = "base64", value = Base64ContentSource.class),
     @JsonSubTypes.Type(name = "azure.blob", value = AzureBlobContentSource.class),
     @JsonSubTypes.Type(name = "local", value = LocalContentSource.class),
-    @JsonSubTypes.Type(name = "local", value = WebContentSource.class)
+    @JsonSubTypes.Type(name = "web", value = WebContentSource.class)
 })
 @Immutable
 public class ContentSource {}

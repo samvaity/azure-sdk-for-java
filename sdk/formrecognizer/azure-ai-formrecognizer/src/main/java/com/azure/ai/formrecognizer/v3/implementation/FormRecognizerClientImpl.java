@@ -12,8 +12,10 @@ import com.azure.ai.formrecognizer.v3.implementation.models.ContentType;
 import com.azure.ai.formrecognizer.v3.implementation.models.CopyAuthorization;
 import com.azure.ai.formrecognizer.v3.implementation.models.CopyModelResponse;
 import com.azure.ai.formrecognizer.v3.implementation.models.ErrorResponseException;
+import com.azure.ai.formrecognizer.v3.implementation.models.ModelInfo;
 import com.azure.ai.formrecognizer.v3.implementation.models.ModelSummary;
 import com.azure.ai.formrecognizer.v3.implementation.models.OperationInfo;
+import com.azure.ai.formrecognizer.v3.implementation.models.Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema;
 import com.azure.ai.formrecognizer.v3.implementation.models.Paths1CndbjaDocumentmodelsGetResponses200ContentApplicationJsonSchema;
 import com.azure.ai.formrecognizer.v3.implementation.models.Paths1Ep1Fe8InfoGetResponses200ContentApplicationJsonSchema;
 import com.azure.ai.formrecognizer.v3.implementation.models.Paths1Go644WDocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema;
@@ -169,7 +171,7 @@ public final class FormRecognizerClientImpl {
     @Host("{endpoint}/formrecognizer/{ApiVersion}")
     @ServiceInterface(name = "FormRecognizerClient")
     public interface FormRecognizerClientService {
-        @Post("/documentModels/{modelId}/")
+        @Post("/documentModels/{modelId}/:analyze")
         @ExpectedResponses({202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<AnalyzeDocumentResponse> analyzeDocument(
@@ -186,7 +188,7 @@ public final class FormRecognizerClientImpl {
                 @HeaderParam("Accept") String accept,
                 Context context);
 
-        @Post("/documentModels/{modelId}/")
+        @Post("/documentModels/{modelId}/:analyze")
         @ExpectedResponses({202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<AnalyzeDocumentResponse> analyzeDocument(
@@ -210,8 +212,8 @@ public final class FormRecognizerClientImpl {
                 @HostParam("endpoint") String endpoint,
                 @HostParam("ApiVersion") String apiVersion,
                 @PathParam("modelId") String modelId,
-                @HostParam("ApiVersion") String apiVersionParam,
                 @PathParam("resultId") String resultId,
+                @HostParam("ApiVersion") String apiVersionParam,
                 @HeaderParam("Accept") String accept,
                 Context context);
 
@@ -277,7 +279,7 @@ public final class FormRecognizerClientImpl {
         @Get("/operations/{operationId}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<OperationInfo>> getOperationInfo(
+        Mono<Response<Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema>> getOperationInfo(
                 @HostParam("endpoint") String endpoint,
                 @HostParam("ApiVersion") String apiVersion,
                 @PathParam("operationId") String operationId,
@@ -298,7 +300,7 @@ public final class FormRecognizerClientImpl {
         @Get("/documentModels/{modelId}")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
-        Mono<Response<ModelSummary>> getModel(
+        Mono<Response<ModelInfo>> getModel(
                 @HostParam("endpoint") String endpoint,
                 @HostParam("ApiVersion") String apiVersion,
                 @PathParam("modelId") String modelId,
@@ -761,8 +763,8 @@ public final class FormRecognizerClientImpl {
                                 this.getEndpoint(),
                                 this.getApiVersion(),
                                 modelId,
-                                this.getApiVersion(),
                                 resultId,
+                                this.getApiVersion(),
                                 accept,
                                 context));
     }
@@ -783,7 +785,7 @@ public final class FormRecognizerClientImpl {
             String modelId, String resultId, Context context) {
         final String accept = "application/json";
         return service.getAnalyzeResult(
-                this.getEndpoint(), this.getApiVersion(), modelId, this.getApiVersion(), resultId, accept, context);
+                this.getEndpoint(), this.getApiVersion(), modelId, resultId, this.getApiVersion(), accept, context);
     }
 
     /**
@@ -1420,14 +1422,15 @@ public final class FormRecognizerClientImpl {
     /**
      * Gets operation info.
      *
-     * @param operationId Unique model name.
+     * @param operationId Unique operation ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return operation info.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<OperationInfo>> getOperationInfoWithResponseAsync(String operationId) {
+    public Mono<Response<Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema>>
+            getOperationInfoWithResponseAsync(String operationId) {
         final String accept = "application/json";
         return FluxUtil.withContext(
                 context ->
@@ -1443,7 +1446,7 @@ public final class FormRecognizerClientImpl {
     /**
      * Gets operation info.
      *
-     * @param operationId Unique model name.
+     * @param operationId Unique operation ID.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -1451,7 +1454,8 @@ public final class FormRecognizerClientImpl {
      * @return operation info.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<OperationInfo>> getOperationInfoWithResponseAsync(String operationId, Context context) {
+    public Mono<Response<Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema>>
+            getOperationInfoWithResponseAsync(String operationId, Context context) {
         final String accept = "application/json";
         return service.getOperationInfo(
                 this.getEndpoint(), this.getApiVersion(), operationId, this.getApiVersion(), accept, context);
@@ -1460,17 +1464,19 @@ public final class FormRecognizerClientImpl {
     /**
      * Gets operation info.
      *
-     * @param operationId Unique model name.
+     * @param operationId Unique operation ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return operation info.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<OperationInfo> getOperationInfoAsync(String operationId) {
+    public Mono<Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema> getOperationInfoAsync(
+            String operationId) {
         return getOperationInfoWithResponseAsync(operationId)
                 .flatMap(
-                        (Response<OperationInfo> res) -> {
+                        (Response<Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema>
+                                        res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -1482,7 +1488,7 @@ public final class FormRecognizerClientImpl {
     /**
      * Gets operation info.
      *
-     * @param operationId Unique model name.
+     * @param operationId Unique operation ID.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -1490,10 +1496,12 @@ public final class FormRecognizerClientImpl {
      * @return operation info.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<OperationInfo> getOperationInfoAsync(String operationId, Context context) {
+    public Mono<Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema> getOperationInfoAsync(
+            String operationId, Context context) {
         return getOperationInfoWithResponseAsync(operationId, context)
                 .flatMap(
-                        (Response<OperationInfo> res) -> {
+                        (Response<Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema>
+                                        res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -1505,21 +1513,22 @@ public final class FormRecognizerClientImpl {
     /**
      * Gets operation info.
      *
-     * @param operationId Unique model name.
+     * @param operationId Unique operation ID.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      * @return operation info.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public OperationInfo getOperationInfo(String operationId) {
+    public Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema getOperationInfo(
+            String operationId) {
         return getOperationInfoAsync(operationId).block();
     }
 
     /**
      * Gets operation info.
      *
-     * @param operationId Unique model name.
+     * @param operationId Unique operation ID.
      * @param context The context to associate with this operation.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws ErrorResponseException thrown if the request is rejected by server.
@@ -1527,7 +1536,8 @@ public final class FormRecognizerClientImpl {
      * @return operation info.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<OperationInfo> getOperationInfoWithResponse(String operationId, Context context) {
+    public Response<Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema>
+            getOperationInfoWithResponse(String operationId, Context context) {
         return getOperationInfoWithResponseAsync(operationId, context).block();
     }
 
@@ -1649,7 +1659,7 @@ public final class FormRecognizerClientImpl {
      * @return detailed model information.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<ModelSummary>> getModelWithResponseAsync(String modelId) {
+    public Mono<Response<ModelInfo>> getModelWithResponseAsync(String modelId) {
         final String accept = "application/json";
         return FluxUtil.withContext(
                 context ->
@@ -1673,7 +1683,7 @@ public final class FormRecognizerClientImpl {
      * @return detailed model information.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<ModelSummary>> getModelWithResponseAsync(String modelId, Context context) {
+    public Mono<Response<ModelInfo>> getModelWithResponseAsync(String modelId, Context context) {
         final String accept = "application/json";
         return service.getModel(
                 this.getEndpoint(), this.getApiVersion(), modelId, this.getApiVersion(), accept, context);
@@ -1689,10 +1699,10 @@ public final class FormRecognizerClientImpl {
      * @return detailed model information.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<ModelSummary> getModelAsync(String modelId) {
+    public Mono<ModelInfo> getModelAsync(String modelId) {
         return getModelWithResponseAsync(modelId)
                 .flatMap(
-                        (Response<ModelSummary> res) -> {
+                        (Response<ModelInfo> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -1712,10 +1722,10 @@ public final class FormRecognizerClientImpl {
      * @return detailed model information.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<ModelSummary> getModelAsync(String modelId, Context context) {
+    public Mono<ModelInfo> getModelAsync(String modelId, Context context) {
         return getModelWithResponseAsync(modelId, context)
                 .flatMap(
-                        (Response<ModelSummary> res) -> {
+                        (Response<ModelInfo> res) -> {
                             if (res.getValue() != null) {
                                 return Mono.just(res.getValue());
                             } else {
@@ -1734,7 +1744,7 @@ public final class FormRecognizerClientImpl {
      * @return detailed model information.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public ModelSummary getModel(String modelId) {
+    public ModelInfo getModel(String modelId) {
         return getModelAsync(modelId).block();
     }
 
@@ -1749,7 +1759,7 @@ public final class FormRecognizerClientImpl {
      * @return detailed model information.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<ModelSummary> getModelWithResponse(String modelId, Context context) {
+    public Response<ModelInfo> getModelWithResponse(String modelId, Context context) {
         return getModelWithResponseAsync(modelId, context).block();
     }
 

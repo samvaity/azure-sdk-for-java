@@ -18,10 +18,10 @@ public final class Components70NzpzSchemasModelinfoPropertiesDoctypesAdditionalp
     private String description;
 
     /*
-     * Technique for building a custom model.
+     * Estimated confidence for each field.
      */
-    @JsonProperty(value = "technique")
-    private DocumentModelBuildTechnique technique;
+    @JsonProperty(value = "fieldConfidence")
+    private Map<String, Float> fieldConfidence;
 
     /*
      * Description of the document semantic schema using a JSON Schema style
@@ -31,10 +31,10 @@ public final class Components70NzpzSchemasModelinfoPropertiesDoctypesAdditionalp
     private Map<String, FieldTypeSchema> fieldSchema;
 
     /*
-     * Estimated confidence for each field.
+     * Technique for building a custom model.
      */
-    @JsonProperty(value = "fieldConfidence")
-    private Map<String, Float> fieldConfidence;
+    @JsonProperty(value = "technique")
+    private DocumentModelBuildTechnique technique;
 
     /**
      * Get the description property: Model description.
@@ -57,23 +57,23 @@ public final class Components70NzpzSchemasModelinfoPropertiesDoctypesAdditionalp
     }
 
     /**
-     * Get the technique property: Technique for building a custom model.
+     * Get the fieldConfidence property: Estimated confidence for each field.
      *
-     * @return the technique value.
+     * @return the fieldConfidence value.
      */
-    public DocumentModelBuildTechnique getTechnique() {
-        return this.technique;
+    public Map<String, Float> getFieldConfidence() {
+        return this.fieldConfidence;
     }
 
     /**
-     * Set the technique property: Technique for building a custom model.
+     * Set the fieldConfidence property: Estimated confidence for each field.
      *
-     * @param technique the technique value to set.
+     * @param fieldConfidence the fieldConfidence value to set.
      * @return the Components70NzpzSchemasModelinfoPropertiesDoctypesAdditionalproperties object itself.
      */
-    public Components70NzpzSchemasModelinfoPropertiesDoctypesAdditionalproperties setTechnique(
-            DocumentModelBuildTechnique technique) {
-        this.technique = technique;
+    public Components70NzpzSchemasModelinfoPropertiesDoctypesAdditionalproperties setFieldConfidence(
+            Map<String, Float> fieldConfidence) {
+        this.fieldConfidence = fieldConfidence;
         return this;
     }
 
@@ -99,23 +99,23 @@ public final class Components70NzpzSchemasModelinfoPropertiesDoctypesAdditionalp
     }
 
     /**
-     * Get the fieldConfidence property: Estimated confidence for each field.
+     * Get the technique property: Technique for building a custom model.
      *
-     * @return the fieldConfidence value.
+     * @return the technique value.
      */
-    public Map<String, Float> getFieldConfidence() {
-        return this.fieldConfidence;
+    public DocumentModelBuildTechnique getTechnique() {
+        return this.technique;
     }
 
     /**
-     * Set the fieldConfidence property: Estimated confidence for each field.
+     * Set the technique property: Technique for building a custom model.
      *
-     * @param fieldConfidence the fieldConfidence value to set.
+     * @param technique the technique value to set.
      * @return the Components70NzpzSchemasModelinfoPropertiesDoctypesAdditionalproperties object itself.
      */
-    public Components70NzpzSchemasModelinfoPropertiesDoctypesAdditionalproperties setFieldConfidence(
-            Map<String, Float> fieldConfidence) {
-        this.fieldConfidence = fieldConfidence;
+    public Components70NzpzSchemasModelinfoPropertiesDoctypesAdditionalproperties setTechnique(
+            DocumentModelBuildTechnique technique) {
+        this.technique = technique;
         return this;
     }
 }

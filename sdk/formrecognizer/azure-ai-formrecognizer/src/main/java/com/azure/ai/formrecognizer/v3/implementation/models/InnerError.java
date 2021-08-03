@@ -6,22 +6,15 @@ package com.azure.ai.formrecognizer.v3.implementation.models;
 
 import com.azure.core.annotation.Fluent;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 
-/** Error info. */
+/** Detailed error. */
 @Fluent
-public final class Error {
+public final class InnerError {
     /*
      * Error code.
      */
     @JsonProperty(value = "code", required = true)
     private String code;
-
-    /*
-     * The details property.
-     */
-    @JsonProperty(value = "details")
-    private List<Error> details;
 
     /*
      * Detailed error.
@@ -32,14 +25,8 @@ public final class Error {
     /*
      * Error message.
      */
-    @JsonProperty(value = "message", required = true)
+    @JsonProperty(value = "message")
     private String message;
-
-    /*
-     * Target of the error.
-     */
-    @JsonProperty(value = "target")
-    private String target;
 
     /**
      * Get the code property: Error code.
@@ -54,30 +41,10 @@ public final class Error {
      * Set the code property: Error code.
      *
      * @param code the code value to set.
-     * @return the Error object itself.
+     * @return the InnerError object itself.
      */
-    public Error setCode(String code) {
+    public InnerError setCode(String code) {
         this.code = code;
-        return this;
-    }
-
-    /**
-     * Get the details property: The details property.
-     *
-     * @return the details value.
-     */
-    public List<Error> getDetails() {
-        return this.details;
-    }
-
-    /**
-     * Set the details property: The details property.
-     *
-     * @param details the details value to set.
-     * @return the Error object itself.
-     */
-    public Error setDetails(List<Error> details) {
-        this.details = details;
         return this;
     }
 
@@ -94,9 +61,9 @@ public final class Error {
      * Set the innererror property: Detailed error.
      *
      * @param innererror the innererror value to set.
-     * @return the Error object itself.
+     * @return the InnerError object itself.
      */
-    public Error setInnererror(InnerError innererror) {
+    public InnerError setInnererror(InnerError innererror) {
         this.innererror = innererror;
         return this;
     }
@@ -114,30 +81,10 @@ public final class Error {
      * Set the message property: Error message.
      *
      * @param message the message value to set.
-     * @return the Error object itself.
+     * @return the InnerError object itself.
      */
-    public Error setMessage(String message) {
+    public InnerError setMessage(String message) {
         this.message = message;
-        return this;
-    }
-
-    /**
-     * Get the target property: Target of the error.
-     *
-     * @return the target value.
-     */
-    public String getTarget() {
-        return this.target;
-    }
-
-    /**
-     * Set the target property: Target of the error.
-     *
-     * @param target the target value to set.
-     * @return the Error object itself.
-     */
-    public Error setTarget(String target) {
-        this.target = target;
         return this;
     }
 }
