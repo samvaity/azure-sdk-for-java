@@ -30,7 +30,7 @@
     "https"
   ],
   "paths": {
-    "/documentModels/{modelId}/:analyze": {
+    "/documentModels/{modelId}:analyze": {
       "post": {
         "summary": "Analyze document",
         "description": "Analyzes document with model.",
@@ -139,7 +139,8 @@
               "$ref": "#/definitions/ErrorResponse"
             }
           }
-        }
+        },
+        "x-ms-long-running-operation": true
       }
     },
     "/documentModels/{modelId}/analyzeResults/{resultId}": {
@@ -178,7 +179,7 @@
         }
       }
     },
-    "/documentModels/:build": {
+    "/documentModels:build": {
       "post": {
         "summary": "Build model",
         "operationId": "Build model",
@@ -244,7 +245,7 @@
         "x-ms-long-running-operation": true
       }
     },
-    "/documentModels/:compose": {
+    "/documentModels:compose": {
       "post": {
         "summary": "Compose model",
         "description": "Creates a new model from document types of existing models.",
@@ -317,7 +318,7 @@
         "x-ms-long-running-operation": true
       }
     },
-    "/documentModels/:authorizeCopy": {
+    "/documentModels:authorizeCopy": {
       "post": {
         "summary": "Generate copy authorization",
         "description": "Generates authorization to copy a model to this location with specified modelId and optional description.",
@@ -369,7 +370,7 @@
         }
       }
     },
-    "/documentModels/{modelId}/:copyTo": {
+    "/documentModels/{modelId}:copyTo": {
       "post": {
         "summary": "Copy model",
         "description": "Copies model to the target resource, region, and modelId.",

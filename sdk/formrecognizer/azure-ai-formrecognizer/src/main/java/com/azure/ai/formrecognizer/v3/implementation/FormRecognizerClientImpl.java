@@ -15,14 +15,14 @@ import com.azure.ai.formrecognizer.v3.implementation.models.ErrorResponseExcepti
 import com.azure.ai.formrecognizer.v3.implementation.models.ModelInfo;
 import com.azure.ai.formrecognizer.v3.implementation.models.ModelSummary;
 import com.azure.ai.formrecognizer.v3.implementation.models.OperationInfo;
+import com.azure.ai.formrecognizer.v3.implementation.models.Paths10VzxpuDocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema;
 import com.azure.ai.formrecognizer.v3.implementation.models.Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema;
 import com.azure.ai.formrecognizer.v3.implementation.models.Paths1CndbjaDocumentmodelsGetResponses200ContentApplicationJsonSchema;
 import com.azure.ai.formrecognizer.v3.implementation.models.Paths1Ep1Fe8InfoGetResponses200ContentApplicationJsonSchema;
-import com.azure.ai.formrecognizer.v3.implementation.models.Paths1Go644WDocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema;
-import com.azure.ai.formrecognizer.v3.implementation.models.Paths1P2NrygDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema;
-import com.azure.ai.formrecognizer.v3.implementation.models.PathsG0XsehDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema;
+import com.azure.ai.formrecognizer.v3.implementation.models.Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema;
+import com.azure.ai.formrecognizer.v3.implementation.models.Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema;
+import com.azure.ai.formrecognizer.v3.implementation.models.PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema;
 import com.azure.ai.formrecognizer.v3.implementation.models.PathsY4MxprOperationsGetResponses200ContentApplicationJsonSchema;
-import com.azure.ai.formrecognizer.v3.implementation.models.PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema;
 import com.azure.ai.formrecognizer.v3.implementation.models.StringIndexType;
 import com.azure.core.annotation.BodyParam;
 import com.azure.core.annotation.Delete;
@@ -171,7 +171,7 @@ public final class FormRecognizerClientImpl {
     @Host("{endpoint}/formrecognizer/{ApiVersion}")
     @ServiceInterface(name = "FormRecognizerClient")
     public interface FormRecognizerClientService {
-        @Post("/documentModels/{modelId}/:analyze")
+        @Post("/documentModels/{modelId}:analyze")
         @ExpectedResponses({202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<AnalyzeDocumentResponse> analyzeDocument(
@@ -188,7 +188,7 @@ public final class FormRecognizerClientImpl {
                 @HeaderParam("Accept") String accept,
                 Context context);
 
-        @Post("/documentModels/{modelId}/:analyze")
+        @Post("/documentModels/{modelId}:analyze")
         @ExpectedResponses({202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<AnalyzeDocumentResponse> analyzeDocument(
@@ -200,7 +200,7 @@ public final class FormRecognizerClientImpl {
                 @PathParam("modelId") String modelId,
                 @HostParam("ApiVersion") String apiVersionParam,
                 @BodyParam("application/json")
-                        Paths1Go644WDocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema
+                        PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema
                                 analyzeRequest,
                 @HeaderParam("Accept") String accept,
                 Context context);
@@ -217,7 +217,7 @@ public final class FormRecognizerClientImpl {
                 @HeaderParam("Accept") String accept,
                 Context context);
 
-        @Post("/documentModels/:build")
+        @Post("/documentModels:build")
         @ExpectedResponses({202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<BuildModelResponse> buildModel(
@@ -225,11 +225,11 @@ public final class FormRecognizerClientImpl {
                 @HostParam("ApiVersion") String apiVersion,
                 @HostParam("ApiVersion") String apiVersionParam,
                 @BodyParam("application/json")
-                        PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema buildRequest,
+                        Paths10VzxpuDocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema buildRequest,
                 @HeaderParam("Accept") String accept,
                 Context context);
 
-        @Post("/documentModels/:compose")
+        @Post("/documentModels:compose")
         @ExpectedResponses({202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<ComposeModelResponse> composeModel(
@@ -237,11 +237,11 @@ public final class FormRecognizerClientImpl {
                 @HostParam("ApiVersion") String apiVersion,
                 @HostParam("ApiVersion") String apiVersionParam,
                 @BodyParam("application/json")
-                        PathsG0XsehDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema composeRequest,
+                        Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema composeRequest,
                 @HeaderParam("Accept") String accept,
                 Context context);
 
-        @Post("/documentModels/:authorizeCopy")
+        @Post("/documentModels:authorizeCopy")
         @ExpectedResponses({200})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<Response<CopyAuthorization>> authorizeCopy(
@@ -249,12 +249,12 @@ public final class FormRecognizerClientImpl {
                 @HostParam("ApiVersion") String apiVersion,
                 @HostParam("ApiVersion") String apiVersionParam,
                 @BodyParam("application/json")
-                        Paths1P2NrygDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema
+                        Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema
                                 authorizeCopyRequest,
                 @HeaderParam("Accept") String accept,
                 Context context);
 
-        @Post("/documentModels/{modelId}/:copyTo")
+        @Post("/documentModels/{modelId}:copyTo")
         @ExpectedResponses({202})
         @UnexpectedResponseExceptionType(ErrorResponseException.class)
         Mono<CopyModelResponse> copyModel(
@@ -584,7 +584,7 @@ public final class FormRecognizerClientImpl {
             List<String> pages,
             String locale,
             StringIndexType stringIndexType,
-            Paths1Go644WDocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest) {
+            PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest) {
         final String accept = "application/json";
         String pagesConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(pages, CollectionFormat.CSV);
@@ -624,7 +624,7 @@ public final class FormRecognizerClientImpl {
             List<String> pages,
             String locale,
             StringIndexType stringIndexType,
-            Paths1Go644WDocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest,
+            PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest,
             Context context) {
         final String accept = "application/json";
         String pagesConverted =
@@ -662,7 +662,7 @@ public final class FormRecognizerClientImpl {
             List<String> pages,
             String locale,
             StringIndexType stringIndexType,
-            Paths1Go644WDocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest) {
+            PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest) {
         return analyzeDocumentWithResponseAsync(modelId, pages, locale, stringIndexType, analyzeRequest)
                 .flatMap((AnalyzeDocumentResponse res) -> Mono.empty());
     }
@@ -688,7 +688,7 @@ public final class FormRecognizerClientImpl {
             List<String> pages,
             String locale,
             StringIndexType stringIndexType,
-            Paths1Go644WDocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest,
+            PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest,
             Context context) {
         return analyzeDocumentWithResponseAsync(modelId, pages, locale, stringIndexType, analyzeRequest, context)
                 .flatMap((AnalyzeDocumentResponse res) -> Mono.empty());
@@ -713,7 +713,7 @@ public final class FormRecognizerClientImpl {
             List<String> pages,
             String locale,
             StringIndexType stringIndexType,
-            Paths1Go644WDocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest) {
+            PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest) {
         analyzeDocumentAsync(modelId, pages, locale, stringIndexType, analyzeRequest).block();
     }
 
@@ -738,7 +738,7 @@ public final class FormRecognizerClientImpl {
             List<String> pages,
             String locale,
             StringIndexType stringIndexType,
-            Paths1Go644WDocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest,
+            PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest,
             Context context) {
         return analyzeDocumentWithResponseAsync(modelId, pages, locale, stringIndexType, analyzeRequest, context)
                 .block();
@@ -878,7 +878,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<BuildModelResponse> buildModelWithResponseAsync(
-            PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema buildRequest) {
+            Paths10VzxpuDocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema buildRequest) {
         final String accept = "application/json";
         return FluxUtil.withContext(
                 context ->
@@ -903,7 +903,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<BuildModelResponse> buildModelWithResponseAsync(
-            PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema buildRequest, Context context) {
+            Paths10VzxpuDocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema buildRequest, Context context) {
         final String accept = "application/json";
         return service.buildModel(
                 this.getEndpoint(), this.getApiVersion(), this.getApiVersion(), buildRequest, accept, context);
@@ -920,7 +920,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Void> buildModelAsync(
-            PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema buildRequest) {
+            Paths10VzxpuDocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema buildRequest) {
         return buildModelWithResponseAsync(buildRequest).flatMap((BuildModelResponse res) -> Mono.empty());
     }
 
@@ -936,7 +936,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Void> buildModelAsync(
-            PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema buildRequest, Context context) {
+            Paths10VzxpuDocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema buildRequest, Context context) {
         return buildModelWithResponseAsync(buildRequest, context).flatMap((BuildModelResponse res) -> Mono.empty());
     }
 
@@ -949,7 +949,7 @@ public final class FormRecognizerClientImpl {
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public void buildModel(PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema buildRequest) {
+    public void buildModel(Paths10VzxpuDocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema buildRequest) {
         buildModelAsync(buildRequest).block();
     }
 
@@ -965,7 +965,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public BuildModelResponse buildModelWithResponse(
-            PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema buildRequest, Context context) {
+            Paths10VzxpuDocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema buildRequest, Context context) {
         return buildModelWithResponseAsync(buildRequest, context).block();
     }
 
@@ -980,7 +980,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<ComposeModelResponse> composeModelWithResponseAsync(
-            PathsG0XsehDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema composeRequest) {
+            Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema composeRequest) {
         final String accept = "application/json";
         return FluxUtil.withContext(
                 context ->
@@ -1005,7 +1005,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<ComposeModelResponse> composeModelWithResponseAsync(
-            PathsG0XsehDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema composeRequest,
+            Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema composeRequest,
             Context context) {
         final String accept = "application/json";
         return service.composeModel(
@@ -1023,7 +1023,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Void> composeModelAsync(
-            PathsG0XsehDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema composeRequest) {
+            Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema composeRequest) {
         return composeModelWithResponseAsync(composeRequest).flatMap((ComposeModelResponse res) -> Mono.empty());
     }
 
@@ -1039,7 +1039,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Void> composeModelAsync(
-            PathsG0XsehDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema composeRequest,
+            Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema composeRequest,
             Context context) {
         return composeModelWithResponseAsync(composeRequest, context)
                 .flatMap((ComposeModelResponse res) -> Mono.empty());
@@ -1055,7 +1055,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public void composeModel(
-            PathsG0XsehDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema composeRequest) {
+            Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema composeRequest) {
         composeModelAsync(composeRequest).block();
     }
 
@@ -1071,7 +1071,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ComposeModelResponse composeModelWithResponse(
-            PathsG0XsehDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema composeRequest,
+            Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema composeRequest,
             Context context) {
         return composeModelWithResponseAsync(composeRequest, context).block();
     }
@@ -1087,7 +1087,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<CopyAuthorization>> authorizeCopyWithResponseAsync(
-            Paths1P2NrygDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema authorizeCopyRequest) {
+            Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema authorizeCopyRequest) {
         final String accept = "application/json";
         return FluxUtil.withContext(
                 context ->
@@ -1112,7 +1112,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<Response<CopyAuthorization>> authorizeCopyWithResponseAsync(
-            Paths1P2NrygDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema authorizeCopyRequest,
+            Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema authorizeCopyRequest,
             Context context) {
         final String accept = "application/json";
         return service.authorizeCopy(
@@ -1130,7 +1130,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<CopyAuthorization> authorizeCopyAsync(
-            Paths1P2NrygDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema authorizeCopyRequest) {
+            Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema authorizeCopyRequest) {
         return authorizeCopyWithResponseAsync(authorizeCopyRequest)
                 .flatMap(
                         (Response<CopyAuthorization> res) -> {
@@ -1154,7 +1154,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Mono<CopyAuthorization> authorizeCopyAsync(
-            Paths1P2NrygDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema authorizeCopyRequest,
+            Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema authorizeCopyRequest,
             Context context) {
         return authorizeCopyWithResponseAsync(authorizeCopyRequest, context)
                 .flatMap(
@@ -1178,7 +1178,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public CopyAuthorization authorizeCopy(
-            Paths1P2NrygDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema authorizeCopyRequest) {
+            Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema authorizeCopyRequest) {
         return authorizeCopyAsync(authorizeCopyRequest).block();
     }
 
@@ -1194,7 +1194,7 @@ public final class FormRecognizerClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<CopyAuthorization> authorizeCopyWithResponse(
-            Paths1P2NrygDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema authorizeCopyRequest,
+            Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema authorizeCopyRequest,
             Context context) {
         return authorizeCopyWithResponseAsync(authorizeCopyRequest, context).block();
     }
