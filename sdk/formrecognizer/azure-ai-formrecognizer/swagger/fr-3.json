@@ -1980,21 +1980,24 @@
       "required": true,
       "type": "string",
       "format": "[a-zA-Z0-9][a-zA-Z0-9._~:-]{1,63}",
-      "in": "path"
+      "in": "path",
+      "x-ms-parameter-location": "method"
     },
     "PathOperationId": {
       "name": "operationId",
       "description": "Unique operation ID.",
       "required": true,
       "type": "string",
-      "in": "path"
+      "in": "path",
+      "x-ms-parameter-location": "method"
     },
     "PathResultId": {
       "name": "resultId",
       "description": "Analyze operation result ID.",
       "required": true,
       "type": "string",
-      "in": "path"
+      "in": "path",
+      "x-ms-parameter-location": "method"
     },
     "QueryModelId": {
       "name": "modelId",
