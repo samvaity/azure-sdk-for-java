@@ -10,7 +10,7 @@ import java.util.List;
 
 /** Request body to create a composed model from component models. */
 @Fluent
-public final class Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema {
+public final class ComposeDocumentModelRequest {
     /*
      * Unique model name.
      */
@@ -27,7 +27,7 @@ public final class Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplica
      * List of component models to compose.
      */
     @JsonProperty(value = "componentModels", required = true)
-    private List<PostContentSchemaComponentModelsItem> componentModels;
+    private List<ComposeDocumentModelRequestComponentModelsItem> componentModels;
 
     /**
      * Get the modelId property: Unique model name.
@@ -42,9 +42,9 @@ public final class Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplica
      * Set the modelId property: Unique model name.
      *
      * @param modelId the modelId value to set.
-     * @return the Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema object itself.
+     * @return the ComposeDocumentModelRequest object itself.
      */
-    public Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema setModelId(String modelId) {
+    public ComposeDocumentModelRequest setModelId(String modelId) {
         this.modelId = modelId;
         return this;
     }
@@ -62,10 +62,9 @@ public final class Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplica
      * Set the description property: Model description.
      *
      * @param description the description value to set.
-     * @return the Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema object itself.
+     * @return the ComposeDocumentModelRequest object itself.
      */
-    public Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema setDescription(
-            String description) {
+    public ComposeDocumentModelRequest setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -75,7 +74,7 @@ public final class Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplica
      *
      * @return the componentModels value.
      */
-    public List<PostContentSchemaComponentModelsItem> getComponentModels() {
+    public List<ComposeDocumentModelRequestComponentModelsItem> getComponentModels() {
         return this.componentModels;
     }
 
@@ -83,10 +82,10 @@ public final class Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplica
      * Set the componentModels property: List of component models to compose.
      *
      * @param componentModels the componentModels value to set.
-     * @return the Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema object itself.
+     * @return the ComposeDocumentModelRequest object itself.
      */
-    public Paths8GtshoDocumentmodelsComposePostRequestbodyContentApplicationJsonSchema setComponentModels(
-            List<PostContentSchemaComponentModelsItem> componentModels) {
+    public ComposeDocumentModelRequest setComponentModels(
+            List<ComposeDocumentModelRequestComponentModelsItem> componentModels) {
         this.componentModels = componentModels;
         return this;
     }

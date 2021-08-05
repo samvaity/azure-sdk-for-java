@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Request body to authorize model copy. */
 @Fluent
-public final class Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema {
+public final class AuthorizeCopyRequest {
     /*
      * Unique model name.
      */
@@ -35,9 +35,9 @@ public final class Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentAp
      * Set the modelId property: Unique model name.
      *
      * @param modelId the modelId value to set.
-     * @return the Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema object itself.
+     * @return the AuthorizeCopyRequest object itself.
      */
-    public Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema setModelId(String modelId) {
+    public AuthorizeCopyRequest setModelId(String modelId) {
         this.modelId = modelId;
         return this;
     }
@@ -55,10 +55,9 @@ public final class Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentAp
      * Set the description property: Model description.
      *
      * @param description the description value to set.
-     * @return the Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema object itself.
+     * @return the AuthorizeCopyRequest object itself.
      */
-    public Paths1Ln1VDocumentmodelsAuthorizecopyPostRequestbodyContentApplicationJsonSchema setDescription(
-            String description) {
+    public AuthorizeCopyRequest setDescription(String description) {
         this.description = description;
         return this;
     }

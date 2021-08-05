@@ -18,18 +18,6 @@ public final class Error {
     private String code;
 
     /*
-     * The details property.
-     */
-    @JsonProperty(value = "details")
-    private List<Error> details;
-
-    /*
-     * Detailed error.
-     */
-    @JsonProperty(value = "innererror")
-    private InnerError innererror;
-
-    /*
      * Error message.
      */
     @JsonProperty(value = "message", required = true)
@@ -40,6 +28,18 @@ public final class Error {
      */
     @JsonProperty(value = "target")
     private String target;
+
+    /*
+     * List of detailed errors.
+     */
+    @JsonProperty(value = "details")
+    private List<Error> details;
+
+    /*
+     * Detailed error.
+     */
+    @JsonProperty(value = "innererror")
+    private InnerError innererror;
 
     /**
      * Get the code property: Error code.
@@ -58,46 +58,6 @@ public final class Error {
      */
     public Error setCode(String code) {
         this.code = code;
-        return this;
-    }
-
-    /**
-     * Get the details property: The details property.
-     *
-     * @return the details value.
-     */
-    public List<Error> getDetails() {
-        return this.details;
-    }
-
-    /**
-     * Set the details property: The details property.
-     *
-     * @param details the details value to set.
-     * @return the Error object itself.
-     */
-    public Error setDetails(List<Error> details) {
-        this.details = details;
-        return this;
-    }
-
-    /**
-     * Get the innererror property: Detailed error.
-     *
-     * @return the innererror value.
-     */
-    public InnerError getInnererror() {
-        return this.innererror;
-    }
-
-    /**
-     * Set the innererror property: Detailed error.
-     *
-     * @param innererror the innererror value to set.
-     * @return the Error object itself.
-     */
-    public Error setInnererror(InnerError innererror) {
-        this.innererror = innererror;
         return this;
     }
 
@@ -138,6 +98,46 @@ public final class Error {
      */
     public Error setTarget(String target) {
         this.target = target;
+        return this;
+    }
+
+    /**
+     * Get the details property: List of detailed errors.
+     *
+     * @return the details value.
+     */
+    public List<Error> getDetails() {
+        return this.details;
+    }
+
+    /**
+     * Set the details property: List of detailed errors.
+     *
+     * @param details the details value to set.
+     * @return the Error object itself.
+     */
+    public Error setDetails(List<Error> details) {
+        this.details = details;
+        return this;
+    }
+
+    /**
+     * Get the innererror property: Detailed error.
+     *
+     * @return the innererror value.
+     */
+    public InnerError getInnererror() {
+        return this.innererror;
+    }
+
+    /**
+     * Set the innererror property: Detailed error.
+     *
+     * @param innererror the innererror value to set.
+     * @return the Error object itself.
+     */
+    public Error setInnererror(InnerError innererror) {
+        this.innererror = innererror;
         return this;
     }
 }

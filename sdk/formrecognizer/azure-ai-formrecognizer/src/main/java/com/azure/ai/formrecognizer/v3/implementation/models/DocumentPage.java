@@ -44,6 +44,12 @@ public final class DocumentPage {
     private LengthUnit unit;
 
     /*
+     * Location of the page in the reading order concatenated content.
+     */
+    @JsonProperty(value = "spans", required = true)
+    private List<DocumentSpan> spans;
+
+    /*
      * Extracted words from the page.
      */
     @JsonProperty(value = "words", required = true)
@@ -61,12 +67,6 @@ public final class DocumentPage {
      */
     @JsonProperty(value = "lines", required = true)
     private List<DocumentLine> lines;
-
-    /*
-     * Location of the page in the reading order concatenated content.
-     */
-    @JsonProperty(value = "spans", required = true)
-    private List<DocumentSpan> spans;
 
     /**
      * Get the pageNumber property: 1-based page number in the input document.
@@ -173,6 +173,26 @@ public final class DocumentPage {
     }
 
     /**
+     * Get the spans property: Location of the page in the reading order concatenated content.
+     *
+     * @return the spans value.
+     */
+    public List<DocumentSpan> getSpans() {
+        return this.spans;
+    }
+
+    /**
+     * Set the spans property: Location of the page in the reading order concatenated content.
+     *
+     * @param spans the spans value to set.
+     * @return the DocumentPage object itself.
+     */
+    public DocumentPage setSpans(List<DocumentSpan> spans) {
+        this.spans = spans;
+        return this;
+    }
+
+    /**
      * Get the words property: Extracted words from the page.
      *
      * @return the words value.
@@ -229,26 +249,6 @@ public final class DocumentPage {
      */
     public DocumentPage setLines(List<DocumentLine> lines) {
         this.lines = lines;
-        return this;
-    }
-
-    /**
-     * Get the spans property: Location of the page in the reading order concatenated content.
-     *
-     * @return the spans value.
-     */
-    public List<DocumentSpan> getSpans() {
-        return this.spans;
-    }
-
-    /**
-     * Set the spans property: Location of the page in the reading order concatenated content.
-     *
-     * @param spans the spans value to set.
-     * @return the DocumentPage object itself.
-     */
-    public DocumentPage setSpans(List<DocumentSpan> spans) {
-        this.spans = spans;
         return this;
     }
 }

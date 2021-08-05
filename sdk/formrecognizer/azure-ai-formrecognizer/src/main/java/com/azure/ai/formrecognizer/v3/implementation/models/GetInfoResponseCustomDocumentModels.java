@@ -7,9 +7,9 @@ package com.azure.ai.formrecognizer.v3.implementation.models;
 import com.azure.core.annotation.Fluent;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The Paths1D9IbxeInfoGetResponses200ContentApplicationJsonSchemaPropertiesCustomdocumentmodels model. */
+/** Info regarding custom document models. */
 @Fluent
-public final class Paths1D9IbxeInfoGetResponses200ContentApplicationJsonSchemaPropertiesCustomdocumentmodels {
+public final class GetInfoResponseCustomDocumentModels {
     /*
      * Number of custom models in the current resource.
      */
@@ -35,11 +35,9 @@ public final class Paths1D9IbxeInfoGetResponses200ContentApplicationJsonSchemaPr
      * Set the count property: Number of custom models in the current resource.
      *
      * @param count the count value to set.
-     * @return the Paths1D9IbxeInfoGetResponses200ContentApplicationJsonSchemaPropertiesCustomdocumentmodels object
-     *     itself.
+     * @return the GetInfoResponseCustomDocumentModels object itself.
      */
-    public Paths1D9IbxeInfoGetResponses200ContentApplicationJsonSchemaPropertiesCustomdocumentmodels setCount(
-            int count) {
+    public GetInfoResponseCustomDocumentModels setCount(int count) {
         this.count = count;
         return this;
     }
@@ -57,11 +55,9 @@ public final class Paths1D9IbxeInfoGetResponses200ContentApplicationJsonSchemaPr
      * Set the limit property: Maximum number of custom models supported in the current resource.
      *
      * @param limit the limit value to set.
-     * @return the Paths1D9IbxeInfoGetResponses200ContentApplicationJsonSchemaPropertiesCustomdocumentmodels object
-     *     itself.
+     * @return the GetInfoResponseCustomDocumentModels object itself.
      */
-    public Paths1D9IbxeInfoGetResponses200ContentApplicationJsonSchemaPropertiesCustomdocumentmodels setLimit(
-            int limit) {
+    public GetInfoResponseCustomDocumentModels setLimit(int limit) {
         this.limit = limit;
         return this;
     }

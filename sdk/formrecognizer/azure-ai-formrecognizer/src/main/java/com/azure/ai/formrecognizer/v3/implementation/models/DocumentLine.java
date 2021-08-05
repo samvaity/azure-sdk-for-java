@@ -20,7 +20,7 @@ public final class DocumentLine {
     /*
      * Bounding box of the line.
      */
-    @JsonProperty(value = "boundingBox", required = true)
+    @JsonProperty(value = "boundingBox")
     private List<Float> boundingBox;
 
     /*

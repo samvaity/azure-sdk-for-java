@@ -20,7 +20,7 @@ public final class DocumentKeyValueElement {
     /*
      * Bounding regions covering the key-value element.
      */
-    @JsonProperty(value = "boundingRegions", required = true)
+    @JsonProperty(value = "boundingRegions")
     private List<BoundingRegion> boundingRegions;
 
     /*

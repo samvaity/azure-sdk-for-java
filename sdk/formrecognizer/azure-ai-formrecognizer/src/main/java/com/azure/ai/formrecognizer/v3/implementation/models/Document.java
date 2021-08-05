@@ -21,26 +21,26 @@ public final class Document {
     /*
      * Bounding regions covering the document.
      */
-    @JsonProperty(value = "boundingRegions", required = true)
+    @JsonProperty(value = "boundingRegions")
     private List<BoundingRegion> boundingRegions;
-
-    /*
-     * Dictionary of named field values.
-     */
-    @JsonProperty(value = "fields", required = true)
-    private Map<String, FieldValue> fields;
-
-    /*
-     * Confidence of correctly extracting the document.
-     */
-    @JsonProperty(value = "confidence", required = true)
-    private float confidence;
 
     /*
      * Location of the document in the reading order concatenated content.
      */
     @JsonProperty(value = "spans", required = true)
     private List<DocumentSpan> spans;
+
+    /*
+     * Dictionary of named field values.
+     */
+    @JsonProperty(value = "fields", required = true)
+    private Map<String, DocumentField> fields;
+
+    /*
+     * Confidence of correctly extracting the document.
+     */
+    @JsonProperty(value = "confidence", required = true)
+    private float confidence;
 
     /**
      * Get the docType property: Document type.
@@ -83,11 +83,31 @@ public final class Document {
     }
 
     /**
+     * Get the spans property: Location of the document in the reading order concatenated content.
+     *
+     * @return the spans value.
+     */
+    public List<DocumentSpan> getSpans() {
+        return this.spans;
+    }
+
+    /**
+     * Set the spans property: Location of the document in the reading order concatenated content.
+     *
+     * @param spans the spans value to set.
+     * @return the Document object itself.
+     */
+    public Document setSpans(List<DocumentSpan> spans) {
+        this.spans = spans;
+        return this;
+    }
+
+    /**
      * Get the fields property: Dictionary of named field values.
      *
      * @return the fields value.
      */
-    public Map<String, FieldValue> getFields() {
+    public Map<String, DocumentField> getFields() {
         return this.fields;
     }
 
@@ -97,7 +117,7 @@ public final class Document {
      * @param fields the fields value to set.
      * @return the Document object itself.
      */
-    public Document setFields(Map<String, FieldValue> fields) {
+    public Document setFields(Map<String, DocumentField> fields) {
         this.fields = fields;
         return this;
     }
@@ -119,26 +139,6 @@ public final class Document {
      */
     public Document setConfidence(float confidence) {
         this.confidence = confidence;
-        return this;
-    }
-
-    /**
-     * Get the spans property: Location of the document in the reading order concatenated content.
-     *
-     * @return the spans value.
-     */
-    public List<DocumentSpan> getSpans() {
-        return this.spans;
-    }
-
-    /**
-     * Set the spans property: Location of the document in the reading order concatenated content.
-     *
-     * @param spans the spans value to set.
-     * @return the Document object itself.
-     */
-    public Document setSpans(List<DocumentSpan> spans) {
-        this.spans = spans;
         return this;
     }
 }

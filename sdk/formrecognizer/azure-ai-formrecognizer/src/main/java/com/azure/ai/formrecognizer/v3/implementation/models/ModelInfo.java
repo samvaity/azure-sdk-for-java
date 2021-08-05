@@ -15,14 +15,14 @@ public final class ModelInfo extends ModelSummary {
      * Supported document types.
      */
     @JsonProperty(value = "docTypes")
-    private Map<String, Components70NzpzSchemasModelinfoPropertiesDoctypesAdditionalproperties> docTypes;
+    private Map<String, DocTypeInfo> docTypes;
 
     /**
      * Get the docTypes property: Supported document types.
      *
      * @return the docTypes value.
      */
-    public Map<String, Components70NzpzSchemasModelinfoPropertiesDoctypesAdditionalproperties> getDocTypes() {
+    public Map<String, DocTypeInfo> getDocTypes() {
         return this.docTypes;
     }
 
@@ -32,8 +32,7 @@ public final class ModelInfo extends ModelSummary {
      * @param docTypes the docTypes value to set.
      * @return the ModelInfo object itself.
      */
-    public ModelInfo setDocTypes(
-            Map<String, Components70NzpzSchemasModelinfoPropertiesDoctypesAdditionalproperties> docTypes) {
+    public ModelInfo setDocTypes(Map<String, DocTypeInfo> docTypes) {
         this.docTypes = docTypes;
         return this;
     }

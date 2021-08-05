@@ -17,16 +17,16 @@ public final class InnerError {
     private String code;
 
     /*
-     * Detailed error.
-     */
-    @JsonProperty(value = "innererror")
-    private InnerError innererror;
-
-    /*
      * Error message.
      */
     @JsonProperty(value = "message")
     private String message;
+
+    /*
+     * Detailed error.
+     */
+    @JsonProperty(value = "innererror")
+    private InnerError innererror;
 
     /**
      * Get the code property: Error code.
@@ -49,26 +49,6 @@ public final class InnerError {
     }
 
     /**
-     * Get the innererror property: Detailed error.
-     *
-     * @return the innererror value.
-     */
-    public InnerError getInnererror() {
-        return this.innererror;
-    }
-
-    /**
-     * Set the innererror property: Detailed error.
-     *
-     * @param innererror the innererror value to set.
-     * @return the InnerError object itself.
-     */
-    public InnerError setInnererror(InnerError innererror) {
-        this.innererror = innererror;
-        return this;
-    }
-
-    /**
      * Get the message property: Error message.
      *
      * @return the message value.
@@ -85,6 +65,26 @@ public final class InnerError {
      */
     public InnerError setMessage(String message) {
         this.message = message;
+        return this;
+    }
+
+    /**
+     * Get the innererror property: Detailed error.
+     *
+     * @return the innererror value.
+     */
+    public InnerError getInnererror() {
+        return this.innererror;
+    }
+
+    /**
+     * Set the innererror property: Detailed error.
+     *
+     * @param innererror the innererror value to set.
+     * @return the InnerError object itself.
+     */
+    public InnerError setInnererror(InnerError innererror) {
+        this.innererror = innererror;
         return this;
     }
 }

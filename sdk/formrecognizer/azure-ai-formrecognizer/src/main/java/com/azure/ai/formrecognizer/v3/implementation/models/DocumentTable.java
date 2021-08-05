@@ -32,7 +32,7 @@ public final class DocumentTable {
     /*
      * Bounding regions covering the table.
      */
-    @JsonProperty(value = "boundingRegions", required = true)
+    @JsonProperty(value = "boundingRegions")
     private List<BoundingRegion> boundingRegions;
 
     /*

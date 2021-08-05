@@ -34,7 +34,10 @@
       "post": {
         "summary": "Analyze document",
         "description": "Analyzes document with model.",
-        "operationId": "Analyze document",
+        "operationId": "AnalyzeDocument",
+        "tags": [
+          "Analysis"
+        ],
         "consumes": [
           "application/json",
           "application/octet-stream",
@@ -49,62 +52,19 @@
         ],
         "parameters": [
           {
-            "name": "pages",
-            "description": "List of 1-based page numbers to analyze.  Ex. \"1-3,5,7-9\"",
-            "required": false,
-            "type": "array",
-            "in": "query",
-            "items": {
-              "type": "string",
-              "pattern": "(^[0-9]+-[0-9]+$)|(^[0-9]+$)"
-            }
+            "$ref": "#/parameters/PathModelId"
           },
           {
-            "name": "locale",
-            "description": "Locale hint for text recognition and document analysis.  Value may contain only the language code (ex. \"en\", \"fr\") or BCP 47 language tag (ex. \"en-US\").",
-            "required": false,
-            "type": "string",
-            "in": "query"
+            "$ref": "#/parameters/QueryPages"
           },
           {
-            "name": "StringIndexType",
-            "description": "Method used to compute string offset and length.",
-            "required": false,
-            "in": "query",
-            "type": "string",
-            "enum": [
-              "textElements",
-              "unicodeCodePoint",
-              "utf16CodeUnit"
-            ],
-            "x-ms-enum": {
-              "name": "StringIndexType",
-              "modelAsString": true
-            },
-            "default": "textElements"
+            "$ref": "#/parameters/QueryLocale"
           },
           {
-            "name": "modelId",
-            "description": "Unique model name.",
-            "required": true,
-            "type": "string",
-            "format": "[a-zA-Z0-9][a-zA-Z0-9._~:-]{1,63}",
-            "in": "path"
+            "$ref": "#/parameters/QueryStringIndexType"
           },
           {
-            "name": "api-version",
-            "description": "Requested API version.",
-            "required": true,
-            "type": "string",
-            "in": "query",
-            "enum": [
-              "2021-07-30-preview"
-            ],
-            "x-ms-enum": {
-              "name": "ApiVersion",
-              "modelAsString": true
-            },
-            "x-ms-parameter-location": "client"
+            "$ref": "#/parameters/QueryApiVersion"
           },
           {
             "name": "analyzeRequest",
@@ -147,7 +107,10 @@
       "get": {
         "summary": "Get analyze result",
         "description": "Gets the result of document analysis.",
-        "operationId": "Get analyze result",
+        "operationId": "GetAnalyzeDocumentResult",
+        "tags": [
+          "Analysis"
+        ],
         "consumes": [],
         "produces": [
           "application/json"
@@ -182,8 +145,11 @@
     "/documentModels:build": {
       "post": {
         "summary": "Build model",
-        "operationId": "Build model",
         "description": "Builds a custom document analysis model.",
+        "operationId": "BuildDocumentModel",
+        "tags": [
+          "Creation"
+        ],
         "consumes": [
           "application/json"
         ],
@@ -200,28 +166,7 @@
             "required": true,
             "in": "body",
             "schema": {
-              "description": "Request body to build a new custom model.",
-              "type": "object",
-              "required": [
-                "modelId",
-                "source",
-                "technique"
-              ],
-              "properties": {
-                "modelId": {
-                  "$ref": "#/definitions/ModelId"
-                },
-                "description": {
-                  "$ref": "#/definitions/ModelDescription"
-                },
-                "technique": {
-                  "$ref": "#/definitions/DocumentModelBuildTechnique"
-                },
-                "source": {
-                  "description": "Training data.",
-                  "$ref": "#/definitions/ContentSource"
-                }
-              }
+              "$ref": "#/definitions/BuildDocumentModelRequest"
             }
           }
         ],
@@ -249,7 +194,10 @@
       "post": {
         "summary": "Compose model",
         "description": "Creates a new model from document types of existing models.",
-        "operationId": "Compose model",
+        "operationId": "ComposeDocumentModel",
+        "tags": [
+          "Creation"
+        ],
         "consumes": [
           "application/json"
         ],
@@ -265,36 +213,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "description": "Request body to create a composed model from component models.",
-              "type": "object",
-              "required": [
-                "modelId",
-                "componentModels"
-              ],
-              "properties": {
-                "modelId": {
-                  "$ref": "#/definitions/ModelId"
-                },
-                "description": {
-                  "$ref": "#/definitions/ModelDescription"
-                },
-                "componentModels": {
-                  "description": "List of component models to compose.",
-                  "type": "array",
-                  "uniqueItems": true,
-                  "items": {
-                    "type": "object",
-                    "required": [
-                      "modelId"
-                    ],
-                    "properties": {
-                      "modelId": {
-                        "$ref": "#/definitions/ModelId"
-                      }
-                    }
-                  }
-                }
-              }
+              "$ref": "#/definitions/ComposeDocumentModelRequest"
             }
           }
         ],
@@ -322,7 +241,10 @@
       "post": {
         "summary": "Generate copy authorization",
         "description": "Generates authorization to copy a model to this location with specified modelId and optional description.",
-        "operationId": "Authorize copy",
+        "operationId": "AuthorizeCopyDocumentModel",
+        "tags": [
+          "Creation"
+        ],
         "consumes": [
           "application/json"
         ],
@@ -338,19 +260,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "description": "Request body to authorize model copy.",
-              "type": "object",
-              "required": [
-                "modelId"
-              ],
-              "properties": {
-                "modelId": {
-                  "$ref": "#/definitions/ModelId"
-                },
-                "description": {
-                  "$ref": "#/definitions/ModelDescription"
-                }
-              }
+              "$ref": "#/definitions/AuthorizeCopyRequest"
             }
           }
         ],
@@ -374,7 +284,10 @@
       "post": {
         "summary": "Copy model",
         "description": "Copies model to the target resource, region, and modelId.",
-        "operationId": "Copy model",
+        "operationId": "CopyDocumentModelTo",
+        "tags": [
+          "Creation"
+        ],
         "consumes": [
           "application/json"
         ],
@@ -421,7 +334,10 @@
       "get": {
         "summary": "List operations",
         "description": "Lists all operations.",
-        "operationId": "List operations",
+        "operationId": "GetOperations",
+        "tags": [
+          "Operation"
+        ],
         "consumes": [],
         "produces": [
           "application/json"
@@ -435,23 +351,7 @@
           "200": {
             "description": "OK.",
             "schema": {
-              "type": "object",
-              "required": [
-                "value"
-              ],
-              "properties": {
-                "value": {
-                  "description": "List of operations.",
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/OperationInfo"
-                  }
-                },
-                "nextLink": {
-                  "description": "Link to the next page of operations.",
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/GetOperationsResponse"
             }
           },
           "default": {
@@ -471,7 +371,10 @@
       "get": {
         "summary": "Get operation",
         "description": "Gets operation info.",
-        "operationId": "Get operation info",
+        "operationId": "GetOperation",
+        "tags": [
+          "Operation"
+        ],
         "consumes": [],
         "produces": [
           "application/json"
@@ -488,24 +391,7 @@
           "200": {
             "description": "OK.",
             "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/definitions/OperationInfo"
-                },
-                {
-                  "properties": {
-                    "error": {
-                      "$ref": "#/definitions/Error",
-                      "description": "Encountered error."
-                    },
-                    "result": {
-                      "description": "Operation result upon success.",
-                      "type": "object"
-                    }
-                  },
-                  "type": "object"
-                }
-              ]
+              "$ref": "#/definitions/GetOperationResponse"
             }
           },
           "default": {
@@ -521,7 +407,10 @@
       "get": {
         "summary": "List models",
         "description": "List all models",
-        "operationId": "List all models",
+        "operationId": "GetModels",
+        "tags": [
+          "Management"
+        ],
         "consumes": [],
         "produces": [
           "application/json"
@@ -535,23 +424,7 @@
           "200": {
             "description": "OK.",
             "schema": {
-              "type": "object",
-              "required": [
-                "value"
-              ],
-              "properties": {
-                "value": {
-                  "description": "List of models.",
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/ModelSummary"
-                  }
-                },
-                "nextLink": {
-                  "description": "Link to the next page of models.",
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/GetModelsResponse"
             }
           },
           "default": {
@@ -571,7 +444,10 @@
       "get": {
         "summary": "Get model",
         "description": "Gets detailed model information.",
-        "operationId": "Get model",
+        "operationId": "GetModel",
+        "tags": [
+          "Management"
+        ],
         "consumes": [],
         "produces": [
           "application/json"
@@ -602,7 +478,10 @@
       "delete": {
         "summary": "Delete model",
         "description": "Deletes model.",
-        "operationId": "Delete model",
+        "operationId": "DeleteModel",
+        "tags": [
+          "Management"
+        ],
         "consumes": [],
         "produces": [
           "application/json"
@@ -632,7 +511,10 @@
       "get": {
         "summary": "Get info",
         "description": "Return basic info about the current resource.",
-        "operationId": "Get Info",
+        "operationId": "GetInfo",
+        "tags": [
+          "Management"
+        ],
         "consumes": [],
         "produces": [
           "application/json"
@@ -646,29 +528,7 @@
           "200": {
             "description": "OK.",
             "schema": {
-              "type": "object",
-              "required": [
-                "customDocumentModels"
-              ],
-              "properties": {
-                "customDocumentModels": {
-                  "type": "object",
-                  "required": [
-                    "count",
-                    "limit"
-                  ],
-                  "properties": {
-                    "count": {
-                      "type": "integer",
-                      "description": "Number of custom models in the current resource."
-                    },
-                    "limit": {
-                      "type": "integer",
-                      "description": "Maximum number of custom models supported in the current resource."
-                    }
-                  }
-                }
-              }
+              "$ref": "#/definitions/GetInfoResponse"
             }
           },
           "default": {
@@ -682,6 +542,164 @@
     }
   },
   "definitions": {
+    "BuildDocumentModelRequest": {
+      "description": "Request body to build a new custom model.",
+      "type": "object",
+      "required": [
+        "modelId",
+        "source",
+        "technique"
+      ],
+      "properties": {
+        "modelId": {
+          "$ref": "#/definitions/ModelId"
+        },
+        "description": {
+          "$ref": "#/definitions/ModelDescription"
+        },
+        "technique": {
+          "$ref": "#/definitions/DocumentModelBuildTechnique"
+        },
+        "source": {
+          "description": "Training data.",
+          "$ref": "#/definitions/ContentSource"
+        }
+      }
+    },
+    "ComposeDocumentModelRequest": {
+      "description": "Request body to create a composed model from component models.",
+      "type": "object",
+      "required": [
+        "modelId",
+        "componentModels"
+      ],
+      "properties": {
+        "modelId": {
+          "$ref": "#/definitions/ModelId"
+        },
+        "description": {
+          "$ref": "#/definitions/ModelDescription"
+        },
+        "componentModels": {
+          "description": "List of component models to compose.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "required": [
+              "modelId"
+            ],
+            "properties": {
+              "modelId": {
+                "$ref": "#/definitions/ModelId"
+              }
+            }
+          }
+        }
+      }
+    },
+    "AuthorizeCopyRequest": {
+      "description": "Request body to authorize model copy.",
+      "type": "object",
+      "required": [
+        "modelId"
+      ],
+      "properties": {
+        "modelId": {
+          "$ref": "#/definitions/ModelId"
+        },
+        "description": {
+          "$ref": "#/definitions/ModelDescription"
+        }
+      }
+    },
+    "GetOperationsResponse": {
+      "description": "List Operations response object.",
+      "type": "object",
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "description": "List of operations.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OperationInfo"
+          }
+        },
+        "nextLink": {
+          "description": "Link to the next page of operations.",
+          "type": "string"
+        }
+      }
+    },
+    "GetOperationResponse": {
+      "description": "Get Operation response object.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/OperationInfo"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "error": {
+              "description": "Encountered error.",
+              "$ref": "#/definitions/Error"
+            },
+            "result": {
+              "description": "Operation result upon success.",
+              "type": "object"
+            }
+          }
+        }
+      ]
+    },
+    "GetModelsResponse": {
+      "type": "object",
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "description": "List of models.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ModelSummary"
+          }
+        },
+        "nextLink": {
+          "description": "Link to the next page of models.",
+          "type": "string"
+        }
+      }
+    },
+    "GetInfoResponse": {
+      "type": "object",
+      "required": [
+        "customDocumentModels"
+      ],
+      "properties": {
+        "customDocumentModels": {
+          "description": "Info regarding custom document models.",
+          "type": "object",
+          "required": [
+            "count",
+            "limit"
+          ],
+          "properties": {
+            "count": {
+              "description": "Number of custom models in the current resource.",
+              "type": "integer"
+            },
+            "limit": {
+              "description": "Maximum number of custom models supported in the current resource.",
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
     "ApiVersion": {
       "description": "API version.",
       "type": "string",
@@ -693,7 +711,20 @@
         "modelAsString": true
       }
     },
-    "ErrorInformation": {
+    "ErrorResponse": {
+      "description": "Error response object.",
+      "type": "object",
+      "required": [
+        "error"
+      ],
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/Error"
+        }
+      }
+    },
+    "Error": {
+      "description": "Error info.",
       "type": "object",
       "required": [
         "code",
@@ -701,28 +732,8 @@
       ],
       "properties": {
         "code": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
-        }
-      }
-    },
-    "Error": {
-      "description": "Error info.",
-      "properties": {
-        "code": {
           "description": "Error code.",
           "type": "string"
-        },
-        "details": {
-          "items": {
-            "$ref": "#/definitions/Error"
-          },
-          "type": "array"
-        },
-        "innererror": {
-          "$ref": "#/definitions/InnerError"
         },
         "message": {
           "description": "Error message.",
@@ -731,45 +742,38 @@
         "target": {
           "description": "Target of the error.",
           "type": "string"
+        },
+        "details": {
+          "description": "List of detailed errors.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Error"
+          }
+        },
+        "innererror": {
+          "$ref": "#/definitions/InnerError"
         }
-      },
-      "required": [
-        "code",
-        "message"
-      ],
-      "type": "object"
-    },
-    "ErrorResponse": {
-      "description": "Error response object.",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "required": [
-        "error"
-      ],
-      "type": "object"
+      }
     },
     "InnerError": {
       "description": "Detailed error.",
+      "type": "object",
+      "required": [
+        "code"
+      ],
       "properties": {
         "code": {
           "description": "Error code.",
           "type": "string"
         },
-        "innererror": {
-          "$ref": "#/definitions/InnerError"
-        },
         "message": {
           "description": "Error message.",
           "type": "string"
+        },
+        "innererror": {
+          "$ref": "#/definitions/InnerError"
         }
-      },
-      "required": [
-        "code"
-      ],
-      "type": "object"
+      }
     },
     "ContentSource": {
       "description": "Content data or location specification.",
@@ -999,48 +1003,51 @@
       }
     },
     "ModelInfo": {
+      "description": "Model info.",
+      "type": "object",
       "allOf": [
         {
           "$ref": "#/definitions/ModelSummary"
         },
         {
+          "type": "object",
           "properties": {
             "docTypes": {
-              "additionalProperties": {
-                "properties": {
-                  "description": {
-                    "$ref": "#/definitions/ModelDescription"
-                  },
-                  "fieldConfidence": {
-                    "additionalProperties": {
-                      "maximum": 1,
-                      "minimum": 0,
-                      "type": "number"
-                    },
-                    "description": "Estimated confidence for each field.",
-                    "type": "object"
-                  },
-                  "fieldSchema": {
-                    "$ref": "#/definitions/DocTypeSchema"
-                  },
-                  "technique": {
-                    "$ref": "#/definitions/DocumentModelBuildTechnique"
-                  }
-                },
-                "required": [
-                  "fieldSchema"
-                ],
-                "type": "object"
-              },
               "description": "Supported document types.",
-              "type": "object"
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/DocTypeInfo"
+              }
             }
-          },
-          "type": "object"
+          }
         }
+      ]
+    },
+    "DocTypeInfo": {
+      "type": "object",
+      "required": [
+        "fieldSchema"
       ],
-      "description": "Model info.",
-      "type": "object"
+      "properties": {
+        "description": {
+          "$ref": "#/definitions/ModelDescription"
+        },
+        "technique": {
+          "$ref": "#/definitions/DocumentModelBuildTechnique"
+        },
+        "fieldSchema": {
+          "$ref": "#/definitions/DocTypeSchema"
+        },
+        "fieldConfidence": {
+          "description": "Estimated confidence for each field.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
     },
     "DocTypeSchema": {
       "description": "Description of the document semantic schema using a JSON Schema style syntax.",
@@ -1070,6 +1077,14 @@
             "array",
             "object"
           ]
+        },
+        "description": {
+          "description": "Field description.",
+          "type": "string"
+        },
+        "example": {
+          "description": "Example field content.",
+          "type": "string"
         },
         "items": {
           "description": "Field type schema of each array element.",
@@ -1245,6 +1260,13 @@
             "modelAsString": true
           }
         },
+        "spans": {
+          "description": "Location of the page in the reading order concatenated content.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DocumentSpan"
+          }
+        },
         "words": {
           "description": "Extracted words from the page.",
           "type": "array",
@@ -1265,13 +1287,6 @@
           "items": {
             "$ref": "#/definitions/DocumentLine"
           }
-        },
-        "spans": {
-          "description": "Location of the page in the reading order concatenated content.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/DocumentSpan"
-          }
         }
       }
     },
@@ -1280,9 +1295,8 @@
       "type": "object",
       "required": [
         "text",
-        "boundingBox",
-        "confidence",
-        "span"
+        "span",
+        "confidence"
       ],
       "properties": {
         "text": {
@@ -1293,13 +1307,13 @@
           "description": "Bounding box of the word.",
           "$ref": "#/definitions/BoundingBox"
         },
-        "confidence": {
-          "description": "Confidence of correctly extracting the word.",
-          "$ref": "#/definitions/Confidence"
-        },
         "span": {
           "description": "Location of the word in the reading order concatenated content.",
           "$ref": "#/definitions/DocumentSpan"
+        },
+        "confidence": {
+          "description": "Confidence of correctly extracting the word.",
+          "$ref": "#/definitions/Confidence"
         }
       }
     },
@@ -1308,9 +1322,8 @@
       "type": "object",
       "required": [
         "state",
-        "boundingBox",
-        "confidence",
-        "span"
+        "span",
+        "confidence"
       ],
       "properties": {
         "state": {
@@ -1321,13 +1334,13 @@
           "description": "Bounding box of the selection mark.",
           "$ref": "#/definitions/BoundingBox"
         },
-        "confidence": {
-          "description": "Confidence of correctly extracting the selection mark.",
-          "$ref": "#/definitions/Confidence"
-        },
         "span": {
           "description": "Location of the selection mark in the reading order concatenated content.",
           "$ref": "#/definitions/DocumentSpan"
+        },
+        "confidence": {
+          "description": "Confidence of correctly extracting the selection mark.",
+          "$ref": "#/definitions/Confidence"
         }
       }
     },
@@ -1348,7 +1361,6 @@
       "type": "object",
       "required": [
         "content",
-        "boundingBox",
         "spans"
       ],
       "properties": {
@@ -1376,7 +1388,6 @@
         "rowCount",
         "columnCount",
         "cells",
-        "boundingRegions",
         "spans"
       ],
       "properties": {
@@ -1417,15 +1428,14 @@
       "description": "An object representing the location and content of a table cell.",
       "type": "object",
       "required": [
-        "kind",
         "rowIndex",
         "columnIndex",
         "content",
-        "boundingRegions",
         "spans"
       ],
       "properties": {
         "kind": {
+          "description": "Table cell kind.",
           "type": "string",
           "enum": [
             "content",
@@ -1508,7 +1518,6 @@
       "type": "object",
       "required": [
         "content",
-        "boundingRegions",
         "spans"
       ],
       "properties": {
@@ -1538,9 +1547,8 @@
       "required": [
         "category",
         "content",
-        "boundingRegions",
-        "confidence",
-        "spans"
+        "spans",
+        "confidence"
       ],
       "properties": {
         "category": {
@@ -1562,16 +1570,16 @@
             "$ref": "#/definitions/BoundingRegion"
           }
         },
-        "confidence": {
-          "description": "Confidence of correctly extracting the entity.",
-          "$ref": "#/definitions/Confidence"
-        },
         "spans": {
           "description": "Location of the entity in the reading order concatenated content.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/DocumentSpan"
           }
+        },
+        "confidence": {
+          "description": "Confidence of correctly extracting the entity.",
+          "$ref": "#/definitions/Confidence"
         }
       }
     },
@@ -1586,16 +1594,16 @@
           "description": "Is content handwritten?",
           "type": "boolean"
         },
-        "confidence": {
-          "description": "Confidence of correctly identifying the style.",
-          "$ref": "#/definitions/Confidence"
-        },
         "spans": {
           "description": "Location of the text elements in the concatenated content the style applies to.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/DocumentSpan"
           }
+        },
+        "confidence": {
+          "description": "Confidence of correctly identifying the style.",
+          "$ref": "#/definitions/Confidence"
         }
       }
     },
@@ -1604,10 +1612,9 @@
       "type": "object",
       "required": [
         "docType",
-        "boundingRegions",
         "fields",
-        "confidence",
-        "spans"
+        "spans",
+        "confidence"
       ],
       "properties": {
         "docType": {
@@ -1621,27 +1628,27 @@
             "$ref": "#/definitions/BoundingRegion"
           }
         },
-        "fields": {
-          "description": "Dictionary of named field values.",
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/FieldValue"
-          }
-        },
-        "confidence": {
-          "description": "Confidence of correctly extracting the document.",
-          "$ref": "#/definitions/Confidence"
-        },
         "spans": {
           "description": "Location of the document in the reading order concatenated content.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/DocumentSpan"
           }
+        },
+        "fields": {
+          "description": "Dictionary of named field values.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/DocumentField"
+          }
+        },
+        "confidence": {
+          "description": "Confidence of correctly extracting the document.",
+          "$ref": "#/definitions/Confidence"
         }
       }
     },
-    "FieldValue": {
+    "DocumentField": {
       "description": "An object representing the content and location of a field value.",
       "type": "object",
       "required": [
@@ -1650,7 +1657,7 @@
       "properties": {
         "type": {
           "description": "Data type of the field value.",
-          "$ref": "#/definitions/FieldValueType"
+          "$ref": "#/definitions/DocumentFieldType"
         },
         "valueString": {
           "description": "String value.",
@@ -1706,14 +1713,14 @@
           "description": "Array of field values.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/FieldValue"
+            "$ref": "#/definitions/DocumentField"
           }
         },
         "valueObject": {
           "description": "Dictionary of named field values.",
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/FieldValue"
+            "$ref": "#/definitions/DocumentField"
           }
         },
         "content": {
@@ -1727,20 +1734,20 @@
             "$ref": "#/definitions/BoundingRegion"
           }
         },
-        "confidence": {
-          "description": "Confidence of correctly extracting the field.",
-          "$ref": "#/definitions/Confidence"
-        },
         "spans": {
           "description": "Location of the field in the reading order concatenated content.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/DocumentSpan"
           }
+        },
+        "confidence": {
+          "description": "Confidence of correctly extracting the field.",
+          "$ref": "#/definitions/Confidence"
         }
       }
     },
-    "FieldValueType": {
+    "DocumentFieldType": {
       "description": "Semantic data type of the field value.",
       "type": "string",
       "enum": [
@@ -1758,14 +1765,14 @@
         "object"
       ],
       "x-ms-enum": {
-        "name": "FieldValueType",
+        "name": "DocumentFieldType",
         "modelAsString": true
       }
     },
     "ModelId": {
       "description": "Unique model name.",
       "type": "string",
-      "format": "[a-zA-Z0-9][a-zA-Z0-9._~:-]{1,63}"
+      "format": "[a-zA-Z0-9][a-zA-Z0-9._~-]{1,63}"
     },
     "ModelDescription": {
       "description": "Model description.",
@@ -1862,19 +1869,34 @@
   "parameters": {
     "Endpoint": {
       "name": "endpoint",
-      "description": "Supported Cognitive Services endpoints (protocol and hostname, for example: https://westus2.api.cognitive.microsoft.com).",
+      "description": "Supported Cognitive Services endpoints (protocol and hostname, for\nexample: https://westus2.api.cognitive.microsoft.com).",
       "x-ms-parameter-location": "client",
       "required": true,
       "type": "string",
       "in": "path",
       "x-ms-skip-url-encoding": true
     },
+    "QueryApiVersion": {
+      "name": "api-version",
+      "description": "Requested API version.",
+      "required": true,
+      "type": "string",
+      "in": "query",
+      "enum": [
+        "2021-07-30-preview"
+      ],
+      "x-ms-enum": {
+        "name": "ApiVersion",
+        "modelAsString": true
+      },
+      "x-ms-parameter-location": "client"
+    },
     "PathModelId": {
       "name": "modelId",
       "description": "Unique model name.",
       "required": true,
       "type": "string",
-      "format": "[a-zA-Z0-9][a-zA-Z0-9._~:-]{1,63}",
+      "format": "[a-zA-Z0-9][a-zA-Z0-9._~-]{1,63}",
       "in": "path",
       "x-ms-parameter-location": "method"
     },
@@ -1894,14 +1916,6 @@
       "in": "path",
       "x-ms-parameter-location": "method"
     },
-    "QueryModelId": {
-      "name": "modelId",
-      "description": "Unique model name.",
-      "required": true,
-      "type": "string",
-      "format": "[a-zA-Z0-9][a-zA-Z0-9._~:-]{1,63}",
-      "in": "query"
-    },
     "QueryPages": {
       "name": "pages",
       "description": "List of 1-based page numbers to analyze.  Ex. \"1-3,5,7-9\"",
@@ -1911,17 +1925,19 @@
       "items": {
         "type": "string",
         "pattern": "(^[0-9]+-[0-9]+$)|(^[0-9]+$)"
-      }
+      },
+      "x-ms-parameter-location": "method"
     },
     "QueryLocale": {
       "name": "locale",
       "description": "Locale hint for text recognition and document analysis.  Value may contain only the language code (ex. \"en\", \"fr\") or BCP 47 language tag (ex. \"en-US\").",
       "required": false,
       "type": "string",
-      "in": "query"
+      "in": "query",
+      "x-ms-parameter-location": "method"
     },
     "QueryStringIndexType": {
-      "name": "StringIndexType",
+      "name": "stringIndexType",
       "description": "Method used to compute string offset and length.",
       "required": false,
       "in": "query",
@@ -1935,22 +1951,8 @@
         "name": "StringIndexType",
         "modelAsString": true
       },
-      "default": "textElements"
-    },
-    "QueryApiVersion": {
-      "name": "api-version",
-      "description": "Requested API version.",
-      "required": true,
-      "type": "string",
-      "in": "query",
-      "enum": [
-        "2021-07-30-preview"
-      ],
-      "x-ms-enum": {
-        "name": "ApiVersion",
-        "modelAsString": true
-      },
-      "x-ms-parameter-location": "client"
+      "default": "textElements",
+      "x-ms-parameter-location": "method"
     }
   }
 }

@@ -18,6 +18,18 @@ public final class FieldTypeSchema {
     private FieldTypeSchemaType type;
 
     /*
+     * Field description.
+     */
+    @JsonProperty(value = "description")
+    private String description;
+
+    /*
+     * Example field content.
+     */
+    @JsonProperty(value = "example")
+    private String example;
+
+    /*
      * Field type schema of each array element.
      */
     @JsonProperty(value = "items")
@@ -46,6 +58,46 @@ public final class FieldTypeSchema {
      */
     public FieldTypeSchema setType(FieldTypeSchemaType type) {
         this.type = type;
+        return this;
+    }
+
+    /**
+     * Get the description property: Field description.
+     *
+     * @return the description value.
+     */
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * Set the description property: Field description.
+     *
+     * @param description the description value to set.
+     * @return the FieldTypeSchema object itself.
+     */
+    public FieldTypeSchema setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    /**
+     * Get the example property: Example field content.
+     *
+     * @return the example value.
+     */
+    public String getExample() {
+        return this.example;
+    }
+
+    /**
+     * Set the example property: Example field content.
+     *
+     * @param example the example value to set.
+     * @return the FieldTypeSchema object itself.
+     */
+    public FieldTypeSchema setExample(String example) {
+        this.example = example;
         return this;
     }
 

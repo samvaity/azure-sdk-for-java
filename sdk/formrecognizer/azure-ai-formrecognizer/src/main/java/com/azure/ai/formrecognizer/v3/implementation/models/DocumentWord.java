@@ -23,20 +23,20 @@ public final class DocumentWord {
     /*
      * Bounding box of the word.
      */
-    @JsonProperty(value = "boundingBox", required = true)
+    @JsonProperty(value = "boundingBox")
     private List<Float> boundingBox;
-
-    /*
-     * Confidence of correctly extracting the word.
-     */
-    @JsonProperty(value = "confidence", required = true)
-    private float confidence;
 
     /*
      * Location of the word in the reading order concatenated content.
      */
     @JsonProperty(value = "span", required = true)
     private DocumentSpan span;
+
+    /*
+     * Confidence of correctly extracting the word.
+     */
+    @JsonProperty(value = "confidence", required = true)
+    private float confidence;
 
     /**
      * Get the text property: Text content of the word.
@@ -79,26 +79,6 @@ public final class DocumentWord {
     }
 
     /**
-     * Get the confidence property: Confidence of correctly extracting the word.
-     *
-     * @return the confidence value.
-     */
-    public float getConfidence() {
-        return this.confidence;
-    }
-
-    /**
-     * Set the confidence property: Confidence of correctly extracting the word.
-     *
-     * @param confidence the confidence value to set.
-     * @return the DocumentWord object itself.
-     */
-    public DocumentWord setConfidence(float confidence) {
-        this.confidence = confidence;
-        return this;
-    }
-
-    /**
      * Get the span property: Location of the word in the reading order concatenated content.
      *
      * @return the span value.
@@ -115,6 +95,26 @@ public final class DocumentWord {
      */
     public DocumentWord setSpan(DocumentSpan span) {
         this.span = span;
+        return this;
+    }
+
+    /**
+     * Get the confidence property: Confidence of correctly extracting the word.
+     *
+     * @return the confidence value.
+     */
+    public float getConfidence() {
+        return this.confidence;
+    }
+
+    /**
+     * Set the confidence property: Confidence of correctly extracting the word.
+     *
+     * @param confidence the confidence value to set.
+     * @return the DocumentWord object itself.
+     */
+    public DocumentWord setConfidence(float confidence) {
+        this.confidence = confidence;
         return this;
     }
 }

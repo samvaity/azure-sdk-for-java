@@ -18,17 +18,17 @@ public final class DocumentStyle {
     private Boolean isHandwritten;
 
     /*
-     * Confidence of correctly identifying the style.
-     */
-    @JsonProperty(value = "confidence")
-    private Float confidence;
-
-    /*
      * Location of the text elements in the concatenated content the style
      * applies to.
      */
     @JsonProperty(value = "spans", required = true)
     private List<DocumentSpan> spans;
+
+    /*
+     * Confidence of correctly identifying the style.
+     */
+    @JsonProperty(value = "confidence")
+    private Float confidence;
 
     /**
      * Get the isHandwritten property: Is content handwritten?.
@@ -51,26 +51,6 @@ public final class DocumentStyle {
     }
 
     /**
-     * Get the confidence property: Confidence of correctly identifying the style.
-     *
-     * @return the confidence value.
-     */
-    public Float getConfidence() {
-        return this.confidence;
-    }
-
-    /**
-     * Set the confidence property: Confidence of correctly identifying the style.
-     *
-     * @param confidence the confidence value to set.
-     * @return the DocumentStyle object itself.
-     */
-    public DocumentStyle setConfidence(Float confidence) {
-        this.confidence = confidence;
-        return this;
-    }
-
-    /**
      * Get the spans property: Location of the text elements in the concatenated content the style applies to.
      *
      * @return the spans value.
@@ -87,6 +67,26 @@ public final class DocumentStyle {
      */
     public DocumentStyle setSpans(List<DocumentSpan> spans) {
         this.spans = spans;
+        return this;
+    }
+
+    /**
+     * Get the confidence property: Confidence of correctly identifying the style.
+     *
+     * @return the confidence value.
+     */
+    public Float getConfidence() {
+        return this.confidence;
+    }
+
+    /**
+     * Set the confidence property: Confidence of correctly identifying the style.
+     *
+     * @param confidence the confidence value to set.
+     * @return the DocumentStyle object itself.
+     */
+    public DocumentStyle setConfidence(Float confidence) {
+        this.confidence = confidence;
         return this;
     }
 }

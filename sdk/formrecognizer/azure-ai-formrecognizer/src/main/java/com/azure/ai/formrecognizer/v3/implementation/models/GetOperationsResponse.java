@@ -8,9 +8,9 @@ import com.azure.core.annotation.Fluent;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** The PathsY4MxprOperationsGetResponses200ContentApplicationJsonSchema model. */
+/** List Operations response object. */
 @Fluent
-public final class PathsY4MxprOperationsGetResponses200ContentApplicationJsonSchema {
+public final class GetOperationsResponse {
     /*
      * List of operations.
      */
@@ -36,9 +36,9 @@ public final class PathsY4MxprOperationsGetResponses200ContentApplicationJsonSch
      * Set the value property: List of operations.
      *
      * @param value the value value to set.
-     * @return the PathsY4MxprOperationsGetResponses200ContentApplicationJsonSchema object itself.
+     * @return the GetOperationsResponse object itself.
      */
-    public PathsY4MxprOperationsGetResponses200ContentApplicationJsonSchema setValue(List<OperationInfo> value) {
+    public GetOperationsResponse setValue(List<OperationInfo> value) {
         this.value = value;
         return this;
     }
@@ -56,9 +56,9 @@ public final class PathsY4MxprOperationsGetResponses200ContentApplicationJsonSch
      * Set the nextLink property: Link to the next page of operations.
      *
      * @param nextLink the nextLink value to set.
-     * @return the PathsY4MxprOperationsGetResponses200ContentApplicationJsonSchema object itself.
+     * @return the GetOperationsResponse object itself.
      */
-    public PathsY4MxprOperationsGetResponses200ContentApplicationJsonSchema setNextLink(String nextLink) {
+    public GetOperationsResponse setNextLink(String nextLink) {
         this.nextLink = nextLink;
         return this;
     }

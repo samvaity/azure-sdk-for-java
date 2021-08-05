@@ -140,9 +140,6 @@ public final class RestProxy implements InvocationHandler {
                 options.getRequestCallback().accept(request);
             }
 
-            System.out.println(request.getHeaders().toString());
-            System.out.println(request.getHttpMethod().toString());
-            System.out.println(request.getUrl().toString());
             final Mono<HttpResponse> asyncResponse = send(request, context);
 
             Mono<HttpDecodedResponse> asyncDecodedResponse = this.decoder.decode(asyncResponse, methodParser);
@@ -224,50 +221,33 @@ public final class RestProxy implements InvocationHandler {
         final String path = methodParser.setPath(args);
         final UrlBuilder pathUrlBuilder = UrlBuilder.parse(path);
 
-        UrlBuilder urlBuilder1;
+        final UrlBuilder urlBuilder;
         if (pathUrlBuilder.getScheme() != null) {
-            urlBuilder1 = pathUrlBuilder;
+            urlBuilder = pathUrlBuilder;
         } else {
-            urlBuilder1 = new UrlBuilder();
+            urlBuilder = new UrlBuilder();
 
-            methodParser.setSchemeAndHost(args, urlBuilder1);
+            methodParser.setSchemeAndHost(args, urlBuilder);
 
             // Set the path after host, concatenating the path
             // segment in the host.
             if (path != null && !path.isEmpty() && !"/".equals(path)) {
-                String hostPath = urlBuilder1.getPath();
+                String hostPath = urlBuilder.getPath();
                 if (hostPath == null || hostPath.isEmpty() || "/".equals(hostPath) || path.contains("://")) {
-                    urlBuilder1.setPath(path);
+                    urlBuilder.setPath(path);
                 } else {
                     if (path.startsWith("/")) {
-                        urlBuilder1.setPath(hostPath + path);
+                        urlBuilder.setPath(hostPath + path);
                     } else {
-                        urlBuilder1.setPath(hostPath + "/" + path);
+                        urlBuilder.setPath(hostPath + "/" + path);
                     }
                 }
             }
         }
-        String urlBuilder2;
 
-        if (urlBuilder1.toUrl().toString().contains("https://westus2.ppe.cognitiveservices.azure.com/formrecognizer/2021-07-30-preview/documentModels")) {
-            urlBuilder2 = urlBuilder1.toUrl().toString();
-            urlBuilder2 = urlBuilder2.replace("https://westus2.ppe.cognitiveservices.azure.com/formrecognizer/2021-07-30-preview/documentModels", "https://westus2.ppe.cognitiveservices.azure.com/formrecognizer/documentModels");
-        } else {
-            urlBuilder2 = urlBuilder1.toString();
-        }
+        methodParser.setEncodedQueryParameters(args, urlBuilder);
 
-        methodParser.setEncodedQueryParameters(args, UrlBuilder.parse(urlBuilder2));
-
-        if (urlBuilder2.contains("%3Fapi-version=2021-07-30-preview")) {
-            urlBuilder2 = urlBuilder2.replace("%3Fapi-version=2021-07-30-preview", "");
-            urlBuilder2 =  UrlBuilder.parse(urlBuilder2).setQueryParameter("api-version", "2021-07-30-preview").toString();
-        }
-        if (!(urlBuilder2.contains("?api-version=2021-07-30-preview"))) {
-            urlBuilder2 =
-                UrlBuilder.parse(urlBuilder2).setQueryParameter("api-version", "2021-07-30-preview").toString();
-        }
-
-        final URL url = UrlBuilder.parse(urlBuilder2).toUrl();
+        final URL url = urlBuilder.toUrl();
         final HttpRequest request = configRequest(new HttpRequest(methodParser.getHttpMethod(), url),
             methodParser, args);
 

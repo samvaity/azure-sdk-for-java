@@ -8,9 +8,9 @@ import com.azure.core.annotation.Fluent;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** The Paths1CndbjaDocumentmodelsGetResponses200ContentApplicationJsonSchema model. */
+/** The GetModelsResponse model. */
 @Fluent
-public final class Paths1CndbjaDocumentmodelsGetResponses200ContentApplicationJsonSchema {
+public final class GetModelsResponse {
     /*
      * List of models.
      */
@@ -36,9 +36,9 @@ public final class Paths1CndbjaDocumentmodelsGetResponses200ContentApplicationJs
      * Set the value property: List of models.
      *
      * @param value the value value to set.
-     * @return the Paths1CndbjaDocumentmodelsGetResponses200ContentApplicationJsonSchema object itself.
+     * @return the GetModelsResponse object itself.
      */
-    public Paths1CndbjaDocumentmodelsGetResponses200ContentApplicationJsonSchema setValue(List<ModelSummary> value) {
+    public GetModelsResponse setValue(List<ModelSummary> value) {
         this.value = value;
         return this;
     }
@@ -56,9 +56,9 @@ public final class Paths1CndbjaDocumentmodelsGetResponses200ContentApplicationJs
      * Set the nextLink property: Link to the next page of models.
      *
      * @param nextLink the nextLink value to set.
-     * @return the Paths1CndbjaDocumentmodelsGetResponses200ContentApplicationJsonSchema object itself.
+     * @return the GetModelsResponse object itself.
      */
-    public Paths1CndbjaDocumentmodelsGetResponses200ContentApplicationJsonSchema setNextLink(String nextLink) {
+    public GetModelsResponse setNextLink(String nextLink) {
         this.nextLink = nextLink;
         return this;
     }

@@ -32,20 +32,20 @@ public final class DocumentEntity {
     /*
      * Bounding regions covering the entity.
      */
-    @JsonProperty(value = "boundingRegions", required = true)
+    @JsonProperty(value = "boundingRegions")
     private List<BoundingRegion> boundingRegions;
-
-    /*
-     * Confidence of correctly extracting the entity.
-     */
-    @JsonProperty(value = "confidence", required = true)
-    private float confidence;
 
     /*
      * Location of the entity in the reading order concatenated content.
      */
     @JsonProperty(value = "spans", required = true)
     private List<DocumentSpan> spans;
+
+    /*
+     * Confidence of correctly extracting the entity.
+     */
+    @JsonProperty(value = "confidence", required = true)
+    private float confidence;
 
     /**
      * Get the category property: Entity type.
@@ -128,26 +128,6 @@ public final class DocumentEntity {
     }
 
     /**
-     * Get the confidence property: Confidence of correctly extracting the entity.
-     *
-     * @return the confidence value.
-     */
-    public float getConfidence() {
-        return this.confidence;
-    }
-
-    /**
-     * Set the confidence property: Confidence of correctly extracting the entity.
-     *
-     * @param confidence the confidence value to set.
-     * @return the DocumentEntity object itself.
-     */
-    public DocumentEntity setConfidence(float confidence) {
-        this.confidence = confidence;
-        return this;
-    }
-
-    /**
      * Get the spans property: Location of the entity in the reading order concatenated content.
      *
      * @return the spans value.
@@ -164,6 +144,26 @@ public final class DocumentEntity {
      */
     public DocumentEntity setSpans(List<DocumentSpan> spans) {
         this.spans = spans;
+        return this;
+    }
+
+    /**
+     * Get the confidence property: Confidence of correctly extracting the entity.
+     *
+     * @return the confidence value.
+     */
+    public float getConfidence() {
+        return this.confidence;
+    }
+
+    /**
+     * Set the confidence property: Confidence of correctly extracting the entity.
+     *
+     * @param confidence the confidence value to set.
+     * @return the DocumentEntity object itself.
+     */
+    public DocumentEntity setConfidence(float confidence) {
+        this.confidence = confidence;
         return this;
     }
 }

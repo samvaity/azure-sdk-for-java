@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Request body to build a new custom model. */
 @Fluent
-public final class PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema {
+public final class BuildDocumentModelRequest {
     /*
      * Unique model name.
      */
@@ -47,9 +47,9 @@ public final class PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicati
      * Set the modelId property: Unique model name.
      *
      * @param modelId the modelId value to set.
-     * @return the PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema object itself.
+     * @return the BuildDocumentModelRequest object itself.
      */
-    public PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema setModelId(String modelId) {
+    public BuildDocumentModelRequest setModelId(String modelId) {
         this.modelId = modelId;
         return this;
     }
@@ -67,10 +67,9 @@ public final class PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicati
      * Set the description property: Model description.
      *
      * @param description the description value to set.
-     * @return the PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema object itself.
+     * @return the BuildDocumentModelRequest object itself.
      */
-    public PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema setDescription(
-            String description) {
+    public BuildDocumentModelRequest setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -88,10 +87,9 @@ public final class PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicati
      * Set the technique property: Technique for building a custom model.
      *
      * @param technique the technique value to set.
-     * @return the PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema object itself.
+     * @return the BuildDocumentModelRequest object itself.
      */
-    public PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema setTechnique(
-            DocumentModelBuildTechnique technique) {
+    public BuildDocumentModelRequest setTechnique(DocumentModelBuildTechnique technique) {
         this.technique = technique;
         return this;
     }
@@ -109,9 +107,9 @@ public final class PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicati
      * Set the source property: Training data.
      *
      * @param source the source value to set.
-     * @return the PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema object itself.
+     * @return the BuildDocumentModelRequest object itself.
      */
-    public PathsZbsb39DocumentmodelsBuildPostRequestbodyContentApplicationJsonSchema setSource(ContentSource source) {
+    public BuildDocumentModelRequest setSource(ContentSource source) {
         this.source = source;
         return this;
     }

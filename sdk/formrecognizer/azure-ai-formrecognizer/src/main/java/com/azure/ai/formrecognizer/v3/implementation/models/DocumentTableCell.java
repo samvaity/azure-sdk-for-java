@@ -12,9 +12,9 @@ import java.util.List;
 @Fluent
 public final class DocumentTableCell {
     /*
-     * The kind property.
+     * Table cell kind.
      */
-    @JsonProperty(value = "kind", required = true)
+    @JsonProperty(value = "kind")
     private DocumentTableCellKind kind;
 
     /*
@@ -50,7 +50,7 @@ public final class DocumentTableCell {
     /*
      * Bounding regions covering the table cell.
      */
-    @JsonProperty(value = "boundingRegions", required = true)
+    @JsonProperty(value = "boundingRegions")
     private List<BoundingRegion> boundingRegions;
 
     /*
@@ -60,7 +60,7 @@ public final class DocumentTableCell {
     private List<DocumentSpan> spans;
 
     /**
-     * Get the kind property: The kind property.
+     * Get the kind property: Table cell kind.
      *
      * @return the kind value.
      */
@@ -69,7 +69,7 @@ public final class DocumentTableCell {
     }
 
     /**
-     * Set the kind property: The kind property.
+     * Set the kind property: Table cell kind.
      *
      * @param kind the kind value to set.
      * @return the DocumentTableCell object itself.

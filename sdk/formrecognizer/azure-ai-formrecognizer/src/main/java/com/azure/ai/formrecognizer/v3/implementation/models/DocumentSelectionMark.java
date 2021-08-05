@@ -20,14 +20,8 @@ public final class DocumentSelectionMark {
     /*
      * Bounding box of the selection mark.
      */
-    @JsonProperty(value = "boundingBox", required = true)
+    @JsonProperty(value = "boundingBox")
     private List<Float> boundingBox;
-
-    /*
-     * Confidence of correctly extracting the selection mark.
-     */
-    @JsonProperty(value = "confidence", required = true)
-    private float confidence;
 
     /*
      * Location of the selection mark in the reading order concatenated
@@ -35,6 +29,12 @@ public final class DocumentSelectionMark {
      */
     @JsonProperty(value = "span", required = true)
     private DocumentSpan span;
+
+    /*
+     * Confidence of correctly extracting the selection mark.
+     */
+    @JsonProperty(value = "confidence", required = true)
+    private float confidence;
 
     /**
      * Get the state property: State of the selection mark.
@@ -77,26 +77,6 @@ public final class DocumentSelectionMark {
     }
 
     /**
-     * Get the confidence property: Confidence of correctly extracting the selection mark.
-     *
-     * @return the confidence value.
-     */
-    public float getConfidence() {
-        return this.confidence;
-    }
-
-    /**
-     * Set the confidence property: Confidence of correctly extracting the selection mark.
-     *
-     * @param confidence the confidence value to set.
-     * @return the DocumentSelectionMark object itself.
-     */
-    public DocumentSelectionMark setConfidence(float confidence) {
-        this.confidence = confidence;
-        return this;
-    }
-
-    /**
      * Get the span property: Location of the selection mark in the reading order concatenated content.
      *
      * @return the span value.
@@ -113,6 +93,26 @@ public final class DocumentSelectionMark {
      */
     public DocumentSelectionMark setSpan(DocumentSpan span) {
         this.span = span;
+        return this;
+    }
+
+    /**
+     * Get the confidence property: Confidence of correctly extracting the selection mark.
+     *
+     * @return the confidence value.
+     */
+    public float getConfidence() {
+        return this.confidence;
+    }
+
+    /**
+     * Set the confidence property: Confidence of correctly extracting the selection mark.
+     *
+     * @param confidence the confidence value to set.
+     * @return the DocumentSelectionMark object itself.
+     */
+    public DocumentSelectionMark setConfidence(float confidence) {
+        this.confidence = confidence;
         return this;
     }
 }

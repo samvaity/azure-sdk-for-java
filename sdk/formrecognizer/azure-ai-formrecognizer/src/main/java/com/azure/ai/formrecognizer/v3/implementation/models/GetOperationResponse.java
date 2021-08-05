@@ -7,9 +7,9 @@ package com.azure.ai.formrecognizer.v3.implementation.models;
 import com.azure.core.annotation.Fluent;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** The Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema model. */
+/** Get Operation response object. */
 @Fluent
-public final class Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema extends OperationInfo {
+public final class GetOperationResponse extends OperationInfo {
     /*
      * Encountered error.
      */
@@ -35,9 +35,9 @@ public final class Paths1A41EsjOperationsOperationidGetResponses200ContentApplic
      * Set the error property: Encountered error.
      *
      * @param error the error value to set.
-     * @return the Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema object itself.
+     * @return the GetOperationResponse object itself.
      */
-    public Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema setError(Error error) {
+    public GetOperationResponse setError(Error error) {
         this.error = error;
         return this;
     }
@@ -55,9 +55,9 @@ public final class Paths1A41EsjOperationsOperationidGetResponses200ContentApplic
      * Set the result property: Operation result upon success.
      *
      * @param result the result value to set.
-     * @return the Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema object itself.
+     * @return the GetOperationResponse object itself.
      */
-    public Paths1A41EsjOperationsOperationidGetResponses200ContentApplicationJsonSchema setResult(Object result) {
+    public GetOperationResponse setResult(Object result) {
         this.result = result;
         return this;
     }
