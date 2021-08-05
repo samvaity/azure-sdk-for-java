@@ -34,6 +34,9 @@
       "post": {
         "summary": "Analyze document",
         "description": "Analyzes document with model.",
+        "tags": [
+            "Analysis"
+        ],
         "operationId": "Analyze document",
         "consumes": [
           "application/json",
@@ -147,6 +150,9 @@
       "get": {
         "summary": "Get analyze result",
         "description": "Gets the result of document analysis.",
+        "tags": [
+            "Analysis"
+        ],
         "operationId": "Get analyze result",
         "consumes": [],
         "produces": [
@@ -183,6 +189,9 @@
       "post": {
         "summary": "Build model",
         "operationId": "Build model",
+        "tags": [
+            "Creation"
+        ],
         "description": "Builds a custom document analysis model.",
         "consumes": [
           "application/json"
@@ -250,6 +259,9 @@
         "summary": "Compose model",
         "description": "Creates a new model from document types of existing models.",
         "operationId": "Compose model",
+        "tags": [
+            "Creation"
+        ],
         "consumes": [
           "application/json"
         ],
@@ -323,6 +335,9 @@
         "summary": "Generate copy authorization",
         "description": "Generates authorization to copy a model to this location with specified modelId and optional description.",
         "operationId": "Authorize copy",
+        "tags": [
+            "Creation"
+        ],
         "consumes": [
           "application/json"
         ],
@@ -375,6 +390,9 @@
         "summary": "Copy model",
         "description": "Copies model to the target resource, region, and modelId.",
         "operationId": "Copy model",
+        "tags": [
+            "Creation"
+        ],
         "consumes": [
           "application/json"
         ],
@@ -422,6 +440,9 @@
         "summary": "List operations",
         "description": "Lists all operations.",
         "operationId": "List operations",
+        "tags": [
+            "Operation"
+        ],
         "consumes": [],
         "produces": [
           "application/json"
@@ -472,6 +493,9 @@
         "summary": "Get operation",
         "description": "Gets operation info.",
         "operationId": "Get operation info",
+        "tags": [
+            "Operation"
+        ],
         "consumes": [],
         "produces": [
           "application/json"
@@ -522,6 +546,9 @@
         "summary": "List models",
         "description": "List all models",
         "operationId": "List all models",
+        "tags": [
+            "Management"
+        ],
         "consumes": [],
         "produces": [
           "application/json"
@@ -572,6 +599,9 @@
         "summary": "Get model",
         "description": "Gets detailed model information.",
         "operationId": "Get model",
+        "tags": [
+            "Management"
+        ],
         "consumes": [],
         "produces": [
           "application/json"
@@ -603,6 +633,9 @@
         "summary": "Delete model",
         "description": "Deletes model.",
         "operationId": "Delete model",
+        "tags": [
+            "Management"
+        ],
         "consumes": [],
         "produces": [
           "application/json"
@@ -633,6 +666,9 @@
         "summary": "Get info",
         "description": "Return basic info about the current resource.",
         "operationId": "Get Info",
+        "tags": [
+            "Management"
+        ],
         "consumes": [],
         "produces": [
           "application/json"
@@ -652,6 +688,7 @@
               ],
               "properties": {
                 "customDocumentModels": {
+                  "description": "Custom document models",
                   "type": "object",
                   "required": [
                     "count",
@@ -719,7 +756,8 @@
           "items": {
             "$ref": "#/definitions/Error"
           },
-          "type": "array"
+          "type": "array",
+          "description": "Error details"
         },
         "innererror": {
           "$ref": "#/definitions/InnerError"
@@ -1426,6 +1464,7 @@
       ],
       "properties": {
         "kind": {
+          "description": "DocumentTableCell kind",
           "type": "string",
           "enum": [
             "content",
