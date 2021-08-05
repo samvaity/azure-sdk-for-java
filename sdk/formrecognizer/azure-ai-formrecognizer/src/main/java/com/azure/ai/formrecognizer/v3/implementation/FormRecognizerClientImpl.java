@@ -11,6 +11,7 @@ import com.azure.ai.formrecognizer.v3.implementation.models.BuildDocumentModelRe
 import com.azure.ai.formrecognizer.v3.implementation.models.BuildDocumentModelResponse;
 import com.azure.ai.formrecognizer.v3.implementation.models.ComposeDocumentModelRequest;
 import com.azure.ai.formrecognizer.v3.implementation.models.ComposeDocumentModelResponse;
+import com.azure.ai.formrecognizer.v3.implementation.models.ContentSource;
 import com.azure.ai.formrecognizer.v3.implementation.models.ContentType;
 import com.azure.ai.formrecognizer.v3.implementation.models.CopyAuthorization;
 import com.azure.ai.formrecognizer.v3.implementation.models.CopyDocumentModelToResponse;
@@ -198,9 +199,7 @@ public final class FormRecognizerClientImpl {
                 @QueryParam("locale") String locale,
                 @QueryParam("stringIndexType") StringIndexType stringIndexType,
                 @HostParam("ApiVersion") String apiVersionParam,
-                @BodyParam("application/json")
-                        PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema
-                                analyzeRequest,
+                @BodyParam("application/json") ContentSource analyzeRequest,
                 @HeaderParam("Accept") String accept,
                 Context context);
 
@@ -579,7 +578,7 @@ public final class FormRecognizerClientImpl {
             List<String> pages,
             String locale,
             StringIndexType stringIndexType,
-            PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest) {
+            ContentSource analyzeRequest) {
         final String accept = "application/json";
         String pagesConverted =
                 JacksonAdapter.createDefaultSerializerAdapter().serializeList(pages, CollectionFormat.CSV);
@@ -619,7 +618,7 @@ public final class FormRecognizerClientImpl {
             List<String> pages,
             String locale,
             StringIndexType stringIndexType,
-            PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest,
+            ContentSource analyzeRequest,
             Context context) {
         final String accept = "application/json";
         String pagesConverted =
@@ -657,7 +656,7 @@ public final class FormRecognizerClientImpl {
             List<String> pages,
             String locale,
             StringIndexType stringIndexType,
-            PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest) {
+            ContentSource analyzeRequest) {
         return analyzeDocumentWithResponseAsync(modelId, pages, locale, stringIndexType, analyzeRequest)
                 .flatMap((AnalyzeDocumentResponse res) -> Mono.empty());
     }
@@ -683,7 +682,7 @@ public final class FormRecognizerClientImpl {
             List<String> pages,
             String locale,
             StringIndexType stringIndexType,
-            PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest,
+            ContentSource analyzeRequest,
             Context context) {
         return analyzeDocumentWithResponseAsync(modelId, pages, locale, stringIndexType, analyzeRequest, context)
                 .flatMap((AnalyzeDocumentResponse res) -> Mono.empty());
@@ -708,7 +707,7 @@ public final class FormRecognizerClientImpl {
             List<String> pages,
             String locale,
             StringIndexType stringIndexType,
-            PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest) {
+            ContentSource analyzeRequest) {
         analyzeDocumentAsync(modelId, pages, locale, stringIndexType, analyzeRequest).block();
     }
 
@@ -733,7 +732,7 @@ public final class FormRecognizerClientImpl {
             List<String> pages,
             String locale,
             StringIndexType stringIndexType,
-            PathsXjehw4DocumentmodelsModelidAnalyzePostRequestbodyContentApplicationJsonSchema analyzeRequest,
+            ContentSource analyzeRequest,
             Context context) {
         return analyzeDocumentWithResponseAsync(modelId, pages, locale, stringIndexType, analyzeRequest, context)
                 .block();

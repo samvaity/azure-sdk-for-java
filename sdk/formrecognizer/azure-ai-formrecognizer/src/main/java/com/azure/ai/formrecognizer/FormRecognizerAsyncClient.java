@@ -1008,11 +1008,11 @@ public final class FormRecognizerAsyncClient {
                                 parseModelId(response.getDeserializedHeaders().getOperationLocation())))),
                         identityDocument, finalRecognizeIdentityDocumentOptions.getContentType()),
                     v3pollingOperation(
-                        resultId -> v3_service.getAnalyzeResultWithResponseAsync("prebuilt-idDocument", resultId, context)),
+                        resultId -> v3_service.getAnalyzeDocumentResultWithResponseAsync("prebuilt-idDocument", resultId, context)),
                     (activationResponse, pollingContext) -> monoError(logger,
                         new RuntimeException("Cancellation is not supported")),
                     v3fetchingOperation(
-                        resultId -> v3_service.getAnalyzeResultWithResponseAsync("prebuilt-idDocument", resultId, context))
+                        resultId -> v3_service.getAnalyzeDocumentResultWithResponseAsync("prebuilt-idDocument", resultId, context))
                         .andThen(after -> after.map(modelSimpleResponse -> Transforms.v3toRecognizedForm(
                             modelSimpleResponse.getValue().getAnalyzeResult(), null))
                             .onErrorMap(Utility::mapToHttpResponseExceptionIfExists)));

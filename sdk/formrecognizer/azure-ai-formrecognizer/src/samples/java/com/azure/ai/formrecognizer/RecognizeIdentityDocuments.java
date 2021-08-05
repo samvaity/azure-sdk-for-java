@@ -40,7 +40,7 @@ public class RecognizeIdentityDocuments {
             .serviceVersion(FormRecognizerServiceVersion.V3_0)
             .buildClient();
 
-        File licenseDocumentFile = new File("C:\\Users\\savaity\\Desktop\\Java\\azure-sdk-for-java\\sdk\\formrecognizer\\azure-ai-formrecognizer\\src\\test\\resources\\sample_files\\Test\\license.jpg");
+        File licenseDocumentFile = new File("<~>\\azure-sdk-for-java\\sdk\\formrecognizer\\azure-ai-formrecognizer\\src\\test\\resources\\sample_files\\Test\\license.jpg");
         byte[] fileContent = Files.readAllBytes(licenseDocumentFile.toPath());
         InputStream targetStream = new ByteArrayInputStream(fileContent);
 

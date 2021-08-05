@@ -558,7 +558,7 @@ final class Transforms {
                         valueData = new FieldData(fieldValue.getContent(), v3toBoundingBox(fieldValue.getBoundingRegions().get(0)),
                             1, null);
                     }
-                    recognizedFieldMap.put(key, v3setFormField(key, valueData, fieldValue));
+                    recognizedFieldMap.put(key, v3setFormField(key, valueData, null));
                 } else {
                     recognizedFieldMap.put(key, new FormField(key, null, null, null,
                         DEFAULT_CONFIDENCE_VALUE));

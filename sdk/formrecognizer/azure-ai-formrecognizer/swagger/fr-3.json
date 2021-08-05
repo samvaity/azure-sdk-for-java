@@ -72,14 +72,7 @@
             "required": false,
             "in": "body",
             "schema": {
-              "description": "Document analysis parameters.",
-              "type": "object",
-              "properties": {
-                "source": {
-                  "description": "Documents to analyze.",
-                  "$ref": "#/definitions/ContentSource"
-                }
-              }
+              "$ref": "#/definitions/ContentSource"
             }
           }
         ],
@@ -162,7 +155,7 @@
           },
           {
             "name": "buildRequest",
-            "description": "Building request parameters.",
+              "description": "Building request parameters.",
             "required": true,
             "in": "body",
             "schema": {
