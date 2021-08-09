@@ -996,7 +996,7 @@ public final class FormRecognizerAsyncClient {
                     DEFAULT_POLL_INTERVAL,
                     streamActivationOperation(
                         (contentType -> v3_service.analyzeDocumentWithResponseAsync(
-                            "prebuilt-idDocument:analyze",
+                            "prebuilt-idDocument",
                             com.azure.ai.formrecognizer.v3.implementation.models.ContentType.fromString(contentType.toString()),
                             finalRecognizeIdentityDocumentOptions.getPages(),
                             null,

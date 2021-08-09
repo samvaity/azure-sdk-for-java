@@ -37,19 +37,34 @@ service-interface-as-public: true
 
 ### Add multiple service API support
 This is better to fixed in the swagger, but we are working around now.
-```yaml
-directive:
-- from: swagger-document
-  where: $["x-ms-parameterized-host"]
-  transform: >
-    $.hostTemplate = "{endpoint}/formrecognizer/{ApiVersion}";
-    $.parameters.push({
-      "name": "ApiVersion",
-      "description": "Form Recognizer API version.",
-      "x-ms-parameter-location": "client",
-      "required": true,
-      "type": "string",
-      "in": "path",
-      "x-ms-skip-url-encoding": true
-    });
+
+[comment]: <> (```yaml)
+
+[comment]: <> (directive:)
+
+[comment]: <> (- from: swagger-document)
+
+[comment]: <> (  where: $["x-ms-parameterized-host"])
+
+[comment]: <> (  transform: >)
+
+[comment]: <> (    $.hostTemplate = "{endpoint}/formrecognizer/{ApiVersion}";)
+
+[comment]: <> (    $.parameters.push&#40;{)
+
+[comment]: <> (      "name": "ApiVersion",)
+
+[comment]: <> (      "description": "Form Recognizer API version.",)
+
+[comment]: <> (      "x-ms-parameter-location": "client",)
+
+[comment]: <> (      "required": true,)
+
+[comment]: <> (      "type": "string",)
+
+[comment]: <> (      "in": "path",)
+
+[comment]: <> (      "x-ms-skip-url-encoding": true)
+
+[comment]: <> (    }&#41;;)
 ```
