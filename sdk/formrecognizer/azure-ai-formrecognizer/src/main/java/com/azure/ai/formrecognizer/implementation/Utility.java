@@ -72,7 +72,7 @@ public final class Utility {
         CLIENT_NAME = properties.getOrDefault(NAME, "UnknownName");
         CLIENT_VERSION = properties.getOrDefault(VERSION, "UnknownVersion");
     }
-    
+
     public static final Duration DEFAULT_POLL_INTERVAL = Duration.ofSeconds(5);
 
     private Utility() {
@@ -190,8 +190,13 @@ public final class Utility {
     public static String parseModelId(String operationLocation) {
         if (!CoreUtils.isNullOrEmpty(operationLocation)) {
             int lastIndex = operationLocation.lastIndexOf('/');
+            int endGUID = operationLocation.indexOf('?');
             if (lastIndex != -1) {
-                return operationLocation.substring(lastIndex + 1);
+                if (endGUID != -1) {
+                    return operationLocation.substring(lastIndex + 1, endGUID);
+                } else {
+                    return operationLocation.substring(lastIndex + 1);
+                }
             }
         }
         throw LOGGER.logExceptionAsError(
