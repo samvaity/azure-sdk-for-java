@@ -23,7 +23,10 @@ public final class FormLine extends FormElement {
     /*
      * Line text appearance properties.
      */
+    @Deprecated
     private TextAppearance appearance;
+
+    private List<TextAppearance> appearances;
 
     static {
         FormLineHelper.setAccessor(new FormLineHelper.FormLineAccessor() {

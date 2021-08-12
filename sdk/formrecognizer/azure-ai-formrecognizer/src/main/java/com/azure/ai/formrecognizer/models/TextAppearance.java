@@ -21,6 +21,8 @@ public final class TextAppearance {
      */
     private float styleConfidence;
 
+    private DocumentSpan span;
+
     static {
         TextAppearanceHelper.setAccessor(new TextAppearanceHelper.TextAppearanceAccessor() {
             @Override
