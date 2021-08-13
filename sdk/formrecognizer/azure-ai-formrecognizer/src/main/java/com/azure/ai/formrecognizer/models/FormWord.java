@@ -16,6 +16,9 @@ public final class FormWord extends FormElement {
      */
     private final float confidence;
 
+    // Repetitive but can do for convenience
+    // private List<TextAppearance> appearances;
+
     /**
      * Constructs a FormWord object.
      *

@@ -23,7 +23,10 @@ public final class FormLine extends FormElement {
     /*
      * Line text appearance properties.
      */
+    // Returns null/first/major-part of the line style ref
     private TextAppearance appearance;
+
+    private List<TextAppearance> appearances;
 
     static {
         FormLineHelper.setAccessor(new FormLineHelper.FormLineAccessor() {

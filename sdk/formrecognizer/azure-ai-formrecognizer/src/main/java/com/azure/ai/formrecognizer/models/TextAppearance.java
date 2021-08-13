@@ -4,6 +4,7 @@
 package com.azure.ai.formrecognizer.models;
 
 import com.azure.ai.formrecognizer.implementation.TextAppearanceHelper;
+import com.azure.ai.formrecognizer.v3.implementation.models.DocumentSpan;
 import com.azure.core.annotation.Immutable;
 
 /**
@@ -20,6 +21,8 @@ public final class TextAppearance {
      * The confidence of text line style.
      */
     private float styleConfidence;
+
+    private DocumentSpan span;
 
     static {
         TextAppearanceHelper.setAccessor(new TextAppearanceHelper.TextAppearanceAccessor() {
