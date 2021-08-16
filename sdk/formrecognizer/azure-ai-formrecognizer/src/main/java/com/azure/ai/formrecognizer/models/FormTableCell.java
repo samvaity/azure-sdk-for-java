@@ -55,6 +55,8 @@ public final class FormTableCell extends FormElement {
      */
     private final boolean isFooter;
 
+    private FormTableCellKind formTableCellKind;
+
     /**
      * Constructs a FormTableCell object.
      *
@@ -169,6 +171,7 @@ public final class FormTableCell extends FormElement {
      * Get the boolean if the current cell a header cell.
      *
      * @return the boolean indicating if the current cell a header cell.
+     * map isHeader ? kind == rowHeader/columnHeader : false
      */
     public boolean isHeader() {
         return this.isHeader;
@@ -178,6 +181,7 @@ public final class FormTableCell extends FormElement {
      * Get the boolean if the current cell a footer cell.
      *
      * @return the boolean indicating if the current cell is a footer cell.
+     * map isFooter ? kind == rowFooter/columnFooter : false
      */
     public boolean isFooter() {
         return this.isFooter;
