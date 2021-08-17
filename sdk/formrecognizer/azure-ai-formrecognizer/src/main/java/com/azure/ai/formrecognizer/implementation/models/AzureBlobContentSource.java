@@ -4,9 +4,7 @@
 
 package com.azure.ai.formrecognizer.implementation.models;
 
-import com.azure.ai.formrecognizer.v3.implementation.models.ContentSource;
 import com.azure.core.annotation.Fluent;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** Azure Blob Storage content. */
 @Fluent
@@ -14,14 +12,16 @@ public final class AzureBlobContentSource extends ContentSource {
     /*
      * Azure Blob Storage container URL.
      */
-    @JsonProperty(value = "containerUrl", required = true)
     private String containerUrl;
 
     /*
      * Content path.
      */
-    @JsonProperty(value = "path")
     private String path;
+
+    public AzureBlobContentSource(String containerUrl) {
+        this.containerUrl = containerUrl;
+    }
 
     /**
      * Get the containerUrl property: Azure Blob Storage container URL.
