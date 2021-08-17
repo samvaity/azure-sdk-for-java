@@ -373,6 +373,7 @@ public final class FormRecognizerClientImpl {
                                 context));
     }
 
+    //why do we have this method around too?
     /**
      * Analyzes document with model.
      *

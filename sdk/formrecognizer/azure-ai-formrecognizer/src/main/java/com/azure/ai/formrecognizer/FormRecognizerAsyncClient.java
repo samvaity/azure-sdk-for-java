@@ -6,6 +6,8 @@ package com.azure.ai.formrecognizer;
 import com.azure.ai.formrecognizer.implementation.FormRecognizerClientImpl;
 import com.azure.ai.formrecognizer.implementation.Utility;
 import com.azure.ai.formrecognizer.implementation.models.AnalyzeOperationResult;
+import com.azure.ai.formrecognizer.implementation.models.Base64ContentSource;
+import com.azure.ai.formrecognizer.implementation.models.ContentSource;
 import com.azure.ai.formrecognizer.implementation.models.ContentType;
 import com.azure.ai.formrecognizer.implementation.models.Language;
 import com.azure.ai.formrecognizer.implementation.models.Locale;
@@ -25,6 +27,7 @@ import com.azure.ai.formrecognizer.models.RecognizeInvoicesOptions;
 import com.azure.ai.formrecognizer.models.RecognizeReceiptsOptions;
 import com.azure.ai.formrecognizer.models.RecognizedForm;
 import com.azure.ai.formrecognizer.v3.implementation.models.AnalyzeResultOperation;
+import com.azure.ai.formrecognizer.v3.implementation.models.StringIndexType;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
@@ -40,6 +43,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -500,6 +504,19 @@ public final class FormRecognizerAsyncClient {
     public PollerFlux<FormRecognizerOperationResult, List<RecognizedForm>>
         beginRecognizeReceiptsFromUrl(String receiptUrl, RecognizeReceiptsOptions recognizeReceiptsOptions) {
         return beginRecognizeReceiptsFromUrl(receiptUrl, recognizeReceiptsOptions, Context.NONE);
+    }
+
+    //v3.0 breaking
+    @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
+    public PollerFlux<FormRecognizerOperationResult, List<RecognizedForm>>
+        beginRecognizeReceipts(ContentSource content, RecognizeReceiptsOptions recognizeReceiptsOptions) {
+        com.azure.ai.formrecognizer.v3.implementation.models.ContentSource contentSource = null;
+        if (content instanceof Base64ContentSource) {
+            // can send content kind once detected instance of
+            Base64ContentSource base64ConvertedContent = (Base64ContentSource) content;
+            contentSource = new com.azure.ai.formrecognizer.v3.implementation.models.Base64ContentSource().setData(base64ConvertedContent.getData());
+        }
+        v3_service.analyzeDocumentAsync("prebuilt-receipts", Arrays.asList("1"), Locale.EN_GB.toString(), StringIndexType.TEXT_ELEMENTS, contentSource);
     }
 
     PollerFlux<FormRecognizerOperationResult, List<RecognizedForm>>

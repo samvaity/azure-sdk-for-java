@@ -15,6 +15,7 @@ import static com.azure.ai.formrecognizer.implementation.Utility.DEFAULT_POLL_IN
  */
 @Fluent
 public final class RecognizeReceiptsOptions {
+    // what about this contentType? Should we repeat this in the base64 content source?
     private FormContentType contentType;
     private boolean includeFieldElements;
     private FormRecognizerLocale locale;

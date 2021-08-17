@@ -3,6 +3,7 @@
 
 package com.azure.ai.formrecognizer;
 
+import com.azure.ai.formrecognizer.implementation.models.Base64ContentSource;
 import com.azure.ai.formrecognizer.models.FormRecognizerLocale;
 import com.azure.ai.formrecognizer.models.RecognizeBusinessCardsOptions;
 import com.azure.ai.formrecognizer.models.RecognizeContentOptions;
@@ -484,6 +485,19 @@ public class FormRecognizerAsyncClientJavaDocCodeSnippets {
                             }
                         }
                     });
+        // END: com.azure.ai.formrecognizer.FormRecognizerAsyncClient.beginRecognizeReceipts#Flux-long
+    }
+
+    public void beginRecognizeReceiptsWithContent() throws IOException {
+        // BEGIN: com.azure.ai.formrecognizer.FormRecognizerAsyncClient.beginRecognizeReceipts#Flux-long
+        File receipt = new File("{file_source_url}");
+        byte[] buffer = Files.readAllBytes(receipt.toPath());
+        // if training polling operation completed, retrieve the final result.
+        formRecognizerAsyncClient.beginRecognizeReceipts(new Base64ContentSource().setData(buffer), null)
+            .flatMap(AsyncPollResponse::getFinalResult)
+            .subscribe(recognizedReceipts -> {
+                // field extraction
+            });
         // END: com.azure.ai.formrecognizer.FormRecognizerAsyncClient.beginRecognizeReceipts#Flux-long
     }
 
