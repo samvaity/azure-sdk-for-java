@@ -32,10 +32,6 @@ public final class DocumentFieldHelper {
 
         void setValueString(DocumentField documentField, String valueString);
 
-        void setValueDate(DocumentField documentField, LocalDate valueDate);
-
-        void setValueTime(DocumentField documentField, LocalTime valueTime);
-
         void setValuePhoneNumber(DocumentField documentField, String valuePhoneNumber);
 
         void setValueNumber(DocumentField documentField, Float valueNumber);
@@ -76,14 +72,6 @@ public final class DocumentFieldHelper {
 
     static void setValueString(DocumentField documentField, String valueString) {
         accessor.setValueString(documentField, valueString);
-    }
-
-    static void setValueDate(DocumentField documentField, LocalDate valueDate) {
-        accessor.setValueDate(documentField, valueDate);
-    }
-
-    static void setValueTime(DocumentField documentField, LocalTime valueTime) {
-        accessor.setValueTime(documentField, valueTime);
     }
 
     static void setValuePhoneNumber(DocumentField documentField, String valuePhoneNumber) {

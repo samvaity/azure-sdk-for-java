@@ -4,7 +4,14 @@
 package com.azure.ai.formrecognizer.models;
 
 import com.azure.ai.formrecognizer.implementation.util.AnalyzedDocumentHelper;
+import com.azure.core.implementation.jackson.ObjectMapperShim;
+import com.azure.core.util.CoreUtils;
+import com.azure.core.util.serializer.JacksonAdapter;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +19,34 @@ import java.util.Map;
  * An object describing the location and semantic content of a document.
  */
 public final class AnalyzedDocument {
+
+    private static final JacksonAdapter DEFAULT_SERIALIZER_ADAPTER;
+
+    static {
+        JacksonAdapter adapter = new JacksonAdapter();
+
+        UntypedObjectDeserializer defaultDeserializer = new UntypedObjectDeserializer(null, null);
+        Iso8601DateDeserializer iso8601DateDeserializer = new Iso8601DateDeserializer(defaultDeserializer);
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(Object.class, iso8601DateDeserializer);
+
+        adapter.serializer()
+            .disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)
+            .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
+            .registerModule(Iso8601DateSerializer.getModule())
+            .registerModule(module);
+
+        DEFAULT_SERIALIZER_ADAPTER = adapter;
+    }
+
+    public static JacksonAdapter getDefaultSerializerAdapter() {
+        return DEFAULT_SERIALIZER_ADAPTER;
+    }
+
+    public static <T> T convertValue(Object initialValue, Class<T> newValueType) throws IOException {
+        return DEFAULT_SERIALIZER_ADAPTER.serializer().convertValue(initialValue, newValueType);
+    }
+
     /*
      * AnalyzeDocument type.
      */
@@ -131,6 +166,13 @@ public final class AnalyzedDocument {
     void setConfidence(float confidence) {
         this.confidence = confidence;
     }
+
+    public <T> T getDocumentAs(Class<T> modelClass) throws IOException {
+        String json = ObjectMapperShim.createDefaultMapper().writeValueAsString(this.fields);
+        T doc = convertValue(json, modelClass);
+        return doc;
+    }
+
 
     static {
         AnalyzedDocumentHelper.setAccessor(new AnalyzedDocumentHelper.AnalyzedDocumentAccessor() {

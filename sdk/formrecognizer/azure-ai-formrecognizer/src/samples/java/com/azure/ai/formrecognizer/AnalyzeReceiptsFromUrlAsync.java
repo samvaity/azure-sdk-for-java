@@ -90,9 +90,9 @@ public class AnalyzeReceiptsFromUrlAsync {
                 DocumentField transactionDateField = receiptFields.get("TransactionDate");
                 if (transactionDateField != null) {
                     if (DocumentFieldType.DATE == transactionDateField.getType()) {
-                        LocalDate transactionDate = transactionDateField.getValueDate();
-                        System.out.printf("Transaction Date: %s, confidence: %.2f%n",
-                            transactionDate, transactionDateField.getConfidence());
+                        // LocalDate transactionDate = transactionDateField.getValueDate();
+    //                    System.out.printf("Transaction Date: %s, confidence: %.2f%n",
+       //                     transactionDate, transactionDateField.getConfidence());
                     }
                 }
 

@@ -421,12 +421,12 @@ public class Transforms {
             DocumentFieldHelper.setValueString(documentField, innerDocumentField.getValueString());
         } else if (com.azure.ai.formrecognizer.implementation.models.DocumentFieldType.DATE.equals(
             innerDocumentField.getType())) {
-            DocumentFieldHelper.setValueDate(documentField, innerDocumentField.getValueDate());
+            // DocumentFieldHelper.setValueDate(documentField, innerDocumentField.getValueDate());
         } else if (com.azure.ai.formrecognizer.implementation.models.DocumentFieldType.TIME.equals(
             innerDocumentField.getType())) {
-            DocumentFieldHelper.setValueTime(documentField, innerDocumentField.getValueTime() == null
-                ? null : LocalTime.parse(innerDocumentField.getValueTime(),
-                DateTimeFormatter.ofPattern("HH:mm:ss")));
+            // DocumentFieldHelper.setValueTime(documentField, innerDocumentField.getValueTime() == null
+            //     ? null : LocalTime.parse(innerDocumentField.getValueTime(),
+            //     DateTimeFormatter.ofPattern("HH:mm:ss")));
         } else if (com.azure.ai.formrecognizer.implementation.models.DocumentFieldType.PHONE_NUMBER.equals(
             innerDocumentField.getType())) {
             DocumentFieldHelper.setValuePhoneNumber(documentField, innerDocumentField.getValuePhoneNumber());

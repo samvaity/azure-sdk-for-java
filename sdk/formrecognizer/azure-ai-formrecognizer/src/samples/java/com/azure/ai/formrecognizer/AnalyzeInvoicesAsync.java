@@ -118,7 +118,7 @@ public class AnalyzeInvoicesAsync {
                 DocumentField invoiceDateField = invoiceFields.get("InvoiceDate");
                 if (customerNameField != null) {
                     if (DocumentFieldType.DATE == invoiceDateField.getType()) {
-                        LocalDate invoiceDate = invoiceDateField.getValueDate();
+                        String invoiceDate = invoiceDateField.getValueString();;
                         System.out.printf("Invoice Date: %s, confidence: %.2f%n",
                             invoiceDate, invoiceDateField.getConfidence());
                     }

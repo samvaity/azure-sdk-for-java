@@ -23,16 +23,6 @@ public final class DocumentField {
     private String valueString;
 
     /*
-     * Date value in YYYY-MM-DD format (ISO 8601).
-     */
-    private LocalDate valueDate;
-
-    /*
-     * Time value in hh:mm:ss format (ISO 8601).
-     */
-    private LocalTime valueTime;
-
-    /*
      * Phone number value in E.164 format (ex. +19876543210).
      */
     private String valuePhoneNumber;
@@ -128,44 +118,6 @@ public final class DocumentField {
      */
     void setValueString(String valueString) {
         this.valueString = valueString;
-    }
-
-    /**
-     * Get the valueDate property: Date value in YYYY-MM-DD format (ISO 8601).
-     *
-     * @return the valueDate value.
-     */
-    public LocalDate getValueDate() {
-        return this.valueDate;
-    }
-
-    /**
-     * Set the valueDate property: Date value in YYYY-MM-DD format (ISO 8601).
-     *
-     * @param valueDate the valueDate value to set.
-     * @return the DocumentField object itself.
-     */
-    void setValueDate(LocalDate valueDate) {
-        this.valueDate = valueDate;
-    }
-
-    /**
-     * Get the valueTime property: Time value in hh:mm:ss format (ISO 8601).
-     *
-     * @return the valueTime value.
-     */
-    public LocalTime getValueTime() {
-        return this.valueTime;
-    }
-
-    /**
-     * Set the valueTime property: Time value in hh:mm:ss format (ISO 8601).
-     *
-     * @param valueTime the valueTime value to set.
-     * @return the DocumentField object itself.
-     */
-    void setValueTime(LocalTime valueTime) {
-        this.valueTime = valueTime;
     }
 
     /**
@@ -412,16 +364,6 @@ public final class DocumentField {
             @Override
             public void setValueString(DocumentField documentField, String valueString) {
                 documentField.setValueString(valueString);
-            }
-
-            @Override
-            public void setValueDate(DocumentField documentField, LocalDate valueDate) {
-                documentField.setValueDate(valueDate);
-            }
-
-            @Override
-            public void setValueTime(DocumentField documentField, LocalTime valueTime) {
-                documentField.setValueTime(valueTime);
             }
 
             @Override
