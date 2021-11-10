@@ -24,13 +24,16 @@ class AnalyzeReceipts {
 
         DocumentAnalysisClient client = clientInitialization();
 
+        String modelId  = "custom-model-Id";
         SyncPoller<DocumentOperationResult, AnalyzeResult> analyzeReceiptPoller
-            = client.beginAnalyzeDocumentFromUrl("prebuilt-receipt", "https://raw.githubusercontent.com/Azure/azure-sdk-for-java/main/sdk/formrecognizer/azure-ai-formrecognizer/src/test/resources/sample_files/Test/contoso-receipt.png");
+            = client.beginAnalyzeDocumentFromUrl(modelId, "https://raw.githubusercontent.com/Azure/azure-sdk-for-java/main/sdk/formrecognizer/azure-ai-formrecognizer/src/test/resources/sample_files/Test/contoso-receipt.png");
 
         AnalyzeResult analyzeResult = analyzeReceiptPoller.getFinalResult();
 
         analyzeResult.getDocuments().forEach(analyzedDocument -> {
-            if (analyzedDocument.getDocType().equals("prebuilt:receipt")) {
+            if (analyzedDocument.getDocType().equals(modelId)) {
+                // get a pattern of is as.
+                // follow JavaASTAnalyzer
                 ReceiptDocument receiptDocument = null;
                 try {
                     receiptDocument = analyzedDocument.getDocumentAs(ReceiptDocument.class);
@@ -62,8 +65,8 @@ class AnalyzeReceipts {
     private static DocumentAnalysisClient clientInitialization() {
         // Instantiate a client that will be used to call the service.
         return new DocumentAnalysisClientBuilder()
-            .credential(new AzureKeyCredential("eb35e548451f4c4ca2ee2c8d52c3e109"))
-            .endpoint("https://shafangfr.cognitiveservices.azure.com/")
+            .credential(new AzureKeyCredential("{key}"))
+            .endpoint("https://{}.cognitiveservices.azure.com/")
             .buildClient();
     }
 }
