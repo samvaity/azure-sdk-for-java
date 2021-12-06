@@ -5,64 +5,52 @@ package com.azure.core.perf;
 
 import com.azure.core.perf.core.ServiceTest;
 import com.azure.perf.test.core.PerfStressOptions;
-import com.azure.perf.test.core.TestDataCreationHelper;
+import com.azure.storage.blob.BlobAsyncClient;
+import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.BlobContainerAsyncClient;
+import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobServiceAsyncClient;
+import com.azure.storage.blob.BlobServiceClient;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.UUID;
 
 public class UploadFromFileTest extends ServiceTest<PerfStressOptions> {
-
-    private static final Path TEMP_FILE;
-    private static final String TEMP_FILE_PATH;
-
-    static {
-        try {
-            TEMP_FILE = Files.createTempFile(null, null);
-            TEMP_FILE_PATH = TEMP_FILE.toString();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public UploadFromFileTest(PerfStressOptions options) {
         super(options);
     }
 
     @Override
     public Mono<Void> globalSetupAsync() {
-        return super.globalSetupAsync().then(createTempFile());
+        return super.globalSetupAsync();
     }
 
     @Override
     public Mono<Void> globalCleanupAsync() {
-        return deleteTempFile().then(super.globalCleanupAsync());
-    }
-
-    private Mono<Void> createTempFile() {
-        return Mono.fromCallable(() -> {
-            TestDataCreationHelper.writeToFile(TEMP_FILE_PATH, options.getSize(), 8192);
-            return 1;
-        }).then();
-    }
-
-    private Mono<Void> deleteTempFile() {
-        try {
-            Files.delete(TEMP_FILE);
-            return Mono.empty();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return super.globalCleanupAsync();
     }
 
     @Override
     public void run() {
-        blobClientBuilder.buildClient().uploadFromFile(TEMP_FILE_PATH, true);
+        String blobName = "perfblobtest-" + UUID.randomUUID();
+
+        BlobServiceClient storageClient = blobServiceClientBuilder.buildClient();
+
+        BlobContainerClient blobContainerClient = storageClient.createBlobContainer("perfupload" + UUID.randomUUID());
+        BlobClient blobClient = blobContainerClient.getBlobClient(blobName);
+        blobClient.uploadFromFile(filePath, true);
+
     }
 
     @Override
     public Mono<Void> runAsync() {
-        return blobClientBuilder.buildAsyncClient().uploadFromFile(TEMP_FILE_PATH, true);
+        String blobName = "perfblobtest-" + UUID.randomUUID();
+
+        BlobServiceAsyncClient storageAsyncClient = blobServiceClientBuilder.buildAsyncClient();
+
+        BlobContainerAsyncClient
+            blobContainerAsyncClient = storageAsyncClient.createBlobContainer("perfupload" + UUID.randomUUID()).block();
+        BlobAsyncClient blobAsyncClient = blobContainerAsyncClient.getBlobAsyncClient(blobName);
+        return blobAsyncClient.uploadFromFile(filePath, true);
     }
 }
