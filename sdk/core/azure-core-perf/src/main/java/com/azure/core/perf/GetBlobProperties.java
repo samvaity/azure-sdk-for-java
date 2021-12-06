@@ -5,16 +5,17 @@ package com.azure.core.perf;
 
 import com.azure.core.perf.core.ServiceTest;
 import com.azure.perf.test.core.PerfStressOptions;
-import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.BlobContainerAsyncClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceAsyncClient;
 import com.azure.storage.blob.BlobServiceClient;
+import com.azure.storage.blob.models.BlobProperties;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-public class UploadFromFileTest extends ServiceTest<PerfStressOptions> {
-    public UploadFromFileTest(PerfStressOptions options) {
+public class GetBlobProperties extends ServiceTest<PerfStressOptions> {
+    public GetBlobProperties(PerfStressOptions options) {
         super(options);
     }
 
@@ -35,9 +36,9 @@ public class UploadFromFileTest extends ServiceTest<PerfStressOptions> {
         BlobServiceClient storageClient = blobServiceClientBuilder.buildClient();
 
         BlobContainerClient blobContainerClient = storageClient.createBlobContainer("perfupload" + UUID.randomUUID());
-        BlobClient blobClient = blobContainerClient.getBlobClient(blobName);
-        blobClient.uploadFromFile(filePath, true);
-
+        BlobProperties blobProperties = blobContainerClient.getBlobClient(blobName).getProperties();
+        assert blobProperties.getCreationTime() != null;
+        assert blobProperties.getExpiresOn() != null;
     }
 
     @Override
@@ -46,9 +47,10 @@ public class UploadFromFileTest extends ServiceTest<PerfStressOptions> {
 
         BlobServiceAsyncClient storageAsyncClient = blobServiceClientBuilder.buildAsyncClient();
 
-        return storageAsyncClient.createBlobContainer("perfupload" + UUID.randomUUID())
-            .flatMap(blobContainerAsyncClient -> blobContainerAsyncClient.getBlobAsyncClient(blobName)
-                .uploadFromFile(filePath, true));
-
+        BlobContainerAsyncClient
+            blobContainerAsyncClient = storageAsyncClient.createBlobContainer("perfupload" + UUID.randomUUID()).block();
+        return blobContainerAsyncClient.getBlobAsyncClient(blobName)
+            .getProperties()
+            .then();
     }
 }
