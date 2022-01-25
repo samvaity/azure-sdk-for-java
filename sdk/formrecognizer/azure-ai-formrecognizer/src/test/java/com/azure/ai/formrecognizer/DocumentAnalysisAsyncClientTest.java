@@ -315,6 +315,7 @@ public class DocumentAnalysisAsyncClientTest extends DocumentAnalysisClientTestB
     @MethodSource("com.azure.ai.formrecognizer.TestUtils#getTestParameters")
     public void analyzeContentResultWithNullData(HttpClient httpClient,
                                                    DocumentAnalysisServiceVersion serviceVersion) {
+        client = getDocumentAnalysisAsyncClient(httpClient, serviceVersion);
         assertThrows(NullPointerException.class,
             () -> client.beginAnalyzeDocument("prebuilt-layout", null, 0)
                 .setPollInterval(durationTestMode)

@@ -21,6 +21,7 @@ import com.azure.ai.formrecognizer.implementation.models.AzureBlobContentSource;
 import com.azure.ai.formrecognizer.implementation.models.BuildDocumentModelRequest;
 import com.azure.ai.formrecognizer.implementation.models.ComponentModelInfo;
 import com.azure.ai.formrecognizer.implementation.models.ComposeDocumentModelRequest;
+import com.azure.ai.formrecognizer.implementation.models.DocumentBuildMode;
 import com.azure.ai.formrecognizer.implementation.models.GetOperationResponse;
 import com.azure.ai.formrecognizer.implementation.models.OperationStatus;
 import com.azure.ai.formrecognizer.implementation.util.Transforms;
@@ -912,6 +913,8 @@ public final class DocumentModelAdministrationAsyncClient {
                 Objects.requireNonNull(trainingFilesUrl, "'trainingFilesUrl' cannot be null.");
                 BuildDocumentModelRequest buildDocumentModelRequest = new BuildDocumentModelRequest()
                     .setModelId(finalModelId)
+                    // TODO: https://github.com/Azure/azure-sdk-for-java/issues/26682
+                    .setBuildMode(DocumentBuildMode.TEMPLATE)
                     .setAzureBlobSource(new AzureBlobContentSource()
                         .setContainerUrl(trainingFilesUrl)
                         .setPrefix(buildModelOptions.getPrefix()))

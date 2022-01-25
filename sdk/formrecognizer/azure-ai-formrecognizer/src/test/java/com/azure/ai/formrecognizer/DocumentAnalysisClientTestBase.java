@@ -140,7 +140,7 @@ public abstract class DocumentAnalysisClientTestBase extends TestBase {
         // documents
         Assertions.assertEquals(1, actualAnalyzeResult.getDocuments().size());
         actualAnalyzeResult.getDocuments().forEach(actualDocument -> {
-            Assertions.assertEquals("prebuilt:receipt", actualDocument.getDocType());
+            Assertions.assertEquals("receipt.retailMeal", actualDocument.getDocType());
             // document fields
             validatePngReceiptFields(actualDocument.getFields());
         });
@@ -163,7 +163,7 @@ public abstract class DocumentAnalysisClientTestBase extends TestBase {
         // documents
         Assertions.assertEquals(1, actualAnalyzeResult.getDocuments().size());
         actualAnalyzeResult.getDocuments().forEach(actualDocument -> {
-            Assertions.assertEquals("prebuilt:receipt", actualDocument.getDocType());
+            Assertions.assertEquals("receipt.retailMeal", actualDocument.getDocType());
             // document fields
             validateJpegReceiptFields(actualDocument.getFields());
         });
@@ -179,9 +179,9 @@ public abstract class DocumentAnalysisClientTestBase extends TestBase {
         assertEquals(2, page2.getPageNumber());
         assertEquals(1, page1.getSpans().size());
         assertEquals(1, page2.getSpans().size());
-        assertEquals(207, page1.getSpans().get(0).getLength());
-        assertEquals(207, page2.getSpans().get(0).getOffset());
-        assertEquals(1, analyzeResult.getStyles().size());
+        assertEquals(209, page1.getSpans().get(0).getLength());
+        assertEquals(209, page2.getSpans().get(0).getOffset());
+        assertEquals(2, analyzeResult.getStyles().size());
 
         DocumentPage receiptPage1 = analyzeResult.getPages().get(0);
         DocumentPage receiptPage2 = analyzeResult.getPages().get(1);
@@ -272,7 +272,7 @@ public abstract class DocumentAnalysisClientTestBase extends TestBase {
         List<DocumentField> emailList = businessCard1Fields.get("Emails").getValueList();
         assertEquals("johnsinger@contoso.com", emailList.get(0).getValueString());
         Assertions.assertNotNull(emailList.get(0).getConfidence());
-        List<DocumentField> phoneNumberList = businessCard1Fields.get("OtherPhones").getValueList();
+        List<DocumentField> phoneNumberList = businessCard1Fields.get("WorkPhones").getValueList();
         Assertions.assertNotNull(phoneNumberList.get(0).getConfidence());
         assertEquals("+14257793479", phoneNumberList.get(0).getValuePhoneNumber());
         assertEquals(1, businessCard1.getPageNumber());
@@ -349,13 +349,15 @@ public abstract class DocumentAnalysisClientTestBase extends TestBase {
 
         Map<String, DocumentField> itemsMap
             = invoicePage1Fields.get("Items").getValueList().get(0).getValueMap();
-        assertEquals(56651.49f, itemsMap.get("Amount").getValueFloat());
+        // TODO: update to valueCurrency https://github.com/Azure/azure-sdk-for-java/pull/26572
+        // assertEquals(56651.49f, itemsMap.get("Amount").getValueFloat());
         Assertions.assertNotNull(itemsMap.get("Amount").getConfidence());
         assertEquals(LocalDate.of(2017, 6, 18), itemsMap.get("Date").getValueDate());
         Assertions.assertNotNull(itemsMap.get("Date").getConfidence());
         assertEquals("34278587", itemsMap.get("ProductCode").getValueString());
         Assertions.assertNotNull(itemsMap.get("ProductCode").getConfidence());
-        assertEquals(DocumentFieldType.FLOAT, itemsMap.get("Tax").getType());
+        // TODO: update to valueCurrency https://github.com/Azure/azure-sdk-for-java/pull/26572
+        // assertEquals(DocumentFieldType.FLOAT, itemsMap.get("Tax").getType());
         Assertions.assertNotNull(itemsMap.get("Tax").getConfidence());
     }
 
@@ -405,7 +407,7 @@ public abstract class DocumentAnalysisClientTestBase extends TestBase {
         assertEquals(1, licensePage1.getPageNumber());
 
         Assertions.assertNotNull(analyzeResult.getDocuments());
-        assertEquals("prebuilt:idDocument:driverLicense", analyzeResult.getDocuments().get(0).getDocType());
+        assertEquals("idDocument.driverLicense", analyzeResult.getDocuments().get(0).getDocType());
         Map<String, DocumentField> licensePageFields = analyzeResult.getDocuments().get(0).getFields();
         assertEquals("123 STREET ADDRESS YOUR CITY WA 99999-1234", licensePageFields.get("Address")
             .getValueString());
@@ -536,7 +538,7 @@ public abstract class DocumentAnalysisClientTestBase extends TestBase {
         });
 
         Assertions.assertNotNull(analyzeResult.getTables());
-        int[][] table = new int[][] {{5, 4, 20}, {4, 2, 8}};
+        int[][] table = new int[][] {{5, 4, 20}, {3, 2, 6}};
         Assertions.assertEquals(2, analyzeResult.getTables().size());
         for (int i = 0; i < analyzeResult.getTables().size(); i++) {
             int j = 0;
@@ -579,7 +581,7 @@ public abstract class DocumentAnalysisClientTestBase extends TestBase {
         for (int i = 0; i < pages.size(); i++) {
             DocumentPage documentPage = pages.get(i);
             if (i == 0) {
-                assertEquals(1, documentPage.getSelectionMarks().size());
+                assertEquals(0, documentPage.getSelectionMarks().size());
             }
             if (i == 1) {
                 // empty page
@@ -612,8 +614,8 @@ public abstract class DocumentAnalysisClientTestBase extends TestBase {
     void validateJpegCustomDocument(AnalyzeResult actualAnalyzeResult, String modelId) {
         List<DocumentPage> documentPages = actualAnalyzeResult.getPages();
         Assertions.assertEquals(1, documentPages.size());
-        documentPages.forEach(documentPage -> validateDocumentPage(documentPage));
-        int[][] table = new int[][] {{5, 4, 20}, {4, 2, 8}};
+        documentPages.forEach(this::validateDocumentPage);
+        int[][] table = new int[][] {{5, 4, 20}, {3, 2, 6}};
         Assertions.assertEquals(2, actualAnalyzeResult.getTables().size());
         for (int i = 0; i < actualAnalyzeResult.getTables().size(); i++) {
             int j = 0;
@@ -624,7 +626,7 @@ public abstract class DocumentAnalysisClientTestBase extends TestBase {
         }
 
         actualAnalyzeResult.getDocuments().forEach(actualDocument -> {
-            Assertions.assertEquals(modelId + ":" + modelId, actualDocument.getDocType());
+            Assertions.assertEquals(modelId, actualDocument.getDocType());
             actualDocument.getFields().forEach((key, documentField) -> {
                 // document fields
                 Assertions.assertNotNull(documentField.getConfidence());
@@ -708,15 +710,15 @@ public abstract class DocumentAnalysisClientTestBase extends TestBase {
     }
 
     private void validatePngReceiptFields(Map<String, DocumentField> actualFields) {
-        //  "123-456-7890" is not a valid US telephone number since no area code can start with 1, so the service
-        //  returns a null instead.
-        assertNull(actualFields.get("MerchantPhoneNumber").getValuePhoneNumber());
+        Assertions.assertEquals("+11234567890", actualFields.get("MerchantPhoneNumber").getValuePhoneNumber());
         Assertions.assertNotNull(actualFields.get("Subtotal").getValueFloat());
         Assertions.assertNotNull(actualFields.get("Total").getValueFloat());
-        Assertions.assertNotNull(actualFields.get("Tax").getValueFloat());
+        // TODO: update to valueCurrency https://github.com/Azure/azure-sdk-for-java/pull/26572
+        // Assertions.assertNotNull(actualFields.get("Tax").getValueFloat());
         Assertions.assertNotNull(actualFields.get("Subtotal").getConfidence());
         Assertions.assertNotNull(actualFields.get("Total").getConfidence());
-        Assertions.assertNotNull(actualFields.get("Tax").getConfidence());
+        // TODO: update to valueCurrency https://github.com/Azure/azure-sdk-for-java/pull/26572
+        // Assertions.assertNotNull(actualFields.get("Tax").getConfidence());
         Assertions.assertNotNull(actualFields.get("Items"));
         List<DocumentField> itemizedItems = actualFields.get("Items").getValueList();
 

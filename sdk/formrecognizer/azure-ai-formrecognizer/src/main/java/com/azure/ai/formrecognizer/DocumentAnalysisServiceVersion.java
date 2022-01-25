@@ -10,9 +10,9 @@ import com.azure.core.util.ServiceVersion;
  */
 public enum DocumentAnalysisServiceVersion implements ServiceVersion {
     /**
-     * Service version {@code 2021-09-30-preview}.
+     * Service version {@code 2022-01-30-preview}.
      */
-    V2021_09_30_PREVIEW("2021-09-30-preview");
+    V2022_01_30_PREVIEW("2022-01-30-preview");
 
     private final String version;
 
@@ -34,6 +34,6 @@ public enum DocumentAnalysisServiceVersion implements ServiceVersion {
      * @return the latest {@link DocumentAnalysisServiceVersion}
      */
     public static DocumentAnalysisServiceVersion getLatest() {
-        return V2021_09_30_PREVIEW;
+        return V2022_01_30_PREVIEW;
     }
 }

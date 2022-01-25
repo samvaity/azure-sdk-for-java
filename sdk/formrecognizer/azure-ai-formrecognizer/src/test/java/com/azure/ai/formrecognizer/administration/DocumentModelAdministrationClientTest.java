@@ -27,6 +27,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static com.azure.ai.formrecognizer.TestUtils.DISPLAY_NAME_WITH_ARGUMENTS;
 import static com.azure.ai.formrecognizer.TestUtils.NON_EXIST_MODEL_ID;
@@ -115,7 +116,7 @@ public class DocumentModelAdministrationClientTest extends DocumentModelAdminist
     }
 
     /**
-     * Verifies account properties returned with an Http Response for a subscription account.
+     * Verifies account properties returned with a Http Response for a subscription account.
      */
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("com.azure.ai.formrecognizer.TestUtils#getTestParameters")
@@ -343,13 +344,13 @@ public class DocumentModelAdministrationClientTest extends DocumentModelAdminist
         client = getDocumentModelAdministrationClient(httpClient, serviceVersion);
         buildModelRunner((trainingFilesUrl) -> {
             SyncPoller<DocumentOperationResult, DocumentModel> syncPoller1 =
-                client.beginBuildModel(trainingFilesUrl, "sync_component_model_1")
+                client.beginBuildModel(trainingFilesUrl, "sync_component_model_1" + UUID.randomUUID())
                     .setPollInterval(durationTestMode);
             syncPoller1.waitForCompletion();
             DocumentModel createdModel1 = syncPoller1.getFinalResult();
 
             SyncPoller<DocumentOperationResult, DocumentModel> syncPoller2 =
-                client.beginBuildModel(trainingFilesUrl, "sync_component_model_2")
+                client.beginBuildModel(trainingFilesUrl, "sync_component_model_2" + UUID.randomUUID())
                     .setPollInterval(durationTestMode);
             syncPoller2.waitForCompletion();
             DocumentModel createdModel2 = syncPoller2.getFinalResult();
@@ -358,7 +359,7 @@ public class DocumentModelAdministrationClientTest extends DocumentModelAdminist
 
             DocumentModel composedModel =
                 client.beginCreateComposedModel(modelIDList,
-                        "sync_java_composed_model",
+                        "sync_java_composed_model" + UUID.randomUUID(),
                         new CreateComposedModelOptions().setDescription("test desc"),
                         Context.NONE)
                     .setPollInterval(durationTestMode)
@@ -367,6 +368,13 @@ public class DocumentModelAdministrationClientTest extends DocumentModelAdminist
             assertNotNull(composedModel.getModelId());
             assertEquals("test desc", composedModel.getDescription());
             assertEquals(2, composedModel.getDocTypes().size());
+            composedModel.getDocTypes().forEach((key, docTypeInfo) -> {
+                if (key.contains("sync_component_model_1") || key.contains("sync_component_model_2")) {
+                    assert true;
+                } else {
+                    assert false;
+                }
+            });
             validateDocumentModelData(composedModel);
 
             client.deleteModel(createdModel1.getModelId());

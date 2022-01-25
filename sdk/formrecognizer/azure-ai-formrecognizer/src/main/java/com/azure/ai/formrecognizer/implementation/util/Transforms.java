@@ -511,9 +511,13 @@ public class Transforms {
     public static ModelOperation toModelOperation(GetOperationResponse getOperationResponse) {
         ModelOperation modelOperation = new ModelOperation();
         ModelInfo modelInfo = getOperationResponse.getResult();
-        ModelOperationHelper.setModelId(modelOperation, modelInfo.getModelId());
-        ModelOperationHelper.setDescription(modelOperation, modelInfo.getDescription());
-        ModelOperationHelper.setCreatedOn(modelOperation, modelInfo.getCreatedDateTime());
+        if (modelInfo != null) {
+            ModelOperationHelper.setModelId(modelOperation, modelInfo.getModelId());
+            ModelOperationHelper.setDescription(modelOperation, modelInfo.getDescription());
+            ModelOperationHelper.setCreatedOn(modelOperation, modelInfo.getCreatedDateTime());
+            Map<String, DocTypeInfo> docTypeMap = getStringDocTypeInfoMap(modelInfo);
+            ModelOperationHelper.setDocTypes(modelOperation, docTypeMap);
+        }
         ModelOperationHelper.setOperationId(modelOperation, getOperationResponse.getOperationId());
         ModelOperationHelper.setCreatedOn(modelOperation, getOperationResponse.getCreatedDateTime());
         ModelOperationHelper.setKind(modelOperation,
@@ -525,8 +529,6 @@ public class Transforms {
         ModelOperationHelper.setStatus(modelOperation,
             ModelOperationStatus.fromString(getOperationResponse.getStatus().toString()));
         ModelOperationHelper.setResourceLocation(modelOperation, getOperationResponse.getResourceLocation());
-        Map<String, DocTypeInfo> docTypeMap = getStringDocTypeInfoMap(modelInfo);
-        ModelOperationHelper.setDocTypes(modelOperation, docTypeMap);
         DocumentModelOperationError error = toDocumentModelOperationError(getOperationResponse.getError());
         ModelOperationHelper.setError(modelOperation, error);
         return modelOperation;
