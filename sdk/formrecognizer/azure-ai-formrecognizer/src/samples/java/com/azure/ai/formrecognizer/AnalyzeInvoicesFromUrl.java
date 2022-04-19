@@ -5,7 +5,7 @@
 //
 // import com.azure.ai.formrecognizer.models.AnalyzeResult;
 // import com.azure.ai.formrecognizer.models.AnalyzedDocument;
-// import com.azure.ai.formrecognizer.models.DocumentField;
+// import com.azure.ai.formrecognizer.models.TypedDocumentField;
 // import com.azure.ai.formrecognizer.models.DocumentFieldType;
 // import com.azure.ai.formrecognizer.models.DocumentOperationResult;
 // import com.azure.core.credential.AzureKeyCredential;
@@ -47,9 +47,9 @@
 //
 //         for (int i = 0; i < analyzeInvoiceResult.getDocuments().size(); i++) {
 //             AnalyzedDocument analyzedInvoice = analyzeInvoiceResult.getDocuments().get(i);
-//             Map<String, DocumentField> invoiceFields = analyzedInvoice.getFields();
+//             Map<String, TypedDocumentField> invoiceFields = analyzedInvoice.getFields();
 //             System.out.printf("----------- Analyzing invoice  %d -----------%n", i);
-//             DocumentField vendorNameField = invoiceFields.get("VendorName");
+//             TypedDocumentField vendorNameField = invoiceFields.get("VendorName");
 //             if (vendorNameField != null) {
 //                 if (DocumentFieldType.STRING == vendorNameField.getType()) {
 //                     String merchantName = vendorNameField.getValueString();
@@ -58,7 +58,7 @@
 //                 }
 //             }
 //
-//             DocumentField vendorAddressField = invoiceFields.get("VendorAddress");
+//             TypedDocumentField vendorAddressField = invoiceFields.get("VendorAddress");
 //             if (vendorAddressField != null) {
 //                 if (DocumentFieldType.STRING == vendorAddressField.getType()) {
 //                     String merchantAddress = vendorAddressField.getValueString();
@@ -67,7 +67,7 @@
 //                 }
 //             }
 //
-//             DocumentField customerNameField = invoiceFields.get("CustomerName");
+//             TypedDocumentField customerNameField = invoiceFields.get("CustomerName");
 //             if (customerNameField != null) {
 //                 if (DocumentFieldType.STRING == customerNameField.getType()) {
 //                     String merchantAddress = customerNameField.getValueString();
@@ -76,7 +76,7 @@
 //                 }
 //             }
 //
-//             DocumentField customerAddressRecipientField = invoiceFields.get("CustomerAddressRecipient");
+//             TypedDocumentField customerAddressRecipientField = invoiceFields.get("CustomerAddressRecipient");
 //             if (customerAddressRecipientField != null) {
 //                 if (DocumentFieldType.STRING == customerAddressRecipientField.getType()) {
 //                     String customerAddr = customerAddressRecipientField.getValueString();
@@ -85,7 +85,7 @@
 //                 }
 //             }
 //
-//             DocumentField invoiceIdField = invoiceFields.get("InvoiceId");
+//             TypedDocumentField invoiceIdField = invoiceFields.get("InvoiceId");
 //             if (invoiceIdField != null) {
 //                 if (DocumentFieldType.STRING == invoiceIdField.getType()) {
 //                     String invoiceId = invoiceIdField.getValueString();
@@ -94,7 +94,7 @@
 //                 }
 //             }
 //
-//             DocumentField invoiceDateField = invoiceFields.get("InvoiceDate");
+//             TypedDocumentField invoiceDateField = invoiceFields.get("InvoiceDate");
 //             if (customerNameField != null) {
 //                 if (DocumentFieldType.DATE == invoiceDateField.getType()) {
 //                     String invoiceDate = invoiceDateField.getValueString();;
@@ -103,7 +103,7 @@
 //                 }
 //             }
 //
-//             DocumentField invoiceTotalField = invoiceFields.get("InvoiceTotal");
+//             TypedDocumentField invoiceTotalField = invoiceFields.get("InvoiceTotal");
 //             if (customerAddressRecipientField != null) {
 //                 if (DocumentFieldType.FLOAT == invoiceTotalField.getType()) {
 //                     Float invoiceTotal = invoiceTotalField.getValueFloat();
@@ -112,11 +112,11 @@
 //                 }
 //             }
 //
-//             DocumentField invoiceItemsField = invoiceFields.get("Items");
+//             TypedDocumentField invoiceItemsField = invoiceFields.get("Items");
 //             if (invoiceItemsField != null) {
 //                 System.out.printf("Invoice Items: %n");
 //                 if (DocumentFieldType.LIST == invoiceItemsField.getType()) {
-//                     List<DocumentField> invoiceItems = invoiceItemsField.getValueList();
+//                     List<TypedDocumentField> invoiceItems = invoiceItemsField.getValueList();
 //                     invoiceItems.stream()
 //                         .filter(invoiceItem -> DocumentFieldType.MAP == invoiceItem.getType())
 //                         .map(formField -> formField.getValueMap())

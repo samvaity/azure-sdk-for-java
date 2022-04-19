@@ -5,8 +5,8 @@ package com.azure.ai.formrecognizer.implementation.util;
 
 import com.azure.ai.formrecognizer.models.BoundingRegion;
 import com.azure.ai.formrecognizer.models.AnalyzedDocument;
-import com.azure.ai.formrecognizer.models.DocumentField;
 import com.azure.ai.formrecognizer.models.DocumentSpan;
+import com.azure.ai.formrecognizer.models.TypedDocumentField;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +27,7 @@ public final class AnalyzedDocumentHelper {
         void setDocType(AnalyzedDocument analyzedDocument, String docType);
         void setBoundingRegions(AnalyzedDocument analyzedDocument, List<BoundingRegion> boundingRegions);
         void setSpans(AnalyzedDocument analyzedDocument, List<DocumentSpan> spans);
-        void setFields(AnalyzedDocument analyzedDocument, Map<String, DocumentField> fields);
+        void setFields(AnalyzedDocument analyzedDocument, Map<String, TypedDocumentField> fields);
         void setConfidence(AnalyzedDocument analyzedDocument, float confidence);
     }
 
@@ -52,7 +52,7 @@ public final class AnalyzedDocumentHelper {
         accessor.setSpans(analyzedDocument, spans);
     }
 
-    static void setFields(AnalyzedDocument analyzedDocument, Map<String, DocumentField> fields) {
+    static void setFields(AnalyzedDocument analyzedDocument, Map<String, TypedDocumentField> fields) {
         accessor.setFields(analyzedDocument, fields);
     }
 

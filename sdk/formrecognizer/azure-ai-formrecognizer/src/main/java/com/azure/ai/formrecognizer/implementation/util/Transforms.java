@@ -26,7 +26,6 @@ import com.azure.ai.formrecognizer.models.AnalyzeResult;
 import com.azure.ai.formrecognizer.models.AnalyzedDocument;
 import com.azure.ai.formrecognizer.models.BoundingRegion;
 import com.azure.ai.formrecognizer.models.DocumentEntity;
-import com.azure.ai.formrecognizer.models.DocumentField;
 import com.azure.ai.formrecognizer.models.DocumentFieldType;
 import com.azure.ai.formrecognizer.models.DocumentKeyValueElement;
 import com.azure.ai.formrecognizer.models.DocumentKeyValuePair;
@@ -44,12 +43,11 @@ import com.azure.ai.formrecognizer.models.DocumentTableCellKind;
 import com.azure.ai.formrecognizer.models.DocumentWord;
 import com.azure.ai.formrecognizer.models.LengthUnit;
 import com.azure.ai.formrecognizer.models.SelectionMarkState;
+import com.azure.ai.formrecognizer.models.TypedDocumentField;
 import com.azure.core.exception.HttpResponseException;
 import com.azure.core.models.ResponseError;
 import com.azure.core.util.CoreUtils;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -382,17 +380,17 @@ public class Transforms {
         return documentKeyValueElement;
     }
 
-    private static Map<String, DocumentField> toDocumentFields(
+    private static <T> Map<String, TypedDocumentField<T>> toDocumentFields(
         Map<String, com.azure.ai.formrecognizer.implementation.models.DocumentField> innerFields) {
-        Map<String, DocumentField> documentFieldMap = new HashMap<>();
+        Map<String, TypedDocumentField<T>> documentFieldMap = new HashMap<>();
         innerFields.forEach((key, innerDocumentField) ->
             documentFieldMap.put(key, toDocumentField(innerDocumentField)));
         return documentFieldMap;
     }
 
-    private static DocumentField toDocumentField(
+    private static TypedDocumentField toDocumentField(
         com.azure.ai.formrecognizer.implementation.models.DocumentField innerDocumentField) {
-        DocumentField documentField = new DocumentField();
+        TypedDocumentField documentField = new TypedDocumentField(innerDocumentField, innerDocumentField.getType().getClass());
 
         DocumentFieldHelper.setType(documentField,
             DocumentFieldType.fromString(innerDocumentField.getType().toString()));
@@ -414,10 +412,11 @@ public class Transforms {
     }
 
     private static void setDocumentFieldValue(
-        com.azure.ai.formrecognizer.implementation.models.DocumentField innerDocumentField, DocumentField documentField) {
-
+        com.azure.ai.formrecognizer.implementation.models.DocumentField innerDocumentField, TypedDocumentField documentField) {
+        TypedDocumentField typedDocumentField = new TypedDocumentField();
         if (com.azure.ai.formrecognizer.implementation.models.DocumentFieldType.STRING.equals(
             innerDocumentField.getType())) {
+            typedDocumentField.setValue(innerDocumentField.getValueString());
             DocumentFieldHelper.setValueString(documentField, innerDocumentField.getValueString());
         } else if (com.azure.ai.formrecognizer.implementation.models.DocumentFieldType.DATE.equals(
             innerDocumentField.getType())) {
@@ -468,7 +467,7 @@ public class Transforms {
             if (CoreUtils.isNullOrEmpty(innerDocumentField.getValueObject())) {
                 DocumentFieldHelper.setValueObject(documentField, null);
             } else {
-                HashMap<String, DocumentField> documentFieldMap = new HashMap<>();
+                HashMap<String, TypedDocumentField> documentFieldMap = new HashMap<>();
                 innerDocumentField.getValueObject()
                     .forEach((key, innerMapDocumentField)
                         -> documentFieldMap.put(key, toDocumentField(innerMapDocumentField)));

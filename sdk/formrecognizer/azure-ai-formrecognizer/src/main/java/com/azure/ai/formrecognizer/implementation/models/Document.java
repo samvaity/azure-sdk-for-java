@@ -34,7 +34,7 @@ public final class Document {
      * Dictionary of named field values.
      */
     @JsonProperty(value = "fields", required = true)
-    private Map<String, DocumentField> fields;
+    private Map<String, TypedDocumentField> fields;
 
     /*
      * Confidence of correctly extracting the document.
@@ -107,7 +107,7 @@ public final class Document {
      *
      * @return the fields value.
      */
-    public Map<String, DocumentField> getFields() {
+    public Map<String, TypedDocumentField> getFields() {
         return this.fields;
     }
 
@@ -117,7 +117,7 @@ public final class Document {
      * @param fields the fields value to set.
      * @return the Document object itself.
      */
-    public Document setFields(Map<String, DocumentField> fields) {
+    public Document setFields(Map<String, TypedDocumentField> fields) {
         this.fields = fields;
         return this;
     }

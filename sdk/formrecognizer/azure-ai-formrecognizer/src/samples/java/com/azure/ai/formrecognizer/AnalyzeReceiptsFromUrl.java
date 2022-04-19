@@ -5,7 +5,7 @@
 //
 // import com.azure.ai.formrecognizer.models.AnalyzeResult;
 // import com.azure.ai.formrecognizer.models.AnalyzedDocument;
-// import com.azure.ai.formrecognizer.models.DocumentField;
+// import com.azure.ai.formrecognizer.models.TypedDocumentField;
 // import com.azure.ai.formrecognizer.models.DocumentFieldType;
 // import com.azure.ai.formrecognizer.models.DocumentOperationResult;
 // import com.azure.core.credential.AzureKeyCredential;
@@ -45,9 +45,9 @@
 //
 //         for (int i = 0; i < receiptResults.getDocuments().size(); i++) {
 //             AnalyzedDocument analyzedReceipt = receiptResults.getDocuments().get(i);
-//             Map<String, DocumentField> receiptFields = analyzedReceipt.getFields();
+//             Map<String, TypedDocumentField> receiptFields = analyzedReceipt.getFields();
 //             System.out.printf("----------- Analyzing receipt info %d -----------%n", i);
-//             DocumentField merchantNameField = receiptFields.get("MerchantName");
+//             TypedDocumentField merchantNameField = receiptFields.get("MerchantName");
 //             if (merchantNameField != null) {
 //                 if (DocumentFieldType.STRING == merchantNameField.getType()) {
 //                     String merchantName = merchantNameField.getValueString();
@@ -56,7 +56,7 @@
 //                 }
 //             }
 //
-//             DocumentField merchantPhoneNumberField = receiptFields.get("MerchantPhoneNumber");
+//             TypedDocumentField merchantPhoneNumberField = receiptFields.get("MerchantPhoneNumber");
 //             if (merchantPhoneNumberField != null) {
 //                 if (DocumentFieldType.PHONE_NUMBER == merchantPhoneNumberField.getType()) {
 //                     String merchantAddress = merchantPhoneNumberField.getValuePhoneNumber();
@@ -65,7 +65,7 @@
 //                 }
 //             }
 //
-//             DocumentField merchantAddressField = receiptFields.get("MerchantAddress");
+//             TypedDocumentField merchantAddressField = receiptFields.get("MerchantAddress");
 //             if (merchantAddressField != null) {
 //                 if (DocumentFieldType.STRING == merchantAddressField.getType()) {
 //                     String merchantAddress = merchantAddressField.getValueString();
@@ -74,7 +74,7 @@
 //                 }
 //             }
 //
-//             DocumentField transactionDateField = receiptFields.get("TransactionDate");
+//             TypedDocumentField transactionDateField = receiptFields.get("TransactionDate");
 //             if (transactionDateField != null) {
 //                 if (DocumentFieldType.DATE == transactionDateField.getType()) {
 //                     LocalDate transactionDate = transactionDateField.getValueDate();
@@ -83,11 +83,11 @@
 //                 }
 //             }
 //
-//             DocumentField receiptItemsField = receiptFields.get("Items");
+//             TypedDocumentField receiptItemsField = receiptFields.get("Items");
 //             if (receiptItemsField != null) {
 //                 System.out.printf("Receipt Items: %n");
 //                 if (DocumentFieldType.LIST == receiptItemsField.getType()) {
-//                     List<DocumentField> receiptItems = receiptItemsField.getValueList();
+//                     List<TypedDocumentField> receiptItems = receiptItemsField.getValueList();
 //                     receiptItems.stream()
 //                         .filter(receiptItem -> DocumentFieldType.MAP == receiptItem.getType())
 //                         .map(formField -> formField.getValueMap())

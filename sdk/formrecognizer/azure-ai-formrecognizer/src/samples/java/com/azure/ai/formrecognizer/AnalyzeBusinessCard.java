@@ -5,7 +5,6 @@ package com.azure.ai.formrecognizer;
 
 import com.azure.ai.formrecognizer.models.AnalyzeResult;
 import com.azure.ai.formrecognizer.models.AnalyzedDocument;
-import com.azure.ai.formrecognizer.models.DocumentField;
 import com.azure.ai.formrecognizer.models.DocumentFieldType;
 import com.azure.ai.formrecognizer.models.DocumentOperationResult;
 import com.azure.core.credential.AzureKeyCredential;
@@ -49,12 +48,12 @@ public class AnalyzeBusinessCard {
 
         for (int i = 0; i < businessCardPageResults.getDocuments().size(); i++) {
             AnalyzedDocument analyzedBusinessCard = businessCardPageResults.getDocuments().get(i);
-            Map<String, DocumentField> businessCardFields = analyzedBusinessCard.getFields();
+            Map<String, TypedDocumentField> businessCardFields = analyzedBusinessCard.getFields();
             System.out.printf("--------Analyzing business card %d%n--------", i);
-            DocumentField contactNamesDocumentField = businessCardFields.get("ContactNames");
+            TypedDocumentField contactNamesDocumentField = businessCardFields.get("ContactNames");
             if (contactNamesDocumentField != null) {
                 if (DocumentFieldType.LIST == contactNamesDocumentField.getType()) {
-                    List<DocumentField> contactNamesList = contactNamesDocumentField.getValueList();
+                    List<TypedDocumentField> contactNamesList = contactNamesDocumentField.getValueList();
                     contactNamesList.stream()
                         .filter(contactName -> DocumentFieldType.MAP == contactName.getType())
                         .map(contactName -> {
@@ -80,10 +79,10 @@ public class AnalyzeBusinessCard {
                 }
             }
 
-            DocumentField jobTitles = businessCardFields.get("JobTitles");
+            TypedDocumentField jobTitles = businessCardFields.get("JobTitles");
             if (jobTitles != null) {
                 if (DocumentFieldType.LIST == jobTitles.getType()) {
-                    List<DocumentField> jobTitlesItems = jobTitles.getValueList();
+                    List<TypedDocumentField> jobTitlesItems = jobTitles.getValueList();
                     jobTitlesItems.forEach(jobTitlesItem -> {
                         if (DocumentFieldType.STRING == jobTitlesItem.getType()) {
                             String jobTitle = jobTitlesItem.getValueString();
@@ -94,10 +93,10 @@ public class AnalyzeBusinessCard {
                 }
             }
 
-            DocumentField departments = businessCardFields.get("Departments");
+            TypedDocumentField departments = businessCardFields.get("Departments");
             if (departments != null) {
                 if (DocumentFieldType.LIST == departments.getType()) {
-                    List<DocumentField> departmentsItems = departments.getValueList();
+                    List<TypedDocumentField> departmentsItems = departments.getValueList();
                     departmentsItems.forEach(departmentsItem -> {
                         if (DocumentFieldType.STRING == departmentsItem.getType()) {
                             String department = departmentsItem.getValueString();
@@ -108,10 +107,10 @@ public class AnalyzeBusinessCard {
                 }
             }
 
-            DocumentField emails = businessCardFields.get("Emails");
+            TypedDocumentField emails = businessCardFields.get("Emails");
             if (emails != null) {
                 if (DocumentFieldType.LIST == emails.getType()) {
-                    List<DocumentField> emailsItems = emails.getValueList();
+                    List<TypedDocumentField> emailsItems = emails.getValueList();
                     emailsItems.forEach(emailsItem -> {
                         if (DocumentFieldType.STRING == emailsItem.getType()) {
                             String email = emailsItem.getValueString();
@@ -121,10 +120,10 @@ public class AnalyzeBusinessCard {
                 }
             }
 
-            DocumentField websites = businessCardFields.get("Websites");
+            TypedDocumentField websites = businessCardFields.get("Websites");
             if (websites != null) {
                 if (DocumentFieldType.LIST == websites.getType()) {
-                    List<DocumentField> websitesItems = websites.getValueList();
+                    List<TypedDocumentField> websitesItems = websites.getValueList();
                     websitesItems.forEach(websitesItem -> {
                         if (DocumentFieldType.STRING == websitesItem.getType()) {
                             String website = websitesItem.getValueString();
@@ -135,10 +134,10 @@ public class AnalyzeBusinessCard {
                 }
             }
 
-            DocumentField mobilePhones = businessCardFields.get("MobilePhones");
+            TypedDocumentField mobilePhones = businessCardFields.get("MobilePhones");
             if (mobilePhones != null) {
                 if (DocumentFieldType.LIST == mobilePhones.getType()) {
-                    List<DocumentField> mobilePhonesItems = mobilePhones.getValueList();
+                    List<TypedDocumentField> mobilePhonesItems = mobilePhones.getValueList();
                     mobilePhonesItems.forEach(mobilePhonesItem -> {
                         if (DocumentFieldType.PHONE_NUMBER == mobilePhonesItem.getType()) {
                             String mobilePhoneNumber = mobilePhonesItem.getValuePhoneNumber();
@@ -149,10 +148,10 @@ public class AnalyzeBusinessCard {
                 }
             }
 
-            DocumentField otherPhones = businessCardFields.get("OtherPhones");
+            TypedDocumentField otherPhones = businessCardFields.get("OtherPhones");
             if (otherPhones != null) {
                 if (DocumentFieldType.LIST == otherPhones.getType()) {
-                    List<DocumentField> otherPhonesItems = otherPhones.getValueList();
+                    List<TypedDocumentField> otherPhonesItems = otherPhones.getValueList();
                     otherPhonesItems.forEach(otherPhonesItem -> {
                         if (DocumentFieldType.PHONE_NUMBER == otherPhonesItem.getType()) {
                             String otherPhoneNumber = otherPhonesItem.getValuePhoneNumber();
@@ -163,10 +162,10 @@ public class AnalyzeBusinessCard {
                 }
             }
 
-            DocumentField faxes = businessCardFields.get("Faxes");
+            TypedDocumentField faxes = businessCardFields.get("Faxes");
             if (faxes != null) {
                 if (DocumentFieldType.LIST == faxes.getType()) {
-                    List<DocumentField> faxesItems = faxes.getValueList();
+                    List<TypedDocumentField> faxesItems = faxes.getValueList();
                     faxesItems.forEach(faxesItem -> {
                         if (DocumentFieldType.PHONE_NUMBER == faxesItem.getType()) {
                             String faxPhoneNumber = faxesItem.getValuePhoneNumber();
@@ -177,10 +176,10 @@ public class AnalyzeBusinessCard {
                 }
             }
 
-            DocumentField addresses = businessCardFields.get("Addresses");
+            TypedDocumentField addresses = businessCardFields.get("Addresses");
             if (addresses != null) {
                 if (DocumentFieldType.LIST == addresses.getType()) {
-                    List<DocumentField> addressesItems = addresses.getValueList();
+                    List<TypedDocumentField> addressesItems = addresses.getValueList();
                     addressesItems.forEach(addressesItem -> {
                         if (DocumentFieldType.STRING == addressesItem.getType()) {
                             String address = addressesItem.getValueString();
@@ -191,10 +190,10 @@ public class AnalyzeBusinessCard {
                 }
             }
 
-            DocumentField companyName = businessCardFields.get("CompanyNames");
+            TypedDocumentField companyName = businessCardFields.get("CompanyNames");
             if (companyName != null) {
                 if (DocumentFieldType.LIST == companyName.getType()) {
-                    List<DocumentField> companyNameItems = companyName.getValueList();
+                    List<TypedDocumentField> companyNameItems = companyName.getValueList();
                     companyNameItems.forEach(companyNameItem -> {
                         if (DocumentFieldType.STRING == companyNameItem.getType()) {
                             String companyNameValue = companyNameItem.getValueString();

@@ -5,7 +5,6 @@ package com.azure.ai.formrecognizer;
 
 import com.azure.ai.formrecognizer.models.AnalyzeResult;
 import com.azure.ai.formrecognizer.models.AnalyzedDocument;
-import com.azure.ai.formrecognizer.models.DocumentField;
 import com.azure.ai.formrecognizer.models.DocumentFieldType;
 import com.azure.ai.formrecognizer.models.DocumentOperationResult;
 import com.azure.core.credential.AzureKeyCredential;
@@ -16,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -51,9 +49,9 @@ public class AnalyzeInvoices {
 
         for (int i = 0; i < analyzeInvoiceResult.getDocuments().size(); i++) {
             AnalyzedDocument analyzedInvoice = analyzeInvoiceResult.getDocuments().get(i);
-            Map<String, DocumentField> invoiceFields = analyzedInvoice.getFields();
+            Map<String, TypedDocumentField> invoiceFields = analyzedInvoice.getFields();
             System.out.printf("----------- Analyzing invoice  %d -----------%n", i);
-            DocumentField vendorNameField = invoiceFields.get("VendorName");
+            TypedDocumentField vendorNameField = invoiceFields.get("VendorName");
             if (vendorNameField != null) {
                 if (DocumentFieldType.STRING == vendorNameField.getType()) {
                     String merchantName = vendorNameField.getValueString();
@@ -62,7 +60,7 @@ public class AnalyzeInvoices {
                 }
             }
 
-            DocumentField vendorAddressField = invoiceFields.get("VendorAddress");
+            TypedDocumentField vendorAddressField = invoiceFields.get("VendorAddress");
             if (vendorAddressField != null) {
                 if (DocumentFieldType.STRING == vendorAddressField.getType()) {
                     String merchantAddress = vendorAddressField.getValueString();
@@ -71,7 +69,7 @@ public class AnalyzeInvoices {
                 }
             }
 
-            DocumentField customerNameField = invoiceFields.get("CustomerName");
+            TypedDocumentField customerNameField = invoiceFields.get("CustomerName");
             if (customerNameField != null) {
                 if (DocumentFieldType.STRING == customerNameField.getType()) {
                     String merchantAddress = customerNameField.getValueString();
@@ -80,7 +78,7 @@ public class AnalyzeInvoices {
                 }
             }
 
-            DocumentField customerAddressRecipientField = invoiceFields.get("CustomerAddressRecipient");
+            TypedDocumentField customerAddressRecipientField = invoiceFields.get("CustomerAddressRecipient");
             if (customerAddressRecipientField != null) {
                 if (DocumentFieldType.STRING == customerAddressRecipientField.getType()) {
                     String customerAddr = customerAddressRecipientField.getValueString();
@@ -89,7 +87,7 @@ public class AnalyzeInvoices {
                 }
             }
 
-            DocumentField invoiceIdField = invoiceFields.get("InvoiceId");
+            TypedDocumentField invoiceIdField = invoiceFields.get("InvoiceId");
             if (invoiceIdField != null) {
                 if (DocumentFieldType.STRING == invoiceIdField.getType()) {
                     String invoiceId = invoiceIdField.getValueString();
@@ -98,7 +96,7 @@ public class AnalyzeInvoices {
                 }
             }
 
-            DocumentField invoiceDateField = invoiceFields.get("InvoiceDate");
+            TypedDocumentField invoiceDateField = invoiceFields.get("InvoiceDate");
             if (customerNameField != null) {
                 if (DocumentFieldType.DATE == invoiceDateField.getType()) {
                     String invoiceDate = invoiceDateField.getValueString();;
@@ -107,7 +105,7 @@ public class AnalyzeInvoices {
                 }
             }
 
-            DocumentField invoiceTotalField = invoiceFields.get("InvoiceTotal");
+            TypedDocumentField invoiceTotalField = invoiceFields.get("InvoiceTotal");
             if (customerAddressRecipientField != null) {
                 if (DocumentFieldType.FLOAT == invoiceTotalField.getType()) {
                     Float invoiceTotal = invoiceTotalField.getValueFloat();
@@ -116,11 +114,11 @@ public class AnalyzeInvoices {
                 }
             }
 
-            DocumentField invoiceItemsField = invoiceFields.get("Items");
+            TypedDocumentField invoiceItemsField = invoiceFields.get("Items");
             if (invoiceItemsField != null) {
                 System.out.printf("Invoice Items: %n");
                 if (DocumentFieldType.LIST == invoiceItemsField.getType()) {
-                    List<DocumentField> invoiceItems = invoiceItemsField.getValueList();
+                    List<TypedDocumentField> invoiceItems = invoiceItemsField.getValueList();
                     invoiceItems.stream()
                         .filter(invoiceItem -> DocumentFieldType.MAP == invoiceItem.getType())
                         .map(formField -> formField.getValueMap())

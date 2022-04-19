@@ -1415,12 +1415,12 @@ definitions:
                 description: Dictionary of named field values.
                 type: object
                 additionalProperties:   # Property name regex: [\p{L}\p{N}]{1,64}
-                    $ref: "#/definitions/DocumentField"
+                    $ref: "#/definitions/TypedDocumentField"
             confidence:
                 description: Confidence of correctly extracting the document.
                 $ref: "#/definitions/Confidence"
 
-    DocumentField:
+    TypedDocumentField:
         description: An object representing the content and location of a field value.
         type: object
         required: [ type ]
@@ -1472,12 +1472,12 @@ definitions:
                 description: Array of field values.
                 type: array
                 items:
-                    $ref: "#/definitions/DocumentField"
+                    $ref: "#/definitions/TypedDocumentField"
             valueObject:
                 description: Dictionary of named field values.
                 type: object
                 additionalProperties:
-                    $ref: "#/definitions/DocumentField"
+                    $ref: "#/definitions/TypedDocumentField"
             content:
                 description: Field content.
                 type: string

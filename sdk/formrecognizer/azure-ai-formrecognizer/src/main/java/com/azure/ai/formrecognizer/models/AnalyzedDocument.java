@@ -5,7 +5,6 @@ package com.azure.ai.formrecognizer.models;
 
 import com.azure.ai.formrecognizer.implementation.util.AnalyzedDocumentHelper;
 import com.azure.core.implementation.jackson.ObjectMapperShim;
-import com.azure.core.util.CoreUtils;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer;
@@ -65,7 +64,7 @@ public final class AnalyzedDocument {
     /*
      * Dictionary of named field values.
      */
-    private Map<String, DocumentField> fields;
+    private Map<String, ?> fields;
 
     /*
      * Confidence of correctly extracting the document.
@@ -134,7 +133,7 @@ public final class AnalyzedDocument {
      *
      * @return the fields value.
      */
-    public Map<String, DocumentField> getFields() {
+    public Map<String, ?> getFields() {
         return this.fields;
     }
 
@@ -144,7 +143,7 @@ public final class AnalyzedDocument {
      * @param fields the fields value to set.
      * @return the AnalyzeDocument object itself.
      */
-    void setFields(Map<String, DocumentField> fields) {
+    void setFields(Map<String, TypedDocumentField> fields) {
         this.fields = fields;
     }
 
@@ -167,7 +166,7 @@ public final class AnalyzedDocument {
         this.confidence = confidence;
     }
 
-    public <T> T getDocumentAs(Class<T> modelClass) throws IOException {
+    public <T> T buildDocumentAs(Class<T> modelClass) throws IOException {
         String json = ObjectMapperShim.createDefaultMapper().writeValueAsString(this.fields);
         T doc = convertValue(json, modelClass);
         return doc;
@@ -192,7 +191,7 @@ public final class AnalyzedDocument {
             }
 
             @Override
-            public void setFields(AnalyzedDocument analyzedDocument, Map<String, DocumentField> fields) {
+            public void setFields(AnalyzedDocument analyzedDocument, Map<String, TypedDocumentField> fields) {
                 analyzedDocument.setFields(fields);
             }
 

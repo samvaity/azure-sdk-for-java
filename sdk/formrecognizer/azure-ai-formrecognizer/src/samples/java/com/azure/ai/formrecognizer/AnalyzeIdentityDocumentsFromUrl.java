@@ -5,7 +5,7 @@
 //
 // import com.azure.ai.formrecognizer.models.AnalyzeResult;
 // import com.azure.ai.formrecognizer.models.AnalyzedDocument;
-// import com.azure.ai.formrecognizer.models.DocumentField;
+// import com.azure.ai.formrecognizer.models.TypedDocumentField;
 // import com.azure.ai.formrecognizer.models.DocumentFieldType;
 // import com.azure.ai.formrecognizer.models.DocumentOperationResult;
 // import com.azure.core.credential.AzureKeyCredential;
@@ -44,9 +44,9 @@
 //
 //         for (int i = 0; i < identityDocumentResults.getDocuments().size(); i++) {
 //             AnalyzedDocument analyzedIDDocument = identityDocumentResults.getDocuments().get(i);
-//             Map<String, DocumentField> licenseFields = analyzedIDDocument.getFields();
+//             Map<String, TypedDocumentField> licenseFields = analyzedIDDocument.getFields();
 //             System.out.printf("----------- Analyzed license info for page %d -----------%n", i);
-//             DocumentField addressField = licenseFields.get("Address");
+//             TypedDocumentField addressField = licenseFields.get("Address");
 //             if (addressField != null) {
 //                 if (DocumentFieldType.STRING == addressField.getType()) {
 //                     String address = addressField.getValueString();
@@ -55,7 +55,7 @@
 //                 }
 //             }
 //
-//             DocumentField countryRegionDocumentField = licenseFields.get("CountryRegion");
+//             TypedDocumentField countryRegionDocumentField = licenseFields.get("CountryRegion");
 //             if (countryRegionDocumentField != null) {
 //                 if (DocumentFieldType.STRING == countryRegionDocumentField.getType()) {
 //                     String countryRegion = countryRegionDocumentField.getValueCountryRegion();
@@ -64,7 +64,7 @@
 //                 }
 //             }
 //
-//             DocumentField dateOfBirthField = licenseFields.get("DateOfBirth");
+//             TypedDocumentField dateOfBirthField = licenseFields.get("DateOfBirth");
 //             if (dateOfBirthField != null) {
 //                 if (DocumentFieldType.DATE == dateOfBirthField.getType()) {
 //                     LocalDate dateOfBirth = dateOfBirthField.getValueDate();
@@ -73,7 +73,7 @@
 //                 }
 //             }
 //
-//             DocumentField dateOfExpirationField = licenseFields.get("DateOfExpiration");
+//             TypedDocumentField dateOfExpirationField = licenseFields.get("DateOfExpiration");
 //             if (dateOfExpirationField != null) {
 //                 if (DocumentFieldType.DATE == dateOfExpirationField.getType()) {
 //                     LocalDate expirationDate = dateOfExpirationField.getValueDate();
@@ -82,7 +82,7 @@
 //                 }
 //             }
 //
-//             DocumentField documentNumberField = licenseFields.get("DocumentNumber");
+//             TypedDocumentField documentNumberField = licenseFields.get("DocumentNumber");
 //             if (documentNumberField != null) {
 //                 if (DocumentFieldType.STRING == documentNumberField.getType()) {
 //                     String documentNumber = documentNumberField.getValueString();
@@ -91,7 +91,7 @@
 //                 }
 //             }
 //
-//             DocumentField firstNameField = licenseFields.get("FirstName");
+//             TypedDocumentField firstNameField = licenseFields.get("FirstName");
 //             if (firstNameField != null) {
 //                 if (DocumentFieldType.STRING == firstNameField.getType()) {
 //                     String firstName = firstNameField.getValueString();
@@ -100,7 +100,7 @@
 //                 }
 //             }
 //
-//             DocumentField lastNameField = licenseFields.get("LastName");
+//             TypedDocumentField lastNameField = licenseFields.get("LastName");
 //             if (lastNameField != null) {
 //                 if (DocumentFieldType.STRING == lastNameField.getType()) {
 //                     String lastName = lastNameField.getValueString();
@@ -109,7 +109,7 @@
 //                 }
 //             }
 //
-//             DocumentField regionField = licenseFields.get("Region");
+//             TypedDocumentField regionField = licenseFields.get("Region");
 //             if (regionField != null) {
 //                 if (DocumentFieldType.STRING == regionField.getType()) {
 //                     String region = regionField.getValueString();

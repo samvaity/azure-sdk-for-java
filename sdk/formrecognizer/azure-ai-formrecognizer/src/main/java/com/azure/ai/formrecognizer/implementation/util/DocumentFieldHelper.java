@@ -5,18 +5,13 @@ package com.azure.ai.formrecognizer.implementation.util;
 
 import com.azure.ai.formrecognizer.models.BoundingRegion;
 import com.azure.ai.formrecognizer.models.DocumentFieldType;
-import com.azure.ai.formrecognizer.models.DocumentSignatureType;
-import com.azure.ai.formrecognizer.models.SelectionMarkState;
-import com.azure.ai.formrecognizer.models.DocumentField;
 import com.azure.ai.formrecognizer.models.DocumentSpan;
+import com.azure.ai.formrecognizer.models.TypedDocumentField;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;
 
 /**
- * The helper class to set the non-public properties of an {@link DocumentField} instance.
+ * The helper class to set the non-public properties of an {@link TypedDocumentField} instance.
  */
 public final class DocumentFieldHelper {
     private static DocumentFieldHelper.DocumentFieldAccessor accessor;
@@ -25,40 +20,22 @@ public final class DocumentFieldHelper {
     }
 
     /**
-     * Type defining the methods to set the non-public properties of an {@link DocumentField} instance.
+     * Type defining the methods to set the non-public properties of an {@link TypedDocumentField} instance.
      */
     public interface DocumentFieldAccessor {
-        void setType(DocumentField documentField, DocumentFieldType type);
+        void setType(TypedDocumentField documentField, DocumentFieldType type);
 
-        void setValueString(DocumentField documentField, String valueString);
+        void setContent(TypedDocumentField documentField, String content);
 
-        void setValuePhoneNumber(DocumentField documentField, String valuePhoneNumber);
+        void setBoundingRegions(TypedDocumentField documentField, List<BoundingRegion> boundingRegions);
 
-        void setValueNumber(DocumentField documentField, Float valueNumber);
+        void setSpans(TypedDocumentField documentField, List<DocumentSpan> spans);
 
-        void setValueInteger(DocumentField documentField, Long valueInteger);
-
-        void setValueSelectionMark(DocumentField documentField, SelectionMarkState valueSelectionMark);
-
-        void setValueSignature(DocumentField documentField, DocumentSignatureType valueSignature);
-
-        void setValueCountryRegion(DocumentField documentField, String valueCountryRegion);
-
-        void setValueArray(DocumentField documentField, List<DocumentField> valueArray);
-
-        void setValueObject(DocumentField documentField, Map<String, DocumentField> valueObject);
-
-        void setContent(DocumentField documentField, String content);
-
-        void setBoundingRegions(DocumentField documentField, List<BoundingRegion> boundingRegions);
-
-        void setSpans(DocumentField documentField, List<DocumentSpan> spans);
-
-        void setConfidence(DocumentField documentField, Float confidence);
+        void setConfidence(TypedDocumentField documentField, Float confidence);
     }
 
     /**
-     * The method called from {@link DocumentField} to set it's accessor.
+     * The method called from {@link TypedDocumentField} to set it's accessor.
      *
      * @param documentFieldAccessor The accessor.
      */
@@ -66,59 +43,22 @@ public final class DocumentFieldHelper {
         accessor = documentFieldAccessor;
     }
 
-    static void setType(DocumentField documentField, DocumentFieldType type) {
+    static void setType(TypedDocumentField documentField, DocumentFieldType type) {
         accessor.setType(documentField, type);
     }
 
-    static void setValueString(DocumentField documentField, String valueString) {
-        accessor.setValueString(documentField, valueString);
-    }
-
-    static void setValuePhoneNumber(DocumentField documentField, String valuePhoneNumber) {
-        accessor.setValuePhoneNumber(documentField, valuePhoneNumber);
-    }
-
-    static void setValueNumber(DocumentField documentField, Float valueNumber) {
-        accessor.setValueNumber(documentField, valueNumber);
-    }
-
-    static void setValueInteger(DocumentField documentField, Long valueInteger) {
-        accessor.setValueInteger(documentField, valueInteger);
-    }
-
-    static void setValueSelectionMark(DocumentField documentField, SelectionMarkState valueSelectionMark) {
-        accessor.setValueSelectionMark(documentField, valueSelectionMark);
-    }
-
-    static void setValueSignature(DocumentField documentField, DocumentSignatureType valueSignature) {
-        accessor.setValueSignature(documentField, valueSignature);
-    }
-
-    static void setValueCountryRegion(DocumentField documentField, String valueCountryRegion) {
-        accessor.setValueCountryRegion(documentField, valueCountryRegion);
-    }
-
-    static void setValueArray(DocumentField documentField, List<DocumentField> valueArray) {
-        accessor.setValueArray(documentField, valueArray);
-    }
-
-    static void setValueObject(DocumentField documentField, Map<String, DocumentField> valueObject) {
-        accessor.setValueObject(documentField, valueObject);
-    }
-
-    static void setContent(DocumentField documentField, String content) {
+    static void setContent(TypedDocumentField documentField, String content) {
         accessor.setContent(documentField, content);
     }
-
-    static void setBoundingRegions(DocumentField documentField, List<BoundingRegion> boundingRegions) {
+    static void setBoundingRegions(TypedDocumentField documentField, List<BoundingRegion> boundingRegions) {
         accessor.setBoundingRegions(documentField, boundingRegions);
     }
 
-    static void setSpans(DocumentField documentField, List<DocumentSpan> spans) {
+    static void setSpans(TypedDocumentField documentField, List<DocumentSpan> spans) {
         accessor.setSpans(documentField, spans);
     }
 
-    static void setConfidence(DocumentField documentField, Float confidence) {
+    static void setConfidence(TypedDocumentField documentField, Float confidence) {
         accessor.setConfidence(documentField, confidence);
     }
 }

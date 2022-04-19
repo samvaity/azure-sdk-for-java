@@ -99,12 +99,12 @@
 ### User model based on the receipt schema provided by the service:
 
 ```java
-import com.azure.ai.formrecognizer.models.DocumentField;
+
 
 class ReceiptDocument {
-    public DocumentField merchantName;
-    public DocumentField transactionDate;
-    public List<DocumentField> items;
+    public TypedDocumentField merchantName;
+    public TypedDocumentField transactionDate;
+    public List<TypedDocumentField> items;
 }
 ```
 
@@ -127,7 +127,7 @@ class AnalyzeReceipt {
            if (analyzedDocument.getDocType().equals("prebuilt-receipt")) {
                ReceiptDocument receiptDocument = analyzedDocument.getDocumentAs(ReceiptDocument.class);
                System.out.printf("----------- Analyzing receipt info %d -----------%n", i);
-               DocumentField merchantNameField = receiptDocument.getMerchantName();
+               TypedDocumentField merchantNameField = receiptDocument.getMerchantName();
                if (merchantNameField != null) {
                    if (DocumentFieldType.STRING == merchantNameField.getType()) {
                        String merchantName = merchantNameField.getValueString();
@@ -136,7 +136,7 @@ class AnalyzeReceipt {
                    }
                }
 
-               DocumentField transactionDateField = receiptDocument.getTransactionDate();
+               TypedDocumentField transactionDateField = receiptDocument.getTransactionDate();
                if (transactionDateField != null) {
                    if (DocumentFieldType.DATE == transactionDateField.getType()) {
                        LocalDate transactionDate = transactionDateField.getValueDate();
