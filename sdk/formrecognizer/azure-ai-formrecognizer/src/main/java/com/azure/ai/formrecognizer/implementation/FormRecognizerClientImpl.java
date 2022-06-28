@@ -49,13 +49,15 @@ import com.azure.core.http.rest.PagedResponse;
 import com.azure.core.http.rest.PagedResponseBase;
 import com.azure.core.http.rest.Response;
 import com.azure.core.http.rest.RestProxy;
+import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
-import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.nio.ByteBuffer;
 
 /** Initializes a new instance of the FormRecognizerClient type. */
 public final class FormRecognizerClientImpl {
@@ -113,6 +115,7 @@ public final class FormRecognizerClientImpl {
     public SerializerAdapter getSerializerAdapter() {
         return this.serializerAdapter;
     }
+    private final FormRecognizerClientSyncService syncService;
 
     /**
      * Initializes an instance of FormRecognizerClient client.
@@ -160,6 +163,8 @@ public final class FormRecognizerClientImpl {
         this.apiVersion = apiVersion;
         this.service =
                 RestProxy.create(FormRecognizerClientService.class, this.httpPipeline, this.getSerializerAdapter());
+        this.syncService =
+            RestProxy.create(FormRecognizerClientSyncService.class, this.httpPipeline, this.getSerializerAdapter());
     }
 
     /**
@@ -328,6 +333,65 @@ public final class FormRecognizerClientImpl {
     }
 
     /**
+     * The interface defining all the services for FormRecognizerClient to be used by the proxy service to perform REST
+     * calls.
+     */
+    @Host("{endpoint}/formrecognizer")
+    @ServiceInterface(name = "FormRecognizerClientSync")
+    public interface FormRecognizerClientSyncService {
+        @Post("/documentModels/{modelId}:analyze")
+        @ExpectedResponses({202})
+        @UnexpectedResponseExceptionType(ErrorResponseException.class)
+        AnalyzeDocumentResponse analyzeDocument(
+            @HostParam("endpoint") String endpoint,
+            @PathParam("modelId") String modelId,
+            @QueryParam("pages") String pages,
+            @QueryParam("locale") String locale,
+            @QueryParam("stringIndexType") StringIndexType stringIndexType,
+            @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Content-Type") ContentType contentType,
+            @BodyParam("application/octet-stream") BinaryData analyzeRequest,
+            @HeaderParam("Content-Length") Long contentLength,
+            @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Post("/documentModels/{modelId}:analyze")
+        @ExpectedResponses({202})
+        @UnexpectedResponseExceptionType(ErrorResponseException.class)
+        AnalyzeDocumentResponse analyzeDocument(
+            @HostParam("endpoint") String endpoint,
+            @PathParam("modelId") String modelId,
+            @QueryParam("pages") String pages,
+            @QueryParam("locale") String locale,
+            @QueryParam("stringIndexType") StringIndexType stringIndexType,
+            @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") AnalyzeDocumentRequest analyzeRequest,
+            @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Get("/operations/{operationId}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(ErrorResponseException.class)
+        GetOperationResponse getOperation(
+            @HostParam("endpoint") String endpoint,
+            @PathParam("operationId") String operationId,
+            @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept,
+            Context context);
+
+        @Get("/documentModels/{modelId}/analyzeResults/{resultId}")
+        @ExpectedResponses({200})
+        @UnexpectedResponseExceptionType(ErrorResponseException.class)
+        Response<AnalyzeResultOperation> getAnalyzeDocumentResult(
+            @HostParam("endpoint") String endpoint,
+            @PathParam("modelId") String modelId,
+            @PathParam("resultId") String resultId,
+            @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept,
+            Context context);
+    }
+
+    /**
      * Analyzes document with model.
      *
      * @param modelId Unique model name.
@@ -409,6 +473,83 @@ public final class FormRecognizerClientImpl {
                 contentLength,
                 accept,
                 context);
+    }
+
+    /**
+     * Analyzes document with model.
+     *
+     * @param modelId Unique model name.
+     * @param contentType Upload file type.
+     * @param pages List of 1-based page numbers to analyze. Ex. "1-3,5,7-9".
+     * @param locale Locale hint for text recognition and document analysis. Value may contain only the language code
+     *     (ex. "en", "fr") or BCP 47 language tag (ex. "en-US").
+     * @param stringIndexType Method used to compute string offset and length.
+     * @param analyzeRequest Analyze request parameters.
+     * @param contentLength The contentLength parameter.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the completion.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public AnalyzeDocumentResponse analyzeDocumentWithResponseSync(
+        String modelId,
+        ContentType contentType,
+        String pages,
+        String locale,
+        StringIndexType stringIndexType,
+        BinaryData analyzeRequest,
+        Long contentLength, Context context) {
+        final String accept = "application/json";
+        return
+                syncService.analyzeDocument(
+                    this.getEndpoint(),
+                    modelId,
+                    pages,
+                    locale,
+                    stringIndexType,
+                    this.getApiVersion(),
+                    contentType,
+                    analyzeRequest,
+                    contentLength,
+                    accept,
+                    context);
+    }
+
+    /**
+     * Analyzes document with model.
+     *
+     * @param modelId Unique model name.
+     * @param pages List of 1-based page numbers to analyze. Ex. "1-3,5,7-9".
+     * @param locale Locale hint for text recognition and document analysis. Value may contain only the language code
+     *     (ex. "en", "fr") or BCP 47 language tag (ex. "en-US").
+     * @param stringIndexType Method used to compute string offset and length.
+     * @param analyzeRequest Analyze request parameters.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the completion.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public AnalyzeDocumentResponse analyzeDocumentWithResponseSync(
+        String modelId,
+        String pages,
+        String locale,
+        StringIndexType stringIndexType,
+        AnalyzeDocumentRequest analyzeRequest,
+        Context context) {
+        final String accept = "application/json";
+        return syncService.analyzeDocument(
+            this.getEndpoint(),
+            modelId,
+            pages,
+            locale,
+            stringIndexType,
+            this.getApiVersion(),
+            analyzeRequest,
+            accept,
+            context);
     }
 
     /**
@@ -744,6 +885,25 @@ public final class FormRecognizerClientImpl {
         final String accept = "application/json";
         return service.getAnalyzeDocumentResult(
                 this.getEndpoint(), modelId, resultId, this.getApiVersion(), accept, context);
+    }
+
+    /**
+     * Gets the result of document analysis.
+     *
+     * @param modelId Unique model name.
+     * @param resultId Analyze operation result ID.
+     * @param context The context to associate with this operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation.
+     * @throws ErrorResponseException thrown if the request is rejected by server.
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
+     * @return the result of document analysis.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    public Response<AnalyzeResultOperation> getAnalyzeDocumentResultWithResponseSync(
+        String modelId, String resultId, Context context) {
+        final String accept = "application/json";
+        return syncService.getAnalyzeDocumentResult(
+            this.getEndpoint(), modelId, resultId, this.getApiVersion(), accept, context);
     }
 
     /**

@@ -24,7 +24,7 @@ import java.util.function.Function;
  * @param <T> The type of poll response value
  * @param <U> The type of the final result of the long running operation
  */
-final class DefaultSyncPoller<T, U> implements SyncPoller<T, U> {
+public final class DefaultSyncPoller<T, U> implements SyncPoller<T, U> {
     private static final ClientLogger LOGGER = new ClientLogger(DefaultSyncPoller.class);
     private final Function<PollingContext<T>, Mono<PollResponse<T>>> pollOperation;
     private final BiFunction<PollingContext<T>, PollResponse<T>, Mono<T>> cancelOperation;
@@ -52,7 +52,7 @@ final class DefaultSyncPoller<T, U> implements SyncPoller<T, U> {
      *     is same as final poll response value then implementer can choose to simply return value from provided
      *     final poll response.
      */
-    DefaultSyncPoller(Duration pollInterval,
+    public DefaultSyncPoller(Duration pollInterval,
                              Function<PollingContext<T>, PollResponse<T>> syncActivationOperation,
                              Function<PollingContext<T>, Mono<PollResponse<T>>> pollOperation,
                              BiFunction<PollingContext<T>, PollResponse<T>, Mono<T>> cancelOperation,

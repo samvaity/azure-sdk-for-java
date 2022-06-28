@@ -18,9 +18,11 @@ import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.rest.Response;
+import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
 import com.azure.core.util.CoreUtils;
 import com.azure.core.util.logging.ClientLogger;
+import com.azure.core.util.polling.DefaultSyncPoller;
 import com.azure.core.util.polling.LongRunningOperationStatus;
 import com.azure.core.util.polling.PollResponse;
 import com.azure.core.util.polling.PollerFlux;
@@ -34,6 +36,7 @@ import java.util.function.Function;
 
 import static com.azure.ai.formrecognizer.implementation.util.Constants.DEFAULT_POLL_INTERVAL;
 import static com.azure.ai.formrecognizer.implementation.util.Utility.activationOperation;
+import static com.azure.ai.formrecognizer.implementation.util.Utility.activationOperationSync;
 import static com.azure.core.util.FluxUtil.monoError;
 
 /**
@@ -42,7 +45,7 @@ import static com.azure.core.util.FluxUtil.monoError;
  * analysis models, prebuilt models for invoices, receipts, identity documents and business cards, and the layout model.
  *
  * <p><strong>Instantiating an asynchronous Document Analysis Client</strong></p>
- *
+ * <p>
  * <!-- src_embed com.azure.ai.formrecognizer.DocumentAnalysisAsyncClient.instantiation -->
  * <pre>
  * DocumentAnalysisAsyncClient documentAnalysisAsyncClient = new DocumentAnalysisClientBuilder&#40;&#41;
@@ -103,16 +106,15 @@ public final class DocumentAnalysisAsyncClient {
      * @param modelId The unique model ID to be used. Use this to specify the custom model ID or prebuilt model ID.
      * Prebuilt model IDs supported can be found <a href="https://aka.ms/azsdk/formrecognizer/models">here</a>
      * @param documentUrl The URL of the document to analyze.
-     *
      * @return A {@link PollerFlux} that polls the progress of the analyze document operation until it has completed, has failed,
      * or has been cancelled. The completed operation returns an {@link AnalyzeResult}.
      * @throws DocumentModelOperationException If analyze operation fails and the {@link AnalyzeResultOperation} returns
-     * with an {@link OperationStatus#FAILED}..
-     * @throws IllegalArgumentException If {@code documentUrl} or {@code modelId} is null.
+     *                                         with an {@link OperationStatus#FAILED}..
+     * @throws IllegalArgumentException        If {@code documentUrl} or {@code modelId} is null.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<DocumentOperationResult, AnalyzeResult>
-        beginAnalyzeDocumentFromUrl(String modelId, String documentUrl) {
+    beginAnalyzeDocumentFromUrl(String modelId, String documentUrl) {
         return beginAnalyzeDocumentFromUrl(modelId, documentUrl, null);
     }
 
@@ -158,20 +160,20 @@ public final class DocumentAnalysisAsyncClient {
      * @return A {@link PollerFlux} that polls progress of the analyze document operation until it has completed,
      * has failed, or has been cancelled. The completed operation returns an {@link AnalyzeResult}.
      * @throws DocumentModelOperationException If analyze operation fails and the {@link AnalyzeResultOperation} returns
-     * with an {@link OperationStatus#FAILED}.
-     * @throws IllegalArgumentException If {@code documentUrl} or {@code modelId} is null.
+     *                                         with an {@link OperationStatus#FAILED}.
+     * @throws IllegalArgumentException        If {@code documentUrl} or {@code modelId} is null.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<DocumentOperationResult, AnalyzeResult>
-        beginAnalyzeDocumentFromUrl(String modelId, String documentUrl,
-                                   AnalyzeDocumentOptions analyzeDocumentOptions) {
+    beginAnalyzeDocumentFromUrl(String modelId, String documentUrl,
+                                AnalyzeDocumentOptions analyzeDocumentOptions) {
         return beginAnalyzeDocumentFromUrl(documentUrl, modelId, analyzeDocumentOptions, Context.NONE);
     }
 
     PollerFlux<DocumentOperationResult, AnalyzeResult>
-        beginAnalyzeDocumentFromUrl(String documentUrl, String modelId,
-                                   AnalyzeDocumentOptions analyzeDocumentOptions,
-                                   Context context) {
+    beginAnalyzeDocumentFromUrl(String documentUrl, String modelId,
+                                AnalyzeDocumentOptions analyzeDocumentOptions,
+                                Context context) {
         try {
             if (CoreUtils.isNullOrEmpty(documentUrl)) {
                 throw logger.logExceptionAsError(new IllegalArgumentException("'documentUrl' is required and cannot"
@@ -255,16 +257,15 @@ public final class DocumentAnalysisAsyncClient {
      * Prebuilt model IDs supported can be found <a href="https://aka.ms/azsdk/formrecognizer/models">here</a>
      * @param document The data of the document to analyze information from.
      * @param length The exact length of the data.
-     *
      * @return A {@link PollerFlux} that polls the progress of the analyze document operation until it has completed,
      * has failed, or has been cancelled. The completed operation returns an {@link AnalyzeResult}.
      * @throws DocumentModelOperationException If analyze operation fails and the {@link AnalyzeResultOperation} returns
-     * with an {@link OperationStatus#FAILED}.
-     * @throws IllegalArgumentException If {@code document} or {@code modelId} is null.
+     *                                         with an {@link OperationStatus#FAILED}.
+     * @throws IllegalArgumentException        If {@code document} or {@code modelId} is null.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<DocumentOperationResult, AnalyzeResult>
-        beginAnalyzeDocument(String modelId, Flux<ByteBuffer> document, long length) {
+    beginAnalyzeDocument(String modelId, Flux<ByteBuffer> document, long length) {
         return beginAnalyzeDocument(modelId, document, length, null);
     }
 
@@ -313,23 +314,22 @@ public final class DocumentAnalysisAsyncClient {
      * @param length The exact length of the data.
      * @param analyzeDocumentOptions The additional configurable {@link AnalyzeDocumentOptions options} that may be
      * passed when analyzing documents.
-     *
      * @return A {@link PollerFlux} that polls the progress of the analyze document operation until it has completed,
      * has failed, or has been cancelled. The completed operation returns an {@link AnalyzeResult}.
      * @throws DocumentModelOperationException If analyze operation fails and the {@link AnalyzeResultOperation} returns
-     * with an {@link OperationStatus#FAILED}.
-     * @throws IllegalArgumentException If {@code document} or {@code modelId} is null.
+     *                                         with an {@link OperationStatus#FAILED}.
+     * @throws IllegalArgumentException        If {@code document} or {@code modelId} is null.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<DocumentOperationResult, AnalyzeResult>
-        beginAnalyzeDocument(String modelId, Flux<ByteBuffer> document, long length,
-                            AnalyzeDocumentOptions analyzeDocumentOptions) {
+    beginAnalyzeDocument(String modelId, Flux<ByteBuffer> document, long length,
+                         AnalyzeDocumentOptions analyzeDocumentOptions) {
         return beginAnalyzeDocument(modelId, document, length, analyzeDocumentOptions, Context.NONE);
     }
 
     PollerFlux<DocumentOperationResult, AnalyzeResult>
-        beginAnalyzeDocument(String modelId, Flux<ByteBuffer> document, long length,
-                             AnalyzeDocumentOptions analyzeDocumentOptions, Context context) {
+    beginAnalyzeDocument(String modelId, Flux<ByteBuffer> document, long length,
+                         AnalyzeDocumentOptions analyzeDocumentOptions, Context context) {
         try {
             Objects.requireNonNull(document, "'document' is required and cannot be null.");
             if (CoreUtils.isNullOrEmpty(modelId)) {
@@ -343,21 +343,62 @@ public final class DocumentAnalysisAsyncClient {
             return new PollerFlux<>(
                 DEFAULT_POLL_INTERVAL,
                 activationOperation(() ->
-                    service.analyzeDocumentWithResponseAsync(modelId,
-                            null,
-                            CoreUtils.isNullOrEmpty(finalAnalyzeDocumentOptions.getPages())
-                                ? null : String.join(",", finalAnalyzeDocumentOptions.getPages()),
-                            finalAnalyzeDocumentOptions.getLocale() == null ? null
-                                : finalAnalyzeDocumentOptions.getLocale(),
-                            StringIndexType.UTF16CODE_UNIT,
-                            document,
-                            length,
-                            context)
-                        .map(analyzeDocumentResponse -> Transforms.toDocumentOperationResult(
-                            analyzeDocumentResponse.getDeserializedHeaders().getOperationLocation())),
+                        service.analyzeDocumentWithResponseAsync(modelId,
+                                null,
+                                CoreUtils.isNullOrEmpty(finalAnalyzeDocumentOptions.getPages())
+                                    ? null : String.join(",", finalAnalyzeDocumentOptions.getPages()),
+                                finalAnalyzeDocumentOptions.getLocale() == null ? null
+                                    : finalAnalyzeDocumentOptions.getLocale(),
+                                StringIndexType.UTF16CODE_UNIT,
+                                document,
+                                length,
+                                context)
+                            .map(analyzeDocumentResponse -> Transforms.toDocumentOperationResult(
+                                analyzeDocumentResponse.getDeserializedHeaders().getOperationLocation())),
                     logger),
                 pollingOperation(
                     resultId -> service.getAnalyzeDocumentResultWithResponseAsync(
+                        modelId, resultId, context)),
+                (activationResponse, pollingContext) ->
+                    Mono.error(new RuntimeException("Cancellation is not supported")),
+                fetchingOperation(resultId -> service.getAnalyzeDocumentResultWithResponseAsync(
+                    modelId, resultId, context))
+                    .andThen(after -> after.map(modelSimpleResponse ->
+                            Transforms.toAnalyzeResultOperation(modelSimpleResponse.getValue().getAnalyzeResult()))
+                        .onErrorMap(Transforms::mapToHttpResponseExceptionIfExists)));
+        } catch (RuntimeException ex) {
+            return PollerFlux.error(ex);
+        }
+    }
+
+    PollerFlux<DocumentOperationResult, AnalyzeResult>
+    beginAnalyzeDocumentSync(String modelId, BinaryData document, long length,
+                             AnalyzeDocumentOptions analyzeDocumentOptions, Context context) {
+        try {
+            Objects.requireNonNull(document, "'document' is required and cannot be null.");
+            if (CoreUtils.isNullOrEmpty(modelId)) {
+                throw logger.logExceptionAsError(new IllegalArgumentException("'modelId' is required and cannot"
+                    + " be null or empty"));
+            }
+
+            final AnalyzeDocumentOptions finalAnalyzeDocumentOptions
+                = getAnalyzeDocumentOptions(analyzeDocumentOptions);
+
+            return new DefaultSyncPoller<>(
+                DEFAULT_POLL_INTERVAL,
+                activationOperationSync(() ->
+                    service.analyzeDocumentWithResponseSync(modelId,
+                        null,
+                        CoreUtils.isNullOrEmpty(finalAnalyzeDocumentOptions.getPages())
+                            ? null : String.join(",", finalAnalyzeDocumentOptions.getPages()),
+                        finalAnalyzeDocumentOptions.getLocale() == null ? null
+                            : finalAnalyzeDocumentOptions.getLocale(),
+                        StringIndexType.UTF16CODE_UNIT,
+                        document,
+                        length,
+                        context), logger),
+                pollingOperation(
+                    resultId -> service.getAnalyzeDocumentResultWithResponseSync(
                         modelId, resultId, context)),
                 (activationResponse, pollingContext) ->
                     Mono.error(new RuntimeException("Cancellation is not supported")),
@@ -375,7 +416,7 @@ public final class DocumentAnalysisAsyncClient {
      * Poller's POLLING operation.
      */
     private Function<PollingContext<DocumentOperationResult>, Mono<PollResponse<DocumentOperationResult>>>
-        pollingOperation(
+    pollingOperation(
         Function<String, Mono<Response<AnalyzeResultOperation>>> pollingFunction) {
         return pollingContext -> {
             try {
@@ -395,7 +436,7 @@ public final class DocumentAnalysisAsyncClient {
      * Poller's FETCHING operation.
      */
     private Function<PollingContext<DocumentOperationResult>, Mono<Response<AnalyzeResultOperation>>>
-        fetchingOperation(
+    fetchingOperation(
         Function<String, Mono<Response<AnalyzeResultOperation>>> fetchingFunction) {
         return pollingContext -> {
             try {

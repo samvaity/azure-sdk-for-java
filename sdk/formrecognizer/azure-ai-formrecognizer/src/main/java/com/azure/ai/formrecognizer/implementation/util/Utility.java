@@ -3,6 +3,7 @@
 
 package com.azure.ai.formrecognizer.implementation.util;
 
+import com.azure.ai.formrecognizer.implementation.models.AnalyzeDocumentResponse;
 import com.azure.ai.formrecognizer.models.DocumentOperationResult;
 import com.azure.ai.formrecognizer.models.FormRecognizerAudience;
 import com.azure.core.credential.AzureKeyCredential;
@@ -53,11 +54,13 @@ public final class Utility {
     private static final ClientLogger LOGGER = new ClientLogger(Utility.class);
     private static final String CLIENT_NAME;
     private static final String CLIENT_VERSION;
+
     static {
         Map<String, String> properties = CoreUtils.getProperties(Constants.FORM_RECOGNIZER_PROPERTIES);
         CLIENT_NAME = properties.getOrDefault(Constants.NAME, "UnknownName");
         CLIENT_VERSION = properties.getOrDefault(Constants.VERSION, "UnknownVersion");
     }
+
     static final String DEFAULT_SCOPE = "/.default";
 
     private Utility() {
@@ -166,7 +169,7 @@ public final class Utility {
      * Poller's ACTIVATION operation that takes URL as input.
      */
     public static Function<PollingContext<DocumentOperationResult>, Mono<DocumentOperationResult>>
-        activationOperation(
+    activationOperation(
         Supplier<Mono<DocumentOperationResult>> activationOperation,
         ClientLogger logger) {
         return pollingContext -> {
@@ -178,8 +181,24 @@ public final class Utility {
         };
     }
 
+
+    public static Function<PollingContext<DocumentOperationResult>, DocumentOperationResult>
+        activationOperationSync(
+        Supplier<AnalyzeDocumentResponse> activationOperation,
+        ClientLogger logger) {
+        return pollingContext -> {
+            try {
+                return Transforms.toDocumentOperationResult(activationOperation.get().getDeserializedHeaders()
+                    .getOperationLocation());
+            } catch (RuntimeException ex) {
+                throw logger.logExceptionAsError(ex);
+            }
+        };
+    }
+
     /**
      * Generates a random UUID String.
+     *
      * @return the UUID model Identifier.
      */
     public static String generateRandomModelID() {

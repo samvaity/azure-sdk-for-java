@@ -3,6 +3,8 @@
 
 module com.azure.ai.formrecognizer {
     requires transitive com.azure.core;
+    requires reactor.core;
+    requires com.fasterxml.jackson.annotation;
 
     exports com.azure.ai.formrecognizer;
     exports com.azure.ai.formrecognizer.models;
