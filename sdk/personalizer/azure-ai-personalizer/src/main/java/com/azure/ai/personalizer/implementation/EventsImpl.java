@@ -4,8 +4,8 @@
 
 package com.azure.ai.personalizer.implementation;
 
-import com.azure.ai.personalizer.implementation.models.ErrorResponseException;
-import com.azure.ai.personalizer.implementation.models.RewardRequest;
+import com.azure.ai.personalizer.models.ErrorResponseException;
+import com.azure.ai.personalizer.models.RewardRequest;
 import com.azure.core.annotation.BodyParam;
 import com.azure.core.annotation.ExpectedResponses;
 import com.azure.core.annotation.HeaderParam;
@@ -29,24 +29,24 @@ public final class EventsImpl {
     private final EventsService service;
 
     /** The service client containing this operation class. */
-    private final PersonalizerClientV1Preview3Impl client;
+    private final PersonalizerClientImpl client;
 
     /**
      * Initializes an instance of EventsImpl.
      *
      * @param client the instance of the service client containing this operation class.
      */
-    EventsImpl(PersonalizerClientV1Preview3Impl client) {
+    EventsImpl(PersonalizerClientImpl client) {
         this.service = RestProxy.create(EventsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
     /**
-     * The interface defining all the services for PersonalizerClientV1Preview3Events to be used by the proxy service to
-     * perform REST calls.
+     * The interface defining all the services for PersonalizerClientEvents to be used by the proxy service to perform
+     * REST calls.
      */
     @Host("{Endpoint}/personalizer/v1.1-preview.3")
-    @ServiceInterface(name = "PersonalizerClientV1")
+    @ServiceInterface(name = "PersonalizerClientEv")
     public interface EventsService {
         @Post("/events/{eventId}/reward")
         @ExpectedResponses({204})

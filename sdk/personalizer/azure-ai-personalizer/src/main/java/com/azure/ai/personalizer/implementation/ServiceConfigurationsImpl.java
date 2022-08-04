@@ -4,9 +4,9 @@
 
 package com.azure.ai.personalizer.implementation;
 
-import com.azure.ai.personalizer.implementation.models.ErrorResponseException;
-import com.azure.ai.personalizer.implementation.models.PolicyReferenceContract;
-import com.azure.ai.personalizer.implementation.models.ServiceConfiguration;
+import com.azure.ai.personalizer.models.ErrorResponseException;
+import com.azure.ai.personalizer.models.PolicyReferenceContract;
+import com.azure.ai.personalizer.models.ServiceConfiguration;
 import com.azure.core.annotation.BodyParam;
 import com.azure.core.annotation.ExpectedResponses;
 import com.azure.core.annotation.Get;
@@ -32,14 +32,14 @@ public final class ServiceConfigurationsImpl {
     private final ServiceConfigurationsService service;
 
     /** The service client containing this operation class. */
-    private final PersonalizerClientV1Preview3Impl client;
+    private final PersonalizerClientImpl client;
 
     /**
      * Initializes an instance of ServiceConfigurationsImpl.
      *
      * @param client the instance of the service client containing this operation class.
      */
-    ServiceConfigurationsImpl(PersonalizerClientV1Preview3Impl client) {
+    ServiceConfigurationsImpl(PersonalizerClientImpl client) {
         this.service =
                 RestProxy.create(
                         ServiceConfigurationsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
@@ -47,11 +47,11 @@ public final class ServiceConfigurationsImpl {
     }
 
     /**
-     * The interface defining all the services for PersonalizerClientV1Preview3ServiceConfigurations to be used by the
-     * proxy service to perform REST calls.
+     * The interface defining all the services for PersonalizerClientServiceConfigurations to be used by the proxy
+     * service to perform REST calls.
      */
     @Host("{Endpoint}/personalizer/v1.1-preview.3")
-    @ServiceInterface(name = "PersonalizerClientV1")
+    @ServiceInterface(name = "PersonalizerClientSe")
     public interface ServiceConfigurationsService {
         @Get("/configurations/service")
         @ExpectedResponses({200})

@@ -4,9 +4,9 @@
 
 package com.azure.ai.personalizer.implementation;
 
-import com.azure.ai.personalizer.implementation.models.ErrorResponseException;
-import com.azure.ai.personalizer.implementation.models.MultiSlotRankRequest;
-import com.azure.ai.personalizer.implementation.models.MultiSlotRankResponse;
+import com.azure.ai.personalizer.models.ErrorResponseException;
+import com.azure.ai.personalizer.models.MultiSlotRankRequest;
+import com.azure.ai.personalizer.models.MultiSlotRankResponse;
 import com.azure.core.annotation.BodyParam;
 import com.azure.core.annotation.ExpectedResponses;
 import com.azure.core.annotation.HeaderParam;
@@ -29,25 +29,25 @@ public final class MultiSlotsImpl {
     private final MultiSlotsService service;
 
     /** The service client containing this operation class. */
-    private final PersonalizerClientV1Preview3Impl client;
+    private final PersonalizerClientImpl client;
 
     /**
      * Initializes an instance of MultiSlotsImpl.
      *
      * @param client the instance of the service client containing this operation class.
      */
-    MultiSlotsImpl(PersonalizerClientV1Preview3Impl client) {
+    MultiSlotsImpl(PersonalizerClientImpl client) {
         this.service =
                 RestProxy.create(MultiSlotsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
     /**
-     * The interface defining all the services for PersonalizerClientV1Preview3MultiSlots to be used by the proxy
-     * service to perform REST calls.
+     * The interface defining all the services for PersonalizerClientMultiSlots to be used by the proxy service to
+     * perform REST calls.
      */
     @Host("{Endpoint}/personalizer/v1.1-preview.3")
-    @ServiceInterface(name = "PersonalizerClientV1")
+    @ServiceInterface(name = "PersonalizerClientMu")
     public interface MultiSlotsService {
         @Post("/multislot/rank")
         @ExpectedResponses({201})

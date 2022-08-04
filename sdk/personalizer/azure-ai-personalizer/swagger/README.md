@@ -22,17 +22,20 @@ autorest --java --use:@autorest/java@4.0.x
 ``` yaml
 input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/cognitiveservices/data-plane/Personalizer/preview/v1.1-preview.3/Personalizer.json
 java: true
-output-folder: ..\
-generate-client-as-impl: true
+output-folder: ../
 namespace: com.azure.ai.personalizer
 generate-client-interfaces: false
-sync-methods: all
 license-header: MICROSOFT_MIT_SMALL
-add-context-parameter: true
-models-subpackage: implementation.models
-context-client-method-parameter: true
-custom-types-subpackage: models
+data-plane: true
+credential-types: tokencredential, azurekeycredential
+credential-scopes: https://cognitiveservices.azure.com/.default
+title: PersonalizerClient
+use: '@autorest/java@4.1.0'
 service-interface-as-public: true
-custom-strongly-typed-header-deserialization: true
-generic-response-type: true
+sync-methods: all
+add-context-parameter: true
+generate-sync-async-clients: true
+context-client-method-parameter: true
+generate-samples: true
+generate-tests: true
 ```

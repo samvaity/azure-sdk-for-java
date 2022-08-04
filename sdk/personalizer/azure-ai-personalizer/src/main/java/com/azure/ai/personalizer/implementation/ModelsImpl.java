@@ -4,8 +4,8 @@
 
 package com.azure.ai.personalizer.implementation;
 
-import com.azure.ai.personalizer.implementation.models.ErrorResponseException;
-import com.azure.ai.personalizer.implementation.models.ModelProperties;
+import com.azure.ai.personalizer.models.ErrorResponseException;
+import com.azure.ai.personalizer.models.ModelProperties;
 import com.azure.core.annotation.BodyParam;
 import com.azure.core.annotation.Delete;
 import com.azure.core.annotation.ExpectedResponses;
@@ -40,24 +40,24 @@ public final class ModelsImpl {
     private final ModelsService service;
 
     /** The service client containing this operation class. */
-    private final PersonalizerClientV1Preview3Impl client;
+    private final PersonalizerClientImpl client;
 
     /**
      * Initializes an instance of ModelsImpl.
      *
      * @param client the instance of the service client containing this operation class.
      */
-    ModelsImpl(PersonalizerClientV1Preview3Impl client) {
+    ModelsImpl(PersonalizerClientImpl client) {
         this.service = RestProxy.create(ModelsService.class, client.getHttpPipeline(), client.getSerializerAdapter());
         this.client = client;
     }
 
     /**
-     * The interface defining all the services for PersonalizerClientV1Preview3Models to be used by the proxy service to
-     * perform REST calls.
+     * The interface defining all the services for PersonalizerClientModels to be used by the proxy service to perform
+     * REST calls.
      */
     @Host("{Endpoint}/personalizer/v1.1-preview.3")
-    @ServiceInterface(name = "PersonalizerClientV1")
+    @ServiceInterface(name = "PersonalizerClientMo")
     public interface ModelsService {
         @Get("/model")
         @ExpectedResponses({200})
