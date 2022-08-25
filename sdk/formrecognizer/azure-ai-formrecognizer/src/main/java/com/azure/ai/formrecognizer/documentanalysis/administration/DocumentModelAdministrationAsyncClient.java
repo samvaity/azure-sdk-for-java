@@ -281,9 +281,9 @@ public final class DocumentModelAdministrationAsyncClient {
      * documentModelAdministrationAsyncClient.getResourceDetails&#40;&#41;
      *     .subscribe&#40;resourceInfo -&gt; &#123;
      *         System.out.printf&#40;&quot;Max number of models that can be build for this account: %d%n&quot;,
-     *             resourceInfo.getDocumentModelLimit&#40;&#41;&#41;;
+     *             resourceInfo.getCustomDocumentModelLimit&#40;&#41;&#41;;
      *         System.out.printf&#40;&quot;Current count of built document analysis models: %d%n&quot;,
-     *             resourceInfo.getDocumentModelCount&#40;&#41;&#41;;
+     *             resourceInfo.getCustomDocumentModelCount&#40;&#41;&#41;;
      *     &#125;&#41;;
      * </pre>
      * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.getResourceDetails -->
@@ -306,9 +306,9 @@ public final class DocumentModelAdministrationAsyncClient {
      *         System.out.printf&#40;&quot;Response Status Code: %d.&quot;, response.getStatusCode&#40;&#41;&#41;;
      *         ResourceDetails resourceDetails = response.getValue&#40;&#41;;
      *         System.out.printf&#40;&quot;Max number of models that can be build for this account: %d%n&quot;,
-     *             resourceDetails.getDocumentModelLimit&#40;&#41;&#41;;
+     *             resourceDetails.getCustomDocumentModelLimit&#40;&#41;&#41;;
      *         System.out.printf&#40;&quot;Current count of built document analysis models: %d%n&quot;,
-     *             resourceDetails.getDocumentModelCount&#40;&#41;&#41;;
+     *             resourceDetails.getCustomDocumentModelCount&#40;&#41;&#41;;
      *     &#125;&#41;;
      * </pre>
      * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.getResourceDetailsWithResponse -->
@@ -662,21 +662,21 @@ public final class DocumentModelAdministrationAsyncClient {
      * List information for each model on the Form Recognizer account that were built successfully.
      *
      * <p><strong>Code sample</strong></p>
-     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.listModels -->
+     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.listDocumentModels -->
      * <pre>
-     * documentModelAdministrationAsyncClient.listModels&#40;&#41;
+     * documentModelAdministrationAsyncClient.listDocumentModels&#40;&#41;
      *     .subscribe&#40;documentModelInfo -&gt;
      *         System.out.printf&#40;&quot;Model ID: %s, Model description: %s, Created on: %s.%n&quot;,
      *             documentModelInfo.getModelId&#40;&#41;,
      *             documentModelInfo.getDescription&#40;&#41;,
      *             documentModelInfo.getCreatedOn&#40;&#41;&#41;&#41;;
      * </pre>
-     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.listModels -->
+     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.listDocumentModels -->
      *
      * @return {@link PagedFlux} of {@link DocumentModelSummary}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedFlux<DocumentModelSummary> listModels() {
+    public PagedFlux<DocumentModelSummary> listDocumentModels() {
         try {
             return new PagedFlux<>(() -> withContext(this::listFirstPageModelInfo),
                 continuationToken -> withContext(context -> listNextPageModelInfo(continuationToken, context)));
@@ -690,22 +690,22 @@ public final class DocumentModelAdministrationAsyncClient {
      * and a specified {@link Context}.
      *
      * <p><strong>Code sample</strong></p>
-     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.listModels -->
+     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.listDocumentModels -->
      * <pre>
-     * documentModelAdministrationAsyncClient.listModels&#40;&#41;
+     * documentModelAdministrationAsyncClient.listDocumentModels&#40;&#41;
      *     .subscribe&#40;documentModelInfo -&gt;
      *         System.out.printf&#40;&quot;Model ID: %s, Model description: %s, Created on: %s.%n&quot;,
      *             documentModelInfo.getModelId&#40;&#41;,
      *             documentModelInfo.getDescription&#40;&#41;,
      *             documentModelInfo.getCreatedOn&#40;&#41;&#41;&#41;;
      * </pre>
-     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.listModels -->
+     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.listDocumentModels -->
      *
      * @param context Additional context that is passed through the Http pipeline during the service call.
      *
      * @return {@link PagedFlux} of {@link DocumentModelSummary}.
      */
-    PagedFlux<DocumentModelSummary> listModels(Context context) {
+    PagedFlux<DocumentModelSummary> listDocumentModels(Context context) {
         return new PagedFlux<>(() -> listFirstPageModelInfo(context),
             continuationToken -> listNextPageModelInfo(continuationToken, context));
     }
@@ -714,10 +714,10 @@ public final class DocumentModelAdministrationAsyncClient {
      * Get detailed information for a specified model ID.
      *
      * <p><strong>Code sample</strong></p>
-     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.getModel#string -->
+     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.getDocumentModel#string -->
      * <pre>
      * String modelId = &quot;&#123;model_id&#125;&quot;;
-     * documentModelAdministrationAsyncClient.getModel&#40;modelId&#41;.subscribe&#40;documentModel -&gt; &#123;
+     * documentModelAdministrationAsyncClient.getDocumentModel&#40;modelId&#41;.subscribe&#40;documentModel -&gt; &#123;
      *     System.out.printf&#40;&quot;Model ID: %s%n&quot;, documentModel.getModelId&#40;&#41;&#41;;
      *     System.out.printf&#40;&quot;Model Description: %s%n&quot;, documentModel.getDescription&#40;&#41;&#41;;
      *     System.out.printf&#40;&quot;Model Created on: %s%n&quot;, documentModel.getCreatedOn&#40;&#41;&#41;;
@@ -730,25 +730,25 @@ public final class DocumentModelAdministrationAsyncClient {
      *     &#125;&#41;;
      * &#125;&#41;;
      * </pre>
-     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.getModel#string -->
+     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.getDocumentModel#string -->
      *
      * @param modelId The unique model identifier.
      * @return The detailed information for the specified model.
      * @throws IllegalArgumentException If {@code modelId} is null or empty.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<DocumentModelDetails> getModel(String modelId) {
-        return getModelWithResponse(modelId).flatMap(FluxUtil::toMono);
+    public Mono<DocumentModelDetails> getDocumentModel(String modelId) {
+        return getDocumentModelWithResponse(modelId).flatMap(FluxUtil::toMono);
     }
 
     /**
      * Get detailed information for a specified model ID with Http response.
      *
      * <p><strong>Code sample</strong></p>
-     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.getModelWithResponse#string -->
+     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.getDocumentModelWithResponse#string -->
      * <pre>
      * String modelId = &quot;&#123;model_id&#125;&quot;;
-     * documentModelAdministrationAsyncClient.getModelWithResponse&#40;modelId&#41;.subscribe&#40;response -&gt; &#123;
+     * documentModelAdministrationAsyncClient.getDocumentModelWithResponse&#40;modelId&#41;.subscribe&#40;response -&gt; &#123;
      *     System.out.printf&#40;&quot;Response Status Code: %d.&quot;, response.getStatusCode&#40;&#41;&#41;;
      *     DocumentModelDetails documentModelDetails = response.getValue&#40;&#41;;
      *     System.out.printf&#40;&quot;Model ID: %s%n&quot;, documentModelDetails.getModelId&#40;&#41;&#41;;
@@ -763,22 +763,22 @@ public final class DocumentModelAdministrationAsyncClient {
      *     &#125;&#41;;
      * &#125;&#41;;
      * </pre>
-     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.getModelWithResponse#string -->
+     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationAsyncClient.getDocumentModelWithResponse#string -->
      *
      * @param modelId The unique model identifier.
      * @return A {@link Response} containing the requested {@link DocumentModelDetails model}.
      * @throws IllegalArgumentException If {@code modelId} is null or empty.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Mono<Response<DocumentModelDetails>> getModelWithResponse(String modelId) {
+    public Mono<Response<DocumentModelDetails>> getDocumentModelWithResponse(String modelId) {
         try {
-            return withContext(context -> getModelWithResponse(modelId, context));
+            return withContext(context -> getDocumentModelWithResponse(modelId, context));
         } catch (RuntimeException ex) {
             return monoError(logger, ex);
         }
     }
 
-    Mono<Response<DocumentModelDetails>> getModelWithResponse(String modelId, Context context) {
+    Mono<Response<DocumentModelDetails>> getDocumentModelWithResponse(String modelId, Context context) {
         if (CoreUtils.isNullOrEmpty(modelId)) {
             throw logger.logExceptionAsError(new IllegalArgumentException("'modelId' is required and cannot"
                 + " be null or empty"));

@@ -468,17 +468,17 @@ AtomicReference<String> modelId = new AtomicReference<>();
 // First, we see how many models we have, and what our limit is
 ResourceDetails resourceDetails = documentModelAdminClient.getResourceDetails();
 System.out.printf("The resource has %s models, and we can have at most %s models",
-    resourceDetails.getDocumentModelCount(), resourceDetails.getDocumentModelLimit());
+    resourceDetails.getCustomDocumentModelCount(), resourceDetails.getCustomDocumentModelLimit());
 
 // Next, we get a paged list of all of our models
-PagedIterable<DocumentModelSummary> customDocumentModels = documentModelAdminClient.listModels();
+PagedIterable<DocumentModelSummary> customDocumentModels = documentModelAdminClient.listDocumentModels();
 System.out.println("We have following models in the account:");
 customDocumentModels.forEach(documentModelSummary -> {
     System.out.printf("Model ID: %s%n", documentModelSummary.getModelId());
     modelId.set(documentModelSummary.getModelId());
 
     // get custom document analysis model info
-    DocumentModelDetails documentModel = documentModelAdminClient.getModel(documentModelSummary.getModelId());
+    DocumentModelDetails documentModel = documentModelAdminClient.getDocumentModel(documentModelSummary.getModelId());
     System.out.printf("Model ID: %s%n", documentModel.getModelId());
     System.out.printf("Model Description: %s%n", documentModel.getDescription());
     System.out.printf("Model created on: %s%n", documentModel.getCreatedOn());

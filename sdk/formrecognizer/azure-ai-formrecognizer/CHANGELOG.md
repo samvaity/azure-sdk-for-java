@@ -13,6 +13,7 @@ to `DocumentModelOperationDetails`, `DocumentModelOperationSummary`, `DocumentOp
 respectively.
 - Renamed properties `documentModelCount` and `documentModelLimit` to `customDocumentModelCount` 
 and `customDocumentModelLimit` on model `ResourceDetails`.
+- Renamed methods `getModel` and `listModels` to `getDocumentModel` and `listDocumentModels` respectively.
 
 ### Bugs Fixed
 

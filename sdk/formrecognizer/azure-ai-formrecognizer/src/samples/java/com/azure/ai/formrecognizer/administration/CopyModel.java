@@ -51,7 +51,7 @@ public class CopyModel {
         copyPoller.waitForCompletion();
 
         // Get the copied model
-        DocumentModelDetails copiedModel = targetClient.getModel(modelCopyAuthorization.getTargetModelId());
+        DocumentModelDetails copiedModel = targetClient.getDocumentModel(modelCopyAuthorization.getTargetModelId());
 
         System.out.printf("Copied model has model ID: %s, was created on: %s.%n",
             copiedModel.getModelId(),

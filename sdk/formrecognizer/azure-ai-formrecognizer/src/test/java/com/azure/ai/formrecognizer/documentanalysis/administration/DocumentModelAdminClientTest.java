@@ -70,7 +70,7 @@ public class DocumentModelAdminClientTest extends DocumentModelAdministrationCli
     @MethodSource("com.azure.ai.formrecognizer.documentanalysis.TestUtils#getTestParameters")
     public void getModelNullModelID(HttpClient httpClient, DocumentAnalysisServiceVersion serviceVersion) {
         client = getDocumentModelAdministrationClient(httpClient, serviceVersion);
-        assertThrows(IllegalArgumentException.class, () -> client.getModel(null));
+        assertThrows(IllegalArgumentException.class, () -> client.getDocumentModel(null));
     }
 
     /**
@@ -81,7 +81,7 @@ public class DocumentModelAdminClientTest extends DocumentModelAdministrationCli
     public void getModelNonExistingModelID(HttpClient httpClient, DocumentAnalysisServiceVersion serviceVersion) {
         client = getDocumentModelAdministrationClient(httpClient, serviceVersion);
         HttpResponseException exception = assertThrows(HttpResponseException.class, () ->
-            client.getModel(NON_EXIST_MODEL_ID));
+            client.getDocumentModel(NON_EXIST_MODEL_ID));
         final ResponseError responseError = (ResponseError) exception.getValue();
         assertEquals("NotFound", responseError.getCode());
     }
@@ -98,7 +98,7 @@ public class DocumentModelAdminClientTest extends DocumentModelAdministrationCli
                 client.beginBuildModel(trainingDataSasUrl, DocumentModelBuildMode.TEMPLATE)
                     .setPollInterval(durationTestMode).getFinalResult();
             Response<DocumentModelDetails> documentModelResponse =
-                client.getModelWithResponse(documentModelDetails.getModelId(),
+                client.getDocumentModelWithResponse(documentModelDetails.getModelId(),
                     Context.NONE);
             client.deleteModel(documentModelDetails.getModelId());
 
@@ -160,7 +160,7 @@ public class DocumentModelAdminClientTest extends DocumentModelAdministrationCli
 
             assertEquals(deleteModelWithResponse.getStatusCode(), HttpResponseStatus.NO_CONTENT.code());
             final HttpResponseException exception = assertThrows(HttpResponseException.class, () ->
-                client.getModelWithResponse(createdModel.getModelId(), Context.NONE));
+                client.getDocumentModelWithResponse(createdModel.getModelId(), Context.NONE));
             final ResponseError responseError = (ResponseError) exception.getValue();
             assertEquals("NotFound", responseError.getCode());
         });
@@ -174,7 +174,7 @@ public class DocumentModelAdminClientTest extends DocumentModelAdministrationCli
     public void listModels(HttpClient httpClient, DocumentAnalysisServiceVersion serviceVersion) {
         client = getDocumentModelAdministrationClient(httpClient, serviceVersion);
         int pageCount = 0;
-        for (PagedResponse<DocumentModelSummary> documentModelSummaryPagedResponse : client.listModels().iterableByPage()) {
+        for (PagedResponse<DocumentModelSummary> documentModelSummaryPagedResponse : client.listDocumentModels().iterableByPage()) {
             List<DocumentModelSummary> modelInfoList = documentModelSummaryPagedResponse.getValue();
             modelInfoList.forEach(documentModelSummary -> {
                 assertNotNull(documentModelSummary.getModelId());
@@ -197,7 +197,7 @@ public class DocumentModelAdminClientTest extends DocumentModelAdministrationCli
         client = getDocumentModelAdministrationClient(httpClient, serviceVersion);
         int pageCount = 0;
         for (PagedResponse<DocumentModelSummary> documentModelSummaryPagedResponse
-            : client.listModels(Context.NONE).iterableByPage()) {
+            : client.listDocumentModels(Context.NONE).iterableByPage()) {
             List<DocumentModelSummary> modelInfoList = documentModelSummaryPagedResponse.getValue();
             modelInfoList.forEach(documentModelSummary -> {
                 assertNotNull(documentModelSummary.getModelId());

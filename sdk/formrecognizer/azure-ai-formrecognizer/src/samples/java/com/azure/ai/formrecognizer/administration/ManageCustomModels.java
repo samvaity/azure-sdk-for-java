@@ -40,14 +40,14 @@ public class ManageCustomModels {
             resourceDetails.getCustomDocumentModelCount(), resourceDetails.getCustomDocumentModelLimit());
 
         // Next, we get a paged list of all of our models
-        PagedIterable<DocumentModelSummary> customDocumentModels = client.listModels();
+        PagedIterable<DocumentModelSummary> customDocumentModels = client.listDocumentModels();
         System.out.println("We have following models in the account:");
         customDocumentModels.forEach(documentModelInfo -> {
             System.out.printf("Model ID: %s%n", documentModelInfo.getModelId());
 
             // get custom document analysis model info
             modelId.set(documentModelInfo.getModelId());
-            DocumentModelDetails documentModel = client.getModel(documentModelInfo.getModelId());
+            DocumentModelDetails documentModel = client.getDocumentModel(documentModelInfo.getModelId());
             System.out.printf("Model ID: %s%n", documentModel.getModelId());
             System.out.printf("Model Description: %s%n", documentModel.getDescription());
             System.out.printf("Model created on: %s%n", documentModel.getCreatedOn());

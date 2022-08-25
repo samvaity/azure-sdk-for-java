@@ -298,42 +298,42 @@ public class DocumentModelAdminClientJavaDocCodeSnippets {
     }
 
     /**
-     * Code snippet for {@link DocumentModelAdministrationClient#listModels()}
+     * Code snippet for {@link DocumentModelAdministrationClient#listDocumentModels()}
      */
     public void listModels() {
-        // BEGIN: com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.listModels
-        documentModelAdministrationClient.listModels()
+        // BEGIN: com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.listDocumentModels
+        documentModelAdministrationClient.listDocumentModels()
             .forEach(documentModel ->
                 System.out.printf("Model ID: %s, Model description: %s, Created on: %s.%n",
                     documentModel.getModelId(),
                     documentModel.getDescription(),
                     documentModel.getCreatedOn())
             );
-        // END: com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.listModels
+        // END: com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.listDocumentModels
     }
 
     /**
-     * Code snippet for {@link DocumentModelAdministrationClient#listModels(Context)}
+     * Code snippet for {@link DocumentModelAdministrationClient#listDocumentModels(Context)}
      */
     public void listModelsWithContext() {
-        // BEGIN: com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.listModels#Context
-        documentModelAdministrationClient.listModels(Context.NONE)
+        // BEGIN: com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.listDocumentModels#Context
+        documentModelAdministrationClient.listDocumentModels(Context.NONE)
             .forEach(documentModel ->
                 System.out.printf("Model ID: %s, Model description: %s, Created on: %s.%n",
                     documentModel.getModelId(),
                     documentModel.getDescription(),
                     documentModel.getCreatedOn())
             );
-        // END: com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.listModels#Context
+        // END: com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.listDocumentModels#Context
     }
 
     /**
-     * Code snippet for {@link DocumentModelAdministrationClient#getModel(String)}
+     * Code snippet for {@link DocumentModelAdministrationClient#getDocumentModel(String)}
      */
     public void getModel() {
-        // BEGIN: com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getModel#string
+        // BEGIN: com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getDocumentModel#string
         String modelId = "{custom-model-id}";
-        DocumentModelDetails documentModelDetails = documentModelAdministrationClient.getModel(modelId);
+        DocumentModelDetails documentModelDetails = documentModelAdministrationClient.getDocumentModel(modelId);
         System.out.printf("Model ID: %s%n", documentModelDetails.getModelId());
         System.out.printf("Model Description: %s%n", documentModelDetails.getDescription());
         System.out.printf("Model Created on: %s%n", documentModelDetails.getCreatedOn());
@@ -344,17 +344,17 @@ public class DocumentModelAdminClientJavaDocCodeSnippets {
                 System.out.printf("Field confidence: %.2f", documentTypeDetails.getFieldConfidence().get(field));
             });
         });
-        // END: com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getModel#string
+        // END: com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getDocumentModel#string
     }
 
     /**
-     * Code snippet for {@link DocumentModelAdministrationClient#getModelWithResponse(String, Context)}
+     * Code snippet for {@link DocumentModelAdministrationClient#getDocumentModelWithResponse(String, Context)}
      */
     public void getModelWithResponse() {
-        // BEGIN: com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getModelWithResponse#string-Context
+        // BEGIN: com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getDocumentModelWithResponse#string-Context
         String modelId = "{custom-model-id}";
         Response<DocumentModelDetails> response
-            = documentModelAdministrationClient.getModelWithResponse(modelId, Context.NONE);
+            = documentModelAdministrationClient.getDocumentModelWithResponse(modelId, Context.NONE);
         System.out.printf("Response Status Code: %d.", response.getStatusCode());
         DocumentModelDetails documentModelDetails = response.getValue();
         System.out.printf("Model ID: %s%n", documentModelDetails.getModelId());
@@ -367,7 +367,7 @@ public class DocumentModelAdminClientJavaDocCodeSnippets {
                 System.out.printf("Field confidence: %.2f", documentTypeDetails.getFieldConfidence().get(field));
             });
         });
-        // END: com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getModelWithResponse#string-Context
+        // END: com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getDocumentModelWithResponse#string-Context
     }
 
     /**

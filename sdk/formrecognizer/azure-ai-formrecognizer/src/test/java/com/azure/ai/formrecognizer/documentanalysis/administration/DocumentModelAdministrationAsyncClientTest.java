@@ -121,7 +121,7 @@ public class DocumentModelAdministrationAsyncClientTest extends DocumentModelAdm
                 .assertNext(response -> assertEquals(response.getStatusCode(), HttpResponseStatus.NO_CONTENT.code()))
                 .verifyComplete();
 
-            StepVerifier.create(client.getModelWithResponse(createdModel.getModelId()))
+            StepVerifier.create(client.getDocumentModelWithResponse(createdModel.getModelId()))
                 .verifyErrorSatisfies(throwable -> {
                     assertEquals(HttpResponseException.class, throwable.getClass());
                     final ResponseError responseError = (ResponseError) ((HttpResponseException) throwable).getValue();
@@ -423,7 +423,7 @@ public class DocumentModelAdministrationAsyncClientTest extends DocumentModelAdm
     @MethodSource("com.azure.ai.formrecognizer.documentanalysis.TestUtils#getTestParameters")
     public void listModels(HttpClient httpClient, DocumentAnalysisServiceVersion serviceVersion) {
         client = getDocumentModelAdminAsyncClient(httpClient, serviceVersion);
-        StepVerifier.create(client.listModels().byPage().take(4))
+        StepVerifier.create(client.listDocumentModels().byPage().take(4))
             .thenConsumeWhile(documentModelInfoPagedResponse -> {
                 documentModelInfoPagedResponse.getValue()
                     .forEach(documentModelInfo -> {
@@ -441,7 +441,7 @@ public class DocumentModelAdministrationAsyncClientTest extends DocumentModelAdm
     @MethodSource("com.azure.ai.formrecognizer.documentanalysis.TestUtils#getTestParameters")
     public void getModelNullModelId(HttpClient httpClient, DocumentAnalysisServiceVersion serviceVersion) {
         client = getDocumentModelAdminAsyncClient(httpClient, serviceVersion);
-        StepVerifier.create(client.getModel(null)).verifyError();
+        StepVerifier.create(client.getDocumentModel(null)).verifyError();
     }
 
     /**
@@ -458,7 +458,7 @@ public class DocumentModelAdministrationAsyncClientTest extends DocumentModelAdm
             syncPoller1.waitForCompletion();
             DocumentModelDetails createdModel = syncPoller1.getFinalResult();
 
-            StepVerifier.create(client.getModelWithResponse(createdModel.getModelId()))
+            StepVerifier.create(client.getDocumentModelWithResponse(createdModel.getModelId()))
                 .assertNext(documentModelResponse -> {
                     assertEquals(documentModelResponse.getStatusCode(), HttpResponseStatus.OK.code());
                     validateDocumentModelData(documentModelResponse.getValue());

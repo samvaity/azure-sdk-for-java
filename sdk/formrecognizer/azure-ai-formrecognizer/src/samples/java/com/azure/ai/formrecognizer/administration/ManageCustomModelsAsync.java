@@ -38,13 +38,13 @@ public class ManageCustomModelsAsync {
                 resourceInfo.getCustomDocumentModelCount(), resourceInfo.getCustomDocumentModelLimit()));
         // Next, we get a paged list of all of our models
         System.out.println("We have following models in the account:");
-        client.listModels().subscribe(documentModelInfo -> {
+        client.listDocumentModels().subscribe(documentModelInfo -> {
             String createdModelId = documentModelInfo.getModelId();
             System.out.printf("Model ID: %s%n", createdModelId);
 
             // get custom document analysis model info
             modelId.set(createdModelId);
-            client.getModel(documentModelInfo.getModelId()).subscribe(documentModel -> {
+            client.getDocumentModel(documentModelInfo.getModelId()).subscribe(documentModel -> {
                 System.out.printf("Model ID: %s%n", documentModel.getModelId());
                 System.out.printf("Model Description: %s%n", documentModel.getDescription());
                 System.out.printf("Model created on: %s%n", documentModel.getCreatedOn());

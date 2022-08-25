@@ -50,7 +50,7 @@ public class CopyModelAsync {
                             documentModelInfo.getCreatedOn());
 
                         // Get the copied model from the target resource
-                        targetClient.getModel(copyAuthorization.getTargetModelId()).subscribe(documentModel ->
+                        targetClient.getDocumentModel(copyAuthorization.getTargetModelId()).subscribe(documentModel ->
                             System.out.printf("Copied model has model ID: %s was created on: %s.%n",
                                 documentModel.getModelId(),
                                 documentModel.getCreatedOn()));

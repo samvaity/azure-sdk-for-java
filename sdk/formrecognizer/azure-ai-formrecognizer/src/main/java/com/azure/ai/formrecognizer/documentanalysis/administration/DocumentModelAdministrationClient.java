@@ -195,9 +195,9 @@ public final class DocumentModelAdministrationClient {
      * <pre>
      * ResourceDetails resourceDetails = documentModelAdministrationClient.getResourceDetails&#40;&#41;;
      * System.out.printf&#40;&quot;Max number of models that can be build for this account: %d%n&quot;,
-     *     resourceDetails.getDocumentModelLimit&#40;&#41;&#41;;
+     *     resourceDetails.getCustomDocumentModelLimit&#40;&#41;&#41;;
      * System.out.printf&#40;&quot;Current count of built document analysis models: %d%n&quot;,
-     *     resourceDetails.getDocumentModelCount&#40;&#41;&#41;;
+     *     resourceDetails.getCustomDocumentModelCount&#40;&#41;&#41;;
      * </pre>
      * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getResourceDetails -->
      *
@@ -220,9 +220,9 @@ public final class DocumentModelAdministrationClient {
      * System.out.printf&#40;&quot;Response Status Code: %d.&quot;, response.getStatusCode&#40;&#41;&#41;;
      * ResourceDetails resourceDetails = response.getValue&#40;&#41;;
      * System.out.printf&#40;&quot;Max number of models that can be build for this account: %d%n&quot;,
-     *     resourceDetails.getDocumentModelLimit&#40;&#41;&#41;;
+     *     resourceDetails.getCustomDocumentModelLimit&#40;&#41;&#41;;
      * System.out.printf&#40;&quot;Current count of built document analysis models: %d%n&quot;,
-     *     resourceDetails.getDocumentModelCount&#40;&#41;&#41;;
+     *     resourceDetails.getCustomDocumentModelCount&#40;&#41;&#41;;
      * </pre>
      * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getResourceDetailsWithResponse#Context -->
      *
@@ -528,9 +528,9 @@ public final class DocumentModelAdministrationClient {
      * List information for each model on the Form Recognizer account that were built successfully.
      *
      * <p><strong>Code sample</strong></p>
-     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.listModels -->
+     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.listDocumentModels -->
      * <pre>
-     * documentModelAdministrationClient.listModels&#40;&#41;
+     * documentModelAdministrationClient.listDocumentModels&#40;&#41;
      *     .forEach&#40;documentModel -&gt;
      *         System.out.printf&#40;&quot;Model ID: %s, Model description: %s, Created on: %s.%n&quot;,
      *             documentModel.getModelId&#40;&#41;,
@@ -538,13 +538,13 @@ public final class DocumentModelAdministrationClient {
      *             documentModel.getCreatedOn&#40;&#41;&#41;
      *     &#41;;
      * </pre>
-     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.listModels -->
+     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.listDocumentModels -->
      *
      * @return {@link PagedIterable} of {@link DocumentModelSummary} custom form model information.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<DocumentModelSummary> listModels() {
-        return new PagedIterable<>(client.listModels(Context.NONE));
+    public PagedIterable<DocumentModelSummary> listDocumentModels() {
+        return new PagedIterable<>(client.listDocumentModels(Context.NONE));
     }
 
     /**
@@ -552,9 +552,9 @@ public final class DocumentModelAdministrationClient {
      * response and a specified {@link Context}.
      *
      * <p><strong>Code sample</strong></p>
-     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.listModels#Context -->
+     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.listDocumentModels#Context -->
      * <pre>
-     * documentModelAdministrationClient.listModels&#40;Context.NONE&#41;
+     * documentModelAdministrationClient.listDocumentModels&#40;Context.NONE&#41;
      *     .forEach&#40;documentModel -&gt;
      *         System.out.printf&#40;&quot;Model ID: %s, Model description: %s, Created on: %s.%n&quot;,
      *             documentModel.getModelId&#40;&#41;,
@@ -562,25 +562,25 @@ public final class DocumentModelAdministrationClient {
      *             documentModel.getCreatedOn&#40;&#41;&#41;
      *     &#41;;
      * </pre>
-     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.listModels#Context -->
+     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.listDocumentModels#Context -->
      *
      * @param context Additional context that is passed through the Http pipeline during the service call.
      *
      * @return {@link PagedIterable} of {@link DocumentModelSummary} custom form model information.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<DocumentModelSummary> listModels(Context context) {
-        return new PagedIterable<>(client.listModels(context));
+    public PagedIterable<DocumentModelSummary> listDocumentModels(Context context) {
+        return new PagedIterable<>(client.listDocumentModels(context));
     }
 
     /**
      * Get detailed information for a specified model ID.
      *
      * <p><strong>Code sample</strong></p>
-     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getModel#string -->
+     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getDocumentModel#string -->
      * <pre>
      * String modelId = &quot;&#123;custom-model-id&#125;&quot;;
-     * DocumentModelDetails documentModelDetails = documentModelAdministrationClient.getModel&#40;modelId&#41;;
+     * DocumentModelDetails documentModelDetails = documentModelAdministrationClient.getDocumentModel&#40;modelId&#41;;
      * System.out.printf&#40;&quot;Model ID: %s%n&quot;, documentModelDetails.getModelId&#40;&#41;&#41;;
      * System.out.printf&#40;&quot;Model Description: %s%n&quot;, documentModelDetails.getDescription&#40;&#41;&#41;;
      * System.out.printf&#40;&quot;Model Created on: %s%n&quot;, documentModelDetails.getCreatedOn&#40;&#41;&#41;;
@@ -592,7 +592,7 @@ public final class DocumentModelAdministrationClient {
      *     &#125;&#41;;
      * &#125;&#41;;
      * </pre>
-     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getModel#string -->
+     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getDocumentModel#string -->
      *
      * @param modelId The unique model identifier.
      *
@@ -600,19 +600,19 @@ public final class DocumentModelAdministrationClient {
      * @throws IllegalArgumentException If {@code modelId} is null or empty.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public DocumentModelDetails getModel(String modelId) {
-        return getModelWithResponse(modelId, Context.NONE).getValue();
+    public DocumentModelDetails getDocumentModel(String modelId) {
+        return getDocumentModelWithResponse(modelId, Context.NONE).getValue();
     }
 
     /**
      * Get detailed information for a specified model ID.
      *
      * <p><strong>Code sample</strong></p>
-     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getModelWithResponse#string-Context -->
+     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getDocumentModelWithResponse#string-Context -->
      * <pre>
      * String modelId = &quot;&#123;custom-model-id&#125;&quot;;
      * Response&lt;DocumentModelDetails&gt; response
-     *     = documentModelAdministrationClient.getModelWithResponse&#40;modelId, Context.NONE&#41;;
+     *     = documentModelAdministrationClient.getDocumentModelWithResponse&#40;modelId, Context.NONE&#41;;
      * System.out.printf&#40;&quot;Response Status Code: %d.&quot;, response.getStatusCode&#40;&#41;&#41;;
      * DocumentModelDetails documentModelDetails = response.getValue&#40;&#41;;
      * System.out.printf&#40;&quot;Model ID: %s%n&quot;, documentModelDetails.getModelId&#40;&#41;&#41;;
@@ -626,7 +626,7 @@ public final class DocumentModelAdministrationClient {
      *     &#125;&#41;;
      * &#125;&#41;;
      * </pre>
-     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getModelWithResponse#string-Context -->
+     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient.getDocumentModelWithResponse#string-Context -->
      *
      * @param modelId The unique model identifier.
      * @param context Additional context that is passed through the Http pipeline during the service call.
@@ -635,8 +635,8 @@ public final class DocumentModelAdministrationClient {
      * @throws IllegalArgumentException If {@code modelId} is null or empty.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    public Response<DocumentModelDetails> getModelWithResponse(String modelId, Context context) {
-        return client.getModelWithResponse(modelId, context).block();
+    public Response<DocumentModelDetails> getDocumentModelWithResponse(String modelId, Context context) {
+        return client.getDocumentModelWithResponse(modelId, context).block();
     }
 
     /**
