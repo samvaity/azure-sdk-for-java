@@ -62,4 +62,11 @@ public final class ManifestList extends Manifest {
         this.manifests = manifests;
         return this;
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public ManifestList setSchemaVersion(Integer schemaVersion) {
+        super.setSchemaVersion(schemaVersion);
+        return this;
+    }
 }

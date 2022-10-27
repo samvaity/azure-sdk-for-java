@@ -43,6 +43,7 @@ service-interface-as-public: true
 models-subpackage: implementation.models
 custom-types: ArtifactTagOrder,ArtifactManifestOrder,ArtifactArchitecture,ArtifactOperatingSystem,ArtifactManifestPlatform,RepositoryProperties,ContainerRepositoryProperties,OciManifest,OciBlobDescriptor,OciAnnotations
 custom-types-subpackage: models
+enable-sync-stack: true
 ```
 
 ### Set modelAsString flag for the enum values of ArtifactTagOrderBy

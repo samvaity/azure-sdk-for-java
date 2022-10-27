@@ -166,4 +166,11 @@ public final class V1Manifest extends Manifest {
         this.signatures = signatures;
         return this;
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public V1Manifest setSchemaVersion(Integer schemaVersion) {
+        super.setSchemaVersion(schemaVersion);
+        return this;
+    }
 }

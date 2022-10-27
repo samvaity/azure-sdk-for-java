@@ -63,4 +63,11 @@ public final class OCIIndex extends Manifest {
         this.annotations = annotations;
         return this;
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public OCIIndex setSchemaVersion(Integer schemaVersion) {
+        super.setSchemaVersion(schemaVersion);
+        return this;
+    }
 }

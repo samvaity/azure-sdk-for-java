@@ -89,4 +89,11 @@ public final class V2Manifest extends Manifest {
         this.layers = layers;
         return this;
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public V2Manifest setSchemaVersion(Integer schemaVersion) {
+        super.setSchemaVersion(schemaVersion);
+        return this;
+    }
 }

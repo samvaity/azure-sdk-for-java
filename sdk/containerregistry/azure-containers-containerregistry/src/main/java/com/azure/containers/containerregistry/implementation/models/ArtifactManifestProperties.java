@@ -18,8 +18,7 @@ import java.util.List;
 @Fluent
 public class ArtifactManifestProperties {
     /*
-     * Registry login server name. This is likely to be similar to
-     * {registry-name}.azurecr.io.
+     * Registry login server name. This is likely to be similar to {registry-name}.azurecr.io.
      */
     @JsonProperty(value = "registry", access = JsonProperty.Access.WRITE_ONLY)
     private String registryLoginServer;
@@ -67,9 +66,8 @@ public class ArtifactManifestProperties {
     private ArtifactOperatingSystem operatingSystem;
 
     /*
-     * List of artifacts that are referenced by this manifest list, with
-     * information about the platform each supports.  This list will be empty
-     * if this is a leaf manifest and not a manifest list.
+     * List of artifacts that are referenced by this manifest list, with information about the platform each supports.
+     * This list will be empty if this is a leaf manifest and not a manifest list.
      */
     @JsonProperty(value = "manifest.references", access = JsonProperty.Access.WRITE_ONLY)
     private List<ArtifactManifestPlatform> relatedArtifacts;

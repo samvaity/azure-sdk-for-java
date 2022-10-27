@@ -5,6 +5,7 @@
 package com.azure.containers.containerregistry.implementation.models;
 
 import com.azure.core.annotation.Fluent;
+import com.azure.core.http.HttpHeaders;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /** The ContainerRegistryBlobsGetBlobHeaders model. */
@@ -27,6 +28,18 @@ public final class ContainerRegistryBlobsGetBlobHeaders {
      */
     @JsonProperty(value = "Location")
     private String location;
+
+    // HttpHeaders containing the raw property values.
+    /**
+     * Creates an instance of ContainerRegistryBlobsGetBlobHeaders class.
+     *
+     * @param rawHeaders The raw HttpHeaders that will be used to create the property values.
+     */
+    public ContainerRegistryBlobsGetBlobHeaders(HttpHeaders rawHeaders) {
+        this.contentLength = Long.parseLong(rawHeaders.getValue("Content-Length"));
+        this.dockerContentDigest = rawHeaders.getValue("Docker-Content-Digest");
+        this.location = rawHeaders.getValue("Location");
+    }
 
     /**
      * Get the contentLength property: The Content-Length property.

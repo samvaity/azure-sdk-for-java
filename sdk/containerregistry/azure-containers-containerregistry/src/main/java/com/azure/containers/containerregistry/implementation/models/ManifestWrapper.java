@@ -298,4 +298,11 @@ public final class ManifestWrapper extends Manifest {
         this.signatures = signatures;
         return this;
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public ManifestWrapper setSchemaVersion(Integer schemaVersion) {
+        super.setSchemaVersion(schemaVersion);
+        return this;
+    }
 }
