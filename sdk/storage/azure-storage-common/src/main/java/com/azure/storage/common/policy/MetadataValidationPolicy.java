@@ -7,10 +7,11 @@ import com.azure.core.http.HttpHeader;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpPipelineCallContext;
 import com.azure.core.http.HttpPipelineNextPolicy;
+import com.azure.core.http.HttpPipelineNextSyncPolicy;
 import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpPipelinePolicy;
+import com.azure.core.http.policy.HttpPipelineSyncPolicy;
 import com.azure.core.util.CoreUtils;
-import com.azure.core.util.FluxUtil;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.storage.common.implementation.Constants;
 import reactor.core.publisher.Mono;
@@ -26,16 +27,20 @@ public class MetadataValidationPolicy implements HttpPipelinePolicy {
     // Header constant X_MS_META doesn't include the '-' in 'x-ms-meta-' (it is 'x-ms-meta')
     private static final String X_MS_META = Constants.HeaderConstants.X_MS_META + "-";
     private static final int X_MS_META_LENGTH = X_MS_META.length();
-
+    private final HttpPipelineSyncPolicy inner = new HttpPipelineSyncPolicy() {
+        @Override
+        protected void beforeSendingRequest(HttpPipelineCallContext context) {
+            validateMetadataHeaders(context.getHttpRequest().getHeaders());
+        }
+    };
     @Override
     public Mono<HttpResponse> process(HttpPipelineCallContext context, HttpPipelineNextPolicy next) {
-        try {
-            validateMetadataHeaders(context.getHttpRequest().getHeaders());
-        } catch (IllegalArgumentException ex) {
-            return FluxUtil.monoError(LOGGER, ex);
-        }
+        return inner.process(context, next);
+    }
 
-        return next.process();
+    @Override
+    public HttpResponse processSync(HttpPipelineCallContext context, HttpPipelineNextSyncPolicy next) {
+        return inner.processSync(context, next);
     }
 
     static void validateMetadataHeaders(HttpHeaders headers) {
