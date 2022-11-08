@@ -93,15 +93,7 @@ public final class RequestRetryPolicy implements HttpPipelinePolicy {
         // Determine which endpoint to try. It's primary if there is no secondary or if it is an odd number attempt.
         final boolean tryingPrimary = !considerSecondary || (attempt % 2 != 0);
 
-        // Select the correct host and delay.
-        long delayMs;
-        if (tryingPrimary) {
-            // The first attempt returns 0 delay.
-            delayMs = this.requestRetryOptions.calculateDelayInMs(primaryTry);
-        } else {
-            // Delay with some jitter before trying the secondary.
-            delayMs = (long) ((ThreadLocalRandom.current().nextFloat() / 2 + 0.8) * 1000); // Add jitter
-        }
+        long delayMs = getDelayMs(tryingPrimary, primaryTry);
 
         /*
          * Clone the original request to ensure that each try starts with the original (unmutated) request. We cannot
@@ -273,17 +265,7 @@ public final class RequestRetryPolicy implements HttpPipelinePolicy {
         final List<Throwable> suppressed) {
         // Determine which endpoint to try. It's primary if there is no secondary or if it is an odd number attempt.
         final boolean tryingPrimary = !considerSecondary || (attempt % 2 != 0);
-
-        // Select the correct host and delay.
-        long delayMs;
-        if (tryingPrimary) {
-            // The first attempt returns 0 delay.
-            delayMs = this.requestRetryOptions.calculateDelayInMs(primaryTry);
-        } else {
-            // Delay with some jitter before trying the secondary.
-            delayMs = (long) ((ThreadLocalRandom.current().nextFloat() / 2 + 0.8) * 1000); // Add jitter
-        }
-
+        long delayMs = getDelayMs(tryingPrimary, primaryTry);
         /*
          * Clone the original request to ensure that each try starts with the original (unmutated) request. We cannot
          * simply call httpRequest.buffer() because although the body will start emitting from the beginning of the
@@ -294,14 +276,7 @@ public final class RequestRetryPolicy implements HttpPipelinePolicy {
          */
         context.setHttpRequest(originalRequest.copy());
         BinaryData originalRequestBody = originalRequest.getBodyAsBinaryData();
-        if (originalRequestBody != null && !originalRequestBody.isReplayable()) {
-            // Replayable bodies don't require this transformation.
-            // TODO (kasobol-msft) Remove this transformation in favor of
-            // BinaryData.toReplayableBinaryData()
-            // But this should be done together with removal of buffering in chunked uploads.
-            Flux<ByteBuffer> bufferedBody = context.getHttpRequest().getBody().map(ByteBuffer::duplicate);
-            context.getHttpRequest().setBody(bufferedBody);
-        }
+
         if (!tryingPrimary) {
             UrlBuilder builder = UrlBuilder.parse(context.getHttpRequest().getUrl());
             builder.setHost(this.requestRetryOptions.getSecondaryHost());
@@ -328,13 +303,59 @@ public final class RequestRetryPolicy implements HttpPipelinePolicy {
          We want to send the request with a given timeout, but we don't want to kickoff that timeout-bound operation
          until after the retry backoff delay, so we call delaySubscription.
          */
-        HttpResponse responseMono = next.clone().processSync();
+        HttpResponse httpResponse;
+        try {
+            httpResponse = next.clone().processSync();
+        } catch (RuntimeException throwable) {
+            /*
+             * It is likely that many users will not realize that their Flux must be replayable and get an error upon
+             * retries when the provided data length does not match the length of the exact data. We cannot enforce the
+             * desired Flux behavior, so we provide a hint when this is likely the root cause.
+             */
+            if (throwable instanceof IllegalStateException && attempt > 1) {
+                throw LOGGER.logExceptionAsError((new IllegalStateException("The request failed because the size of the contents of "
+                    + "the provided Flux did not match the provided data size upon attempting to retry. This is likely "
+                    + "caused by the Flux not being replayable. To support retries, all Fluxes must produce the same "
+                    + "data for each subscriber. Please ensure this behavior.", throwable)));
+            }
+
+            /*
+             * IOException is a catch-all for IO related errors. Technically it includes many types which may not be
+             * network exceptions, but we should not hit those unless there is a bug in our logic. In either case, it is
+             * better to optimistically retry instead of failing too soon. A Timeout Exception is a client-side timeout
+             * coming from Rx.
+             */
+            boolean retry = false;
+            Throwable unwrappedThrowable = Exceptions.unwrap(throwable);
+            if (unwrappedThrowable instanceof IOException) {
+                retry = true;
+            } else if (unwrappedThrowable instanceof TimeoutException) {
+                retry = true;
+            }
+
+            if (retry && attempt < requestRetryOptions.getMaxTries()) {
+                /*
+                 * We increment primaryTry if we are about to try the primary again (which is when we consider the
+                 * secondary and tried the secondary this time (tryingPrimary==false) or we do not consider the
+                 * secondary at all (considerSecondary==false)). This will ensure primaryTry is correct when passed to
+                 * calculate the delay.
+                 */
+                int newPrimaryTry = (!tryingPrimary || !considerSecondary) ? primaryTry + 1 : primaryTry;
+                List<Throwable> suppressedLocal = suppressed == null ? new LinkedList<>() : suppressed;
+                suppressedLocal.add(unwrappedThrowable);
+                return attemptSync(context, next, originalRequest, considerSecondary, newPrimaryTry, attempt + 1,
+                    suppressedLocal);
+            }
+            if (suppressed != null) {
+                suppressed.forEach(throwable::addSuppressed);
+            }
+            throw LOGGER.logExceptionAsError(throwable);
+        }
 
         // Default try timeout is Integer.MAX_VALUE seconds, if it's that don't set a timeout as that's about 68 years
         // and would likely never complete.
         // TODO (alzimmer): Think about not adding this if it's over a certain length, like 1 year.
         try {
-
             if (this.requestRetryOptions.getTryTimeoutDuration().getSeconds() != Integer.MAX_VALUE) {
                 Thread.sleep(this.requestRetryOptions.getTryTimeoutDuration().toMillis());
             }
@@ -349,7 +370,7 @@ public final class RequestRetryPolicy implements HttpPipelinePolicy {
 
         boolean newConsiderSecondary = considerSecondary;
         boolean retry = false;
-        int statusCode = responseMono.getStatusCode();
+        int statusCode = httpResponse.getStatusCode();
 
         /*
          * If attempt was against the secondary & it returned a StatusNotFound (404), then the resource was not
@@ -372,11 +393,23 @@ public final class RequestRetryPolicy implements HttpPipelinePolicy {
              */
             int newPrimaryTry = (!tryingPrimary || !considerSecondary) ? primaryTry + 1 : primaryTry;
 
-            Flux<ByteBuffer> responseBody = responseMono.getBody();
+            httpResponse.close();
             return attemptSync(context, next, originalRequest, newConsiderSecondary, newPrimaryTry,
                 attempt + 1, suppressed);
 
         }
-        return responseMono;
+        return httpResponse;
+    }
+
+    private long getDelayMs(boolean tryingPrimary, int primaryTry) {
+        // Select the correct host and delay.
+        long delayMs;
+        if (tryingPrimary) {
+            // The first attempt returns 0 delay.
+            return this.requestRetryOptions.calculateDelayInMs(primaryTry);
+        } else {
+            // Delay with some jitter before trying the secondary.
+            return (long) ((ThreadLocalRandom.current().nextFloat() / 2 + 0.8) * 1000); // Add jitter
+        }
     }
 }

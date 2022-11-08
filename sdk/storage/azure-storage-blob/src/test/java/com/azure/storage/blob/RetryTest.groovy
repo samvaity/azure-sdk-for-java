@@ -34,18 +34,6 @@ class RetryTest extends Specification {
             }).verifyComplete()
     }
 
-    def "Retries until success sync"() {
-        setup:
-        RequestRetryTestFactory retryTestFactory = new RequestRetryTestFactory(RequestRetryTestFactory.RETRY_TEST_SCENARIO_RETRY_UNTIL_SUCCESS, retryTestOptions)
-
-        when:
-        def response = retryTestFactory.sendSync(retryTestURL)
-
-        then:
-        assert response.getStatusCode() == 200
-        assert retryTestFactory.getTryNumber() == 6
-    }
-
     def "Retries until max retries"() {
         setup:
         RequestRetryTestFactory retryTestFactory = new RequestRetryTestFactory(RequestRetryTestFactory.RETRY_TEST_SCENARIO_RETRY_UNTIL_MAX_RETRIES, retryTestOptions)
