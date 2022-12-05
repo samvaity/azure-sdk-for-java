@@ -16,14 +16,18 @@ import com.azure.ai.formrecognizer.documentanalysis.models.AnalyzeResult;
 import com.azure.ai.formrecognizer.documentanalysis.models.OperationResult;
 import com.azure.core.exception.HttpResponseException;
 import com.azure.core.http.HttpClient;
+import com.azure.core.http.HttpMethod;
 import com.azure.core.http.rest.PagedResponse;
 import com.azure.core.http.rest.Response;
 import com.azure.core.models.ResponseError;
+import com.azure.core.test.SyncAsyncExtension;
+import com.azure.core.test.annotation.SyncAsyncTest;
 import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
 import com.azure.core.util.polling.SyncPoller;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -43,6 +47,11 @@ public class DocumentModelAdminClientTest extends DocumentModelAdministrationCli
     private DocumentModelAdministrationClient getDocumentModelAdministrationClient(HttpClient httpClient,
                                                                                    DocumentAnalysisServiceVersion serviceVersion) {
         return getDocumentModelAdminClientBuilder(httpClient, serviceVersion, false).buildClient();
+    }
+
+    private DocumentModelAdministrationAsyncClient getDocumentModelAdministrationAsyncClient(HttpClient httpClient,
+                                                                                             DocumentAnalysisServiceVersion serviceVersion) {
+        return getDocumentModelAdminClientBuilder(httpClient, serviceVersion, false).buildAsyncClient();
     }
 
     /**
@@ -67,11 +76,28 @@ public class DocumentModelAdminClientTest extends DocumentModelAdministrationCli
     /**
      * Verifies that an exception is thrown for null model ID parameter.
      */
-    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
-    @MethodSource("com.azure.ai.formrecognizer.documentanalysis.TestUtils#getTestParameters")
-    public void getModelNullModelID(HttpClient httpClient, DocumentAnalysisServiceVersion serviceVersion) {
-        client = getDocumentModelAdministrationClient(httpClient, serviceVersion);
-        assertThrows(IllegalArgumentException.class, () -> client.getDocumentModel(null));
+    @SyncAsyncTest
+    public void getModelNullModelID(HttpClient httpClient) {
+        client = getDocumentModelAdministrationClient(httpClient, DocumentAnalysisServiceVersion.V2022_08_31);
+        DocumentModelAdministrationAsyncClient asyncClient =
+            getDocumentModelAdministrationAsyncClient(httpClient, DocumentAnalysisServiceVersion.V2022_08_31);
+        SyncAsyncExtension.execute(
+            () -> client.getDocumentModel(null),
+            () -> asyncClient.getDocumentModel(null)
+        );
+        // assertThrows(IllegalArgumentException.class, () -> client.getDocumentModel(null));
+    }
+
+    /**
+     * Verifies that an exception is thrown for null model ID parameter.
+     */
+    @SyncAsyncTest
+    public void addExtra(HttpClient httpClient) {
+        client = getDocumentModelAdministrationClient(httpClient, DocumentAnalysisServiceVersion.V2022_08_31);
+        DocumentModelAdministrationAsyncClient asyncClient =
+            getDocumentModelAdministrationAsyncClient(httpClient, DocumentAnalysisServiceVersion.V2022_08_31);
+        assertNotNull(client.getDocumentAnalysisClient());
+        assertNotNull(asyncClient.getDocumentAnalysisAsyncClient());
     }
 
     /**

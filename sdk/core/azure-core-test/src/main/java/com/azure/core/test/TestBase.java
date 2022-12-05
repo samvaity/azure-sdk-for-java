@@ -235,7 +235,7 @@ public abstract class TestBase implements BeforeEachCallback {
         return includeHttpClientOrHttpClientProvider(client.getClass().getSimpleName().toLowerCase(Locale.ROOT));
     }
 
-    private static boolean includeHttpClientOrHttpClientProvider(String name) {
+    static boolean includeHttpClientOrHttpClientProvider(String name) {
         if (AZURE_TEST_HTTP_CLIENTS_VALUE_ALL.equalsIgnoreCase(CONFIGURED_HTTP_CLIENTS_TO_TEST)) {
             return true;
         }

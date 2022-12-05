@@ -4,7 +4,7 @@
 package com.azure.core.test;
 
 import com.azure.core.http.HttpClientProvider;
-import com.azure.core.test.annotation.SyncAsyncTest;
+import com.azure.core.test.annotation.TestTemplateExample;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -27,7 +27,7 @@ import static java.util.Arrays.asList;
 /**
  * An test template extension that helps to branch out a single test into sync and async invocation.
  */
-public final class SyncAsyncExtension implements TestTemplateInvocationContextProvider {
+public final class TestTemplateExtension implements TestTemplateInvocationContextProvider {
 
     private static final ThreadLocal<Boolean> IS_SYNC_THREAD_LOCAL = new ThreadLocal<>();
     private static final ThreadLocal<Boolean> WAS_EXTENSION_USED_THREAD_LOCAL = new ThreadLocal<>();
@@ -93,7 +93,7 @@ public final class SyncAsyncExtension implements TestTemplateInvocationContextPr
     @Override
     public boolean supportsTestTemplate(ExtensionContext extensionContext) {
         return extensionContext.getTestMethod()
-            .map(method -> method.getAnnotation(SyncAsyncTest.class) != null)
+            .map(method -> method.getAnnotation(TestTemplateExample.class) != null)
             .orElse(false);
     }
 
@@ -110,18 +110,15 @@ public final class SyncAsyncExtension implements TestTemplateInvocationContextPr
         }
 
         return Stream.of(
-            new SyncAsyncTestTemplateInvocationContext(true, httpClientsToTest),
-            new SyncAsyncTestTemplateInvocationContext(false, httpClientsToTest)
+            new SyncAsyncTestTemplateInvocationContext(httpClientsToTest)
         );
     }
 
     private final class SyncAsyncTestTemplateInvocationContext implements TestTemplateInvocationContext {
-        private final boolean isSync;
         private final Object[] httpClients;
 
 
-        private SyncAsyncTestTemplateInvocationContext(boolean isSync, Object[] httpClients) {
-            this.isSync = isSync;
+        private SyncAsyncTestTemplateInvocationContext(Object[] httpClients) {
             this.httpClients = httpClients;
         }
 
@@ -133,7 +130,7 @@ public final class SyncAsyncExtension implements TestTemplateInvocationContextPr
         @Override
         public List<Extension> getAdditionalExtensions() {
             return asList(
-                new CartesianProductResolver(httpClients), new SyncAsyncTestInterceptor(isSync)
+                new CartesianProductResolver(httpClients)
             );
             // return Collections.singletonList(new SyncAsyncTestInterceptor(isSync));
         }
