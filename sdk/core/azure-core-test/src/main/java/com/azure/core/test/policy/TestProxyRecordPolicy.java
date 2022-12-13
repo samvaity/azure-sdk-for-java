@@ -1,6 +1,10 @@
 package com.azure.core.test.policy;
 
-import com.azure.core.http.*;
+import com.azure.core.http.HttpMethod;
+import com.azure.core.http.HttpPipelineCallContext;
+import com.azure.core.http.HttpPipelineNextPolicy;
+import com.azure.core.http.HttpRequest;
+import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpPipelinePolicy;
 import com.azure.core.test.utils.HttpURLConnectionHttpClient;
 import com.azure.core.test.utils.TestProxyUtils;
@@ -22,6 +26,16 @@ public class TestProxyRecordPolicy implements HttpPipelinePolicy {
         HttpResponse response = client.sendSync(request, Context.NONE);
 
         xRecordingId = response.getHeaderValue("x-recording-id");
+
+        addUriKeySanitizer();
+    }
+
+    private void addUriKeySanitizer() {
+        HttpRequest request = new HttpRequest(HttpMethod.POST, String.format("%s/Admin/AddSanitizer", TestProxyUtils.getProxyUrl()))
+            .setBody("{\"value\":\"fakeaccount\",\"regex\":\"[a-z]+(?=\\\\.(?:table|blob|queue)\\\\.core\\\\.windows\\\\.net)\"}");
+        request.setHeader("x-abstraction-identifier", "UriRegexSanitizer");
+        request.setHeader("x-recording-id", xRecordingId);
+        client.sendSync(request, Context.NONE);
     }
 
     public void stopRecording(Map<String, String> variables) {

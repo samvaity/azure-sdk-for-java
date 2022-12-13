@@ -11,7 +11,6 @@ import com.azure.core.util.Configuration;
 import com.azure.core.util.Context;
 import com.azure.core.util.UrlBuilder;
 import org.junit.jupiter.api.AfterAll;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -50,7 +49,7 @@ public class TestProxyRecordTests extends TestBase {
             .policies(interceptorManager.getRecordPolicy()).build();
         URL url = null;
         try {
-            url = new UrlBuilder().setHost("example.com").setScheme("https").toUrl();
+            url = new UrlBuilder().setHost("example.blob.core.windows.net/testcontainer/testDir").setScheme("https").toUrl();
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
