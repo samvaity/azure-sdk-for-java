@@ -23,10 +23,15 @@ public class TestProxyUtils {
         builder.setScheme(proxyUrlScheme);
         builder.setHost(proxyUrlHost);
         builder.setPort(proxyUrlPort);
+        builder.setPath("");
+        builder.setQuery("");
 
         String url = builder.toString();
 
         HttpHeaders headers = request.getHeaders();
+        System.out.println("Original URL :: " + originalUrl);
+        System.out.println("Headers :: " + request.getHeaders().get("Ocp-Apim-Subscription-Key"));
+
         headers.add("x-recording-upstream-base-uri", originalUrl.toString());
         headers.add("x-recording-mode", mode);
         headers.add("x-recording-id", xRecordingId);

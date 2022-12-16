@@ -14,15 +14,15 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @SuppressWarnings("deprecation")
 public class TestProxyRecordTests extends TestBase {
+
+    String ENDPOINT = Configuration.getGlobalConfiguration().get("AZURE_FORM_RECOGNIZER_ENDPOINT");
+    String API_KEY = Configuration.getGlobalConfiguration().get("AZURE_FORM_RECOGNIZER_API_KEY");
 
     @BeforeAll
     public static void setupClass() {
@@ -36,10 +36,7 @@ public class TestProxyRecordTests extends TestBase {
         TestBase.teardownClass();
         Configuration.getGlobalConfiguration().remove(TestingHelpers.AZURE_TEST_MODE);
         Configuration.getGlobalConfiguration().remove(TestingHelpers.AZURE_TEST_USE_PROXY);
-
     }
-
-
     @Test
     public void testRecord() {
 
@@ -49,14 +46,36 @@ public class TestProxyRecordTests extends TestBase {
             .policies(interceptorManager.getRecordPolicy()).build();
         URL url = null;
         try {
-            url = new UrlBuilder().setHost("example.blob.core.windows.net/testcontainer/testDir").setScheme("https").toUrl();
+            url = new UrlBuilder().setHost(ENDPOINT).setPath("/formrecognizer/documentModels")
+                .setQueryParameter("api-version", "2022-08-31").setScheme("https").toUrl();
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
         HttpRequest request = new HttpRequest(HttpMethod.GET, url);
+        request.setHeader("Ocp-Apim-Subscription-Key", API_KEY);
+        request.setHeader("Content-Type", "application/json");
         HttpResponse response = pipeline.sendSync(request, Context.NONE);
 
-        assertEquals(response.getStatusCode(), 200);
+        // assertEquals(response.getStatusCode(), 200);
     }
+
+    // @Test
+    // public void testRecord() {
+    //
+    // HttpURLConnectionHttpClient client = new HttpURLConnectionHttpClient();
+    // HttpPipeline pipeline = new HttpPipelineBuilder()
+    //     .httpClient(client)
+    //     .policies(interceptorManager.getRecordPolicy()).build();
+    // URL url = null;
+    // try {
+    //     url = new UrlBuilder().setHost("example.com").setScheme("https").toUrl();
+    // } catch (MalformedURLException e) {
+    //     throw new RuntimeException(e);
+    // }
+    // HttpRequest request = new HttpRequest(HttpMethod.GET, url);
+    // HttpResponse response = pipeline.sendSync(request, Context.NONE);
+    //
+    // assertEquals(response.getStatusCode(), 200);
+    // }
 }
 

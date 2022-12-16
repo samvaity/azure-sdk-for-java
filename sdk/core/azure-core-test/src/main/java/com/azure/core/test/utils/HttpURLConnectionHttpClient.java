@@ -11,7 +11,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.ByteBuffer;
@@ -21,6 +24,101 @@ import java.util.List;
 import java.util.Map;
 
 public class HttpURLConnectionHttpClient implements HttpClient {
+
+    @Override
+    public HttpResponse sendSync(HttpRequest request, Context context) {
+        try {
+            URL obj = new URL(request.getUrl().toString());
+            HttpURLConnection con = null;
+            int responseCode;
+            con = (HttpURLConnection) obj.openConnection();
+
+            con.setRequestMethod(request.getHttpMethod().name());
+            HttpHeaders headers = request.getHeaders();
+            if (headers != null) {
+                for (HttpHeader header : headers) {
+                    String name = header.getName();
+
+                    con.setRequestProperty(name, header.getValue());
+                }
+            }
+
+            responseCode = con.getResponseCode();
+            System.out.println("Request URL :: " + request.getUrl());
+
+            System.out.println("GET Response Code :: " + responseCode);
+
+            if (responseCode == HttpURLConnection.HTTP_OK) { // success
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+                InputStream inputStream = con.getInputStream();
+                final int available = inputStream.available();
+                final byte[] actualBytes = new byte[available];
+                final int read = inputStream.read(actualBytes);
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                inputStream.close();
+
+                // print result
+                System.out.println(response.toString());
+                HttpURLConnection finalCon = con;
+                return new HttpResponse(request) {
+                    @Override
+                    public int getStatusCode() {
+                        return responseCode;
+                    }
+
+                    @Override
+                    public String getHeaderValue(String name) {
+                        return finalCon.getHeaderField(name);
+                    }
+
+                    @Override
+                    public HttpHeaders getHeaders() {
+                        HttpHeaders ret = new HttpHeaders();
+                        Map<String, List<String>> headers = finalCon.getHeaderFields();
+                        for (String key : headers.keySet()) {
+                            for (String value : headers.get(key)) {
+                                ret.add(key, value);
+                            }
+                        }
+                        return ret;
+                    }
+
+                    @Override
+                    public Flux<ByteBuffer> getBody() {
+                        return Flux.just();
+                    }
+
+                    @Override
+                    public Mono<byte[]> getBodyAsByteArray() {
+                        return Mono.just(actualBytes);
+                    }
+
+                    @Override
+                    public Mono<String> getBodyAsString() {
+                        return Mono.just(new String(actualBytes, StandardCharsets.UTF_8));
+                    }
+
+                    @Override
+                    public Mono<String> getBodyAsString(Charset charset) {
+                        return Mono.just(new String(actualBytes, charset));
+                    }
+                };
+            } else {
+                System.out.println("GET request did not work.");
+                System.out.println(request.getUrl());
+                System.out.println();
+                return null;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public Mono<HttpResponse> send(HttpRequest request) {
@@ -40,7 +138,7 @@ public class HttpURLConnectionHttpClient implements HttpClient {
                 }
             }
             BinaryData body = request.getBodyAsBinaryData();
-            if(body != null) {
+            if (body != null) {
                 connection.setDoOutput(true);
                 BufferedOutputStream stream = new BufferedOutputStream(connection.getOutputStream());
                 stream.write(body.toBytes());
@@ -51,7 +149,9 @@ public class HttpURLConnectionHttpClient implements HttpClient {
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-            if (connection != null ) { connection.disconnect(); }
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
     }
 

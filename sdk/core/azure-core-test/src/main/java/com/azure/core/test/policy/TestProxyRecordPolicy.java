@@ -6,6 +6,7 @@ import com.azure.core.http.HttpPipelineNextPolicy;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpPipelinePolicy;
+import com.azure.core.test.models.RecordingRedactor;
 import com.azure.core.test.utils.HttpURLConnectionHttpClient;
 import com.azure.core.test.utils.TestProxyUtils;
 import com.azure.core.util.Context;
@@ -17,6 +18,7 @@ import java.util.function.Function;
 
 public class TestProxyRecordPolicy implements HttpPipelinePolicy {
     private final HttpURLConnectionHttpClient client = new HttpURLConnectionHttpClient();
+    private RecordingRedactor redactor;
     private String xRecordingId;
 
     public void startRecording(String recordFile, List<Function<String, String>> redactors) {
@@ -27,6 +29,12 @@ public class TestProxyRecordPolicy implements HttpPipelinePolicy {
 
         xRecordingId = response.getHeaderValue("x-recording-id");
 
+        // redactor = new RecordingRedactor(redactors);
+        // addSanitizers(response);
+    }
+
+    private void addSanitizers(HttpResponse response) {
+        redactor.redact(response.getBodyAsBinaryData().toString());
         addUriKeySanitizer();
     }
 
@@ -41,8 +49,7 @@ public class TestProxyRecordPolicy implements HttpPipelinePolicy {
     public void stopRecording(Map<String, String> variables) {
         HttpRequest request = new HttpRequest(HttpMethod.POST, String.format("%s/record/stop", TestProxyUtils.getProxyUrl()))
             .setHeader("content-type", "application/json")
-            .setHeader("x-recording-id", xRecordingId)
-            .setBody("{}");
+            .setHeader("x-recording-id", xRecordingId);
         client.sendSync(request, Context.NONE);
     }
 
