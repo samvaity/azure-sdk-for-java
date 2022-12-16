@@ -49,9 +49,11 @@ public class TestProxyRecordPolicy implements HttpPipelinePolicy {
     public void stopRecording(Map<String, String> variables) {
         HttpRequest request = new HttpRequest(HttpMethod.POST, String.format("%s/record/stop", TestProxyUtils.getProxyUrl()))
             .setHeader("content-type", "application/json")
-            .setHeader("x-recording-id", xRecordingId);
+            .setHeader("x-recording-id", xRecordingId)
+            .setBody("{}");
         client.sendSync(request, Context.NONE);
     }
+
 
 
     @Override

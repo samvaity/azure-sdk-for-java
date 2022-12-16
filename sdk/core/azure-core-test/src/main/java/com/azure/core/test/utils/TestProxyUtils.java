@@ -18,24 +18,26 @@ public class TestProxyUtils {
     }
 
     public static void changeHeaders(HttpRequest request, String xRecordingId, String mode) {
-        URL originalUrl = request.getUrl();
         UrlBuilder builder = UrlBuilder.parse(request.getUrl());
         builder.setScheme(proxyUrlScheme);
         builder.setHost(proxyUrlHost);
         builder.setPort(proxyUrlPort);
-        builder.setPath("");
-        builder.setQuery("");
 
-        String url = builder.toString();
+        UrlBuilder builder2 = UrlBuilder.parse(request.getUrl());
+        builder2.setPath("");
+        builder2.setQuery("");
 
-        HttpHeaders headers = request.getHeaders();
-        System.out.println("Original URL :: " + originalUrl);
-        System.out.println("Headers :: " + request.getHeaders().get("Ocp-Apim-Subscription-Key"));
-
-        headers.add("x-recording-upstream-base-uri", originalUrl.toString());
-        headers.add("x-recording-mode", mode);
-        headers.add("x-recording-id", xRecordingId);
         try {
+            URL originalUrl = builder2.toUrl();
+
+            HttpHeaders headers = request.getHeaders();
+
+            System.out.println("Original URL :: " + originalUrl.toString());
+            System.out.println("Headers :: " + request.getHeaders().get("Ocp-Apim-Subscription-Key"));
+
+            headers.add("x-recording-upstream-base-uri", originalUrl.toString());
+            headers.add("x-recording-mode", mode);
+            headers.add("x-recording-id", xRecordingId);
             request.setUrl(builder.toUrl());
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);

@@ -27,9 +27,9 @@ public class HttpURLConnectionHttpClient implements HttpClient {
 
     @Override
     public HttpResponse sendSync(HttpRequest request, Context context) {
+        HttpURLConnection con = null;
         try {
             URL obj = new URL(request.getUrl().toString());
-            HttpURLConnection con = null;
             int responseCode;
             con = (HttpURLConnection) obj.openConnection();
 
@@ -45,8 +45,7 @@ public class HttpURLConnectionHttpClient implements HttpClient {
 
             responseCode = con.getResponseCode();
             System.out.println("Request URL :: " + request.getUrl());
-
-            System.out.println("GET Response Code :: " + responseCode);
+            System.out.println("Response Code :: " + responseCode);
 
             if (responseCode == HttpURLConnection.HTTP_OK) { // success
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -63,8 +62,6 @@ public class HttpURLConnectionHttpClient implements HttpClient {
                 in.close();
                 inputStream.close();
 
-                // print result
-                System.out.println(response.toString());
                 HttpURLConnection finalCon = con;
                 return new HttpResponse(request) {
                     @Override
@@ -110,13 +107,18 @@ public class HttpURLConnectionHttpClient implements HttpClient {
                     }
                 };
             } else {
-                System.out.println("GET request did not work.");
-                System.out.println(request.getUrl());
+                System.out.println("Request did not work.");
+                System.out.println(request.getHttpMethod().toString());
                 System.out.println();
                 return null;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+        finally {
+            if (con != null) {
+                con.disconnect();
+            }
         }
     }
 
