@@ -10,12 +10,9 @@ import com.azure.core.http.HttpPipelineNextSyncPolicy;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpPipelinePolicy;
-import com.azure.core.test.models.RecordingRedactor;
 import com.azure.core.test.utils.HttpURLConnectionHttpClient;
 import com.azure.core.test.utils.TestProxyUtils;
-import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
-import com.azure.core.util.CoreUtils;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.core.util.serializer.SerializerEncoding;
@@ -26,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -109,17 +104,20 @@ public class TestProxyRecordPolicy implements HttpPipelinePolicy {
                     break;
                 case "BODY":
                     sanitizerRegex.forEach(regexValue -> addBodySanitizer(regexValue));
+                    break;
                 case "HEADER":
                     sanitizerRegex.forEach(regexValue -> addHeaderSanitizer(regexValue));
+                    break;
+                default:
+                    System.out.println("Not supported");
             }
 
         });
     }
 
     private void addUrlRegexSanitizer(String regexValue) {
-        String requestBody = String.format("{\"value\":\"REDACTED\",\"regex\":\"%s\"}", regexValue);
         HttpRequest request = new HttpRequest(HttpMethod.POST, String.format("%s/Admin/AddSanitizer", TestProxyUtils.getProxyUrl()))
-                .setBody(requestBody);
+                .setBody("{\"value\":\"https://REDACTED.cognitiveservices.azure.com\",\"regex\":\"[a-z]+(?=\\\\.(?:table|blob|queue|cognitiveservices)\\\\.azure\\\\.com)\"}");
         request.setHeader("x-abstraction-identifier", "UriRegexSanitizer");
         request.setHeader("x-recording-id", xRecordingId);
         client.sendSync(request, Context.NONE);
@@ -138,22 +136,5 @@ public class TestProxyRecordPolicy implements HttpPipelinePolicy {
     private void addHeaderSanitizer(String regexValue) {
         // TODO
     }
-
-    // private static String redactionReplacement(String content, Matcher matcher, String replacement) {
-    //     while (matcher.find()) {
-    //         String captureGroup = matcher.group(2);
-    //         if (!CoreUtils.isNullOrEmpty(captureGroup)) {
-    //             content = content.replace(matcher.group(2), replacement);
-    //         }
-    //     }
-    //
-    //     return content;
-    // }
-
-    // private static String redactModelId(String content) {
-    //     Pattern pattern = Pattern.compile("(.*\"modelId\":)(\"(.+?)\")");
-    //     content = redactionReplacement(content, pattern.matcher(content.replaceAll(" *\" *", "\"")), "REDACTED");
-    //     return content;
-    // }
 }
 

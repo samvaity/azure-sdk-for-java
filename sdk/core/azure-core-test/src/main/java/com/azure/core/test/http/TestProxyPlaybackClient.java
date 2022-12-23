@@ -42,14 +42,19 @@ public class TestProxyPlaybackClient implements HttpClient {
         // TODO: replacement rules
         HttpRequest request = new HttpRequest(HttpMethod.POST, String.format("%s/playback/start", TestProxyUtils.getProxyUrl()))
             .setBody(String.format("{\"x-recording-file\": \"%s\"}", recordFile));
-        try (HttpResponse response = client.sendSync(request, Context.NONE)) {
-            xRecordingId = response.getHeaderValue("x-recording-id");
-            String body = response.getBodyAsString().block();
-            return SERIALIZER.<Map<String, String>>deserialize(body, Map.class, SerializerEncoding.JSON).entrySet().stream().sorted(Comparator.comparingInt(e -> Integer.parseInt(e.getKey()))).map(Map.Entry::getValue).collect(Collectors.toCollection(LinkedList::new));
-
+        HttpResponse response = client.sendSync(request, Context.NONE);
+        xRecordingId = response.getHeaderValue("x-recording-id");
+        String body = response.getBodyAsBinaryData().toString();
+        addUriKeySanitizer();
+        addBodySanitizer("$..modelId");
+        try {
+            return SERIALIZER.<Map<String, String>>deserialize(body, Map.class, SerializerEncoding.JSON).entrySet()
+                .stream().sorted(Comparator.comparingInt(e -> Integer.parseInt(e.getKey()))).map(Map.Entry::getValue)
+                .collect(Collectors.toCollection(LinkedList::new));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     /**
@@ -57,8 +62,18 @@ public class TestProxyPlaybackClient implements HttpClient {
      */
     public void stopPlayback() {
         HttpRequest request = new HttpRequest(HttpMethod.POST, String.format("%s/playback/stop", TestProxyUtils.getProxyUrl()))
+            .setHeader("content-type", "application/json")
             .setHeader("x-recording-id", xRecordingId);
         client.sendSync(request, Context.NONE);
+    }
+
+    @Override
+    public HttpResponse sendSync(HttpRequest request, Context context) {
+        if (xRecordingId == null) {
+            throw new RuntimeException("Playback was not started before a request was sent.");
+        }
+        TestProxyUtils.changeHeaders(request, xRecordingId, "playback");
+        return client.sendSync(request, context);
     }
 
     /**
@@ -73,5 +88,23 @@ public class TestProxyPlaybackClient implements HttpClient {
         }
         TestProxyUtils.changeHeaders(request, xRecordingId, "playback");
         return client.send(request);
+    }
+
+    private void addUriKeySanitizer() {
+
+        HttpRequest request = new HttpRequest(HttpMethod.POST, String.format("%s/Admin/AddSanitizer", TestProxyUtils.getProxyUrl()))
+            .setBody("{\"value\":\"https://REDACTED.cognitiveservices.azure.com\",\"regex\":\"[a-z]+(?=\\\\.(?:table|blob|queue|cognitiveservices)\\\\.azure\\\\.com)\"}");
+        request.setHeader("x-abstraction-identifier", "UriRegexSanitizer");
+        request.setHeader("x-recording-id", xRecordingId);
+        client.sendSync(request, Context.NONE);
+    }
+    private void addBodySanitizer(String regexValue) {
+        String requestBody = String.format("{\"value\":\"REDACTED\",\"jsonPath\":\"%s\"}", regexValue);
+
+        HttpRequest request = new HttpRequest(HttpMethod.POST, String.format("%s/Admin/AddSanitizer", TestProxyUtils.getProxyUrl()))
+            .setBody(requestBody);
+        request.setHeader("x-abstraction-identifier", "BodyKeySanitizer");
+        request.setHeader("x-recording-id", xRecordingId);
+        client.sendSync(request, Context.NONE);
     }
 }

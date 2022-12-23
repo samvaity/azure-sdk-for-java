@@ -50,6 +50,8 @@ public class TestProxyUtils {
             HttpHeaders headers = request.getHeaders();
 
             headers.add("x-recording-upstream-base-uri", originalUrl.toString());
+            System.out.println("Request URL ::" + request.getUrl());
+            System.out.println("Original URL ::" + originalUrl);
             headers.add("x-recording-mode", mode);
             headers.add("x-recording-id", xRecordingId);
             request.setUrl(proxyUrlBuilder.toUrl());

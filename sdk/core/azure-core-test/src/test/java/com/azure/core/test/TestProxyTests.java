@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,22 +130,19 @@ public class TestProxyTests extends TestBase {
 
         HttpRequest request = new HttpRequest(HttpMethod.GET, url);
         HttpResponse response = client.sendSync(request, Context.NONE);
-        assertEquals(response.getBodyAsString().block(), "first path");
+        assertEquals(response.getBodyAsBinaryData().toString(), "first path");
         assertEquals(response.getStatusCode(), 200);
     }
 
     @Test
-    @Tag("RECORD")
+    @Tag("Record")
     public void testRecordWithRedaction() {
         HttpURLConnectionHttpClient client = new HttpURLConnectionHttpClient();
         Map<String, List<String>> map = new HashMap<String, List<String>>();
-        List<String> urlSanitizers = new ArrayList<>();
-        urlSanitizers.add("^(?:https?:\\\\/\\\\/)?(?:[^@\\\\/\\\\n]+@)?(?:www\\\\.)?([^:\\\\/?\\\\n]+)");
 
         List<String> bodySanitizers = new ArrayList<>();
         bodySanitizers.add("$..modelId");
 
-        map.put("URL", urlSanitizers);
         map.put("BODY", bodySanitizers);
 
         HttpPipeline pipeline = new HttpPipelineBuilder()
@@ -172,5 +170,30 @@ public class TestProxyTests extends TestBase {
         assertEquals(response.getStatusCode(), 200);
     }
 
+    @Test
+    @Tag("Playback")
+    public void testPlaybackWithRedaction() {
+        HttpClient client = interceptorManager.getPlaybackClient();
+        URL url;
+        try {
+            url = new UrlBuilder()
+                .setHost(ENDPOINT)
+                .setPath("/formrecognizer/documentModels")
+                .setScheme("https")
+                .setQueryParameter("api-version", "2022-08-31")
+                .toUrl();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+        testResourceNamer.randomName("test", 10);
+        testResourceNamer.now();
+        HttpRequest request = new HttpRequest(HttpMethod.GET, url);
+        request.setHeader("Ocp-Apim-Subscription-Key", API_KEY);
+        request.setHeader("Content-Type", "application/json");
+
+        HttpResponse response = client.sendSync(request, Context.NONE);
+
+        assertEquals(response.getStatusCode(), 200);
+    }
 }
 

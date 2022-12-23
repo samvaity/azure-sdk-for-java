@@ -83,7 +83,7 @@ public class TestProxyManager {
     private String getProxyProcessName() {
         String osName = System.getProperty("os.name").toLowerCase(Locale.ROOT);
         if (osName.contains("windows")) {
-            return "Azure.Sdk.Tools.TestProxy.exe";
+            return "test-proxy.exe";
         } else if (osName.contains("linux")) {
             throw new UnsupportedOperationException();
         } else {
