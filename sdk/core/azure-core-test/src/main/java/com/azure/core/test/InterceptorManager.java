@@ -9,8 +9,9 @@ import com.azure.core.test.http.TestProxyPlaybackClient;
 import com.azure.core.test.models.NetworkCallRecord;
 import com.azure.core.test.models.RecordedData;
 import com.azure.core.test.models.RecordingRedactor;
-import com.azure.core.test.policy.TestProxyRecordPolicy;
+import com.azure.core.test.models.TestProxySanitizer;
 import com.azure.core.test.policy.RecordNetworkCallPolicy;
+import com.azure.core.test.policy.TestProxyRecordPolicy;
 import com.azure.core.util.CoreUtils;
 import com.azure.core.util.logging.ClientLogger;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,6 +73,7 @@ public class InterceptorManager implements AutoCloseable {
     private TestProxyRecordPolicy testProxyRecordPolicy;
     private TestProxyPlaybackClient testProxyPlaybackClient;
     private final Queue<String> proxyVariableQueue = new LinkedList<>();
+    private List<TestProxySanitizer> recordSanitizers;
 
     /**
      * Creates a new InterceptorManager that either replays test-session records or saves them.
@@ -270,7 +272,7 @@ public class InterceptorManager implements AutoCloseable {
      */
     public HttpPipelinePolicy getRecordPolicy() {
         if (enableTestProxy) {
-            return startProxyRecording(Collections.emptyList());
+            return startProxyRecording();
         }
         return getRecordPolicy(Collections.emptyList());
     }
@@ -286,7 +288,7 @@ public class InterceptorManager implements AutoCloseable {
     public HttpPipelinePolicy getRecordPolicy(List<Function<String, String>> recordingRedactors) {
         if (enableTestProxy) {
             proxyVariableQueue.clear();
-            return startProxyRecording(recordingRedactors);
+            return startProxyRecording();
         }
         return new RecordNetworkCallPolicy(recordedData, recordingRedactors);
     }
@@ -298,8 +300,8 @@ public class InterceptorManager implements AutoCloseable {
      */
     public HttpClient getPlaybackClient() {
         if (enableTestProxy) {
-            testProxyPlaybackClient = new TestProxyPlaybackClient();
-            proxyVariableQueue.addAll(testProxyPlaybackClient.startPlayback(playbackRecordName, null));
+            testProxyPlaybackClient = new TestProxyPlaybackClient(this.recordSanitizers);
+            proxyVariableQueue.addAll(testProxyPlaybackClient.startPlayback(playbackRecordName));
             return testProxyPlaybackClient;
         } else {
             return new PlaybackClient(recordedData, textReplacementRules);
@@ -367,9 +369,9 @@ public class InterceptorManager implements AutoCloseable {
         }
     }
 
-    private HttpPipelinePolicy startProxyRecording(List<Function<String, String>> recordingRedactors) {
-        this.testProxyRecordPolicy = new TestProxyRecordPolicy();
-        testProxyRecordPolicy.startRecording(playbackRecordName, recordingRedactors);
+    private HttpPipelinePolicy startProxyRecording() {
+        this.testProxyRecordPolicy = new TestProxyRecordPolicy(this.recordSanitizers);
+        testProxyRecordPolicy.startRecording(playbackRecordName);
         return testProxyRecordPolicy;
     }
 
@@ -425,5 +427,13 @@ public class InterceptorManager implements AutoCloseable {
      */
     public void addTextReplacementRule(String regex, String replacement) {
         textReplacementRules.put(regex, replacement);
+    }
+
+    /**
+     * Add text replacement rule (regex as key, the replacement text as value) into {@code recordSanitizers}
+     * @param recordSanitizers the list of replacement regex and rules.
+     */
+    public void addRecordSanitizers(List<TestProxySanitizer> recordSanitizers) {
+        this.recordSanitizers = recordSanitizers;
     }
 }

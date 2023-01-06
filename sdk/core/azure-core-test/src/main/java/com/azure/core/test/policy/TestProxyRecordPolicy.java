@@ -6,9 +6,11 @@ package com.azure.core.test.policy;
 import com.azure.core.http.HttpMethod;
 import com.azure.core.http.HttpPipelineCallContext;
 import com.azure.core.http.HttpPipelineNextPolicy;
+import com.azure.core.http.HttpPipelineNextSyncPolicy;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpPipelinePolicy;
+import com.azure.core.test.models.TestProxySanitizer;
 import com.azure.core.test.utils.HttpURLConnectionHttpClient;
 import com.azure.core.test.utils.TestProxyUtils;
 import com.azure.core.util.Context;
@@ -18,34 +20,47 @@ import com.azure.core.util.serializer.SerializerEncoding;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.azure.core.test.utils.TestProxyUtils.getRegexSanitizerRequests;
+import static com.azure.core.test.utils.TestProxyUtils.loadSanitizers;
+
 
 /**
  * A {@link HttpPipelinePolicy} for redirecting traffic through the test proxy for recording.
  */
 public class TestProxyRecordPolicy implements HttpPipelinePolicy {
     private static final SerializerAdapter SERIALIZER = new JacksonAdapter();
-
     private final HttpURLConnectionHttpClient client = new HttpURLConnectionHttpClient();
     private String xRecordingId;
+    private final List<TestProxySanitizer> sanitizers = new ArrayList<>();
+    private static final List<TestProxySanitizer> DEFAULT_SANITIZERS = loadSanitizers();
+
+    public TestProxyRecordPolicy(List<TestProxySanitizer> customSanitizers) {
+        this.sanitizers.addAll(DEFAULT_SANITIZERS);
+        this.sanitizers.addAll(customSanitizers == null ? Collections.emptyList() : customSanitizers);
+    }
 
     /**
      * Starts a recording of test traffic.
+     *
      * @param recordFile The name of the file to save the recording to.
-     * @param redactors The set of redactors to send to the test proxy.
      */
-    public void startRecording(String recordFile, List<Function<String, String>> redactors) {
-        // TODO: redactors
+    public void startRecording(String recordFile) {
         HttpRequest request = new HttpRequest(HttpMethod.POST, String.format("%s/record/start", TestProxyUtils.getProxyUrl()))
             .setBody(String.format("{\"x-recording-file\": \"%s\"}", recordFile));
+
         HttpResponse response = client.sendSync(request, Context.NONE);
 
-        xRecordingId = response.getHeaderValue("x-recording-id");
+        this.xRecordingId = response.getHeaderValue("x-recording-id");
+
+        addProxySanitization();
     }
 
     /**
@@ -79,10 +94,24 @@ public class TestProxyRecordPolicy implements HttpPipelinePolicy {
     }
 
     @Override
+    public HttpResponse processSync(HttpPipelineCallContext context, HttpPipelineNextSyncPolicy next) {
+        TestProxyUtils.changeHeaders(context.getHttpRequest(), xRecordingId, "record");
+        return next.processSync();
+    }
+
+    @Override
     public Mono<HttpResponse> process(HttpPipelineCallContext context, HttpPipelineNextPolicy next) {
         HttpRequest request = context.getHttpRequest();
         TestProxyUtils.changeHeaders(request, xRecordingId, "record");
         return next.process();
+    }
+
+    private void addProxySanitization() {
+        getRegexSanitizerRequests(this.sanitizers)
+            .forEach(request -> {
+                request.setHeader("x-recording-id", xRecordingId);
+                client.sendSync(request, Context.NONE);
+            });
     }
 }
 
