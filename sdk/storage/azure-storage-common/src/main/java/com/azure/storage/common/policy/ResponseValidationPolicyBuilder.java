@@ -5,6 +5,7 @@ package com.azure.storage.common.policy;
 
 import com.azure.core.http.HttpPipelineCallContext;
 import com.azure.core.http.HttpPipelineNextPolicy;
+import com.azure.core.http.HttpPipelineNextSyncPolicy;
 import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpPipelinePolicy;
 import com.azure.core.util.logging.ClientLogger;
@@ -70,6 +71,18 @@ public class ResponseValidationPolicyBuilder {
             Collection<BiConsumer<HttpResponse, ClientLogger>> assertionsCopy = new ArrayList<>();
             assertions.forEach(assertionsCopy::add);
             this.assertions = assertionsCopy;
+        }
+
+        @Override
+        public HttpResponse processSync(HttpPipelineCallContext context, HttpPipelineNextSyncPolicy next) {
+            HttpResponse httpResponse = next.processSync();
+
+            for (BiConsumer<HttpResponse, ClientLogger> assertion : assertions) {
+                assertion.accept(httpResponse, LOGGER);
+                return httpResponse;
+            }
+
+            return httpResponse;
         }
 
         @Override

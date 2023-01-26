@@ -7,6 +7,7 @@ package com.azure.storage.common.policy;
 import com.azure.core.http.HttpMethod;
 import com.azure.core.http.HttpPipelineCallContext;
 import com.azure.core.http.HttpPipelineNextPolicy;
+import com.azure.core.http.HttpPipelineNextSyncPolicy;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.HttpResponse;
 import com.azure.core.http.policy.HttpLoggingPolicy;
@@ -15,6 +16,7 @@ import com.azure.core.util.BinaryData;
 import com.azure.core.util.Contexts;
 import com.azure.core.util.ProgressReporter;
 import com.azure.core.util.UrlBuilder;
+import com.azure.core.util.logging.ClientLogger;
 import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -35,6 +37,7 @@ import java.util.concurrent.TimeoutException;
  * backoff are supported. The policy must only be used directly when creating a custom pipeline.
  */
 public final class RequestRetryPolicy implements HttpPipelinePolicy {
+    private static final ClientLogger LOGGER = new ClientLogger(RequestRetryPolicy.class);
     private final RequestRetryOptions requestRetryOptions;
 
     /**
@@ -46,6 +49,14 @@ public final class RequestRetryPolicy implements HttpPipelinePolicy {
         this.requestRetryOptions = requestRetryOptions;
     }
 
+    @Override
+    public HttpResponse processSync(HttpPipelineCallContext context, HttpPipelineNextSyncPolicy next) {
+        boolean considerSecondary = (this.requestRetryOptions.getSecondaryHost() != null)
+            && (HttpMethod.GET.equals(context.getHttpRequest().getHttpMethod())
+            || HttpMethod.HEAD.equals(context.getHttpRequest().getHttpMethod()));
+
+        return this.attemptSync(context, next, context.getHttpRequest(), considerSecondary, 1, 1, null);
+    }
     @Override
     public Mono<HttpResponse> process(HttpPipelineCallContext context, HttpPipelineNextPolicy next) {
         boolean considerSecondary = (this.requestRetryOptions.getSecondaryHost() != null)
@@ -83,14 +94,7 @@ public final class RequestRetryPolicy implements HttpPipelinePolicy {
         final boolean tryingPrimary = !considerSecondary || (attempt % 2 != 0);
 
         // Select the correct host and delay.
-        long delayMs;
-        if (tryingPrimary) {
-            // The first attempt returns 0 delay.
-            delayMs = this.requestRetryOptions.calculateDelayInMs(primaryTry);
-        } else {
-            // Delay with some jitter before trying the secondary.
-            delayMs = (long) ((ThreadLocalRandom.current().nextFloat() / 2 + 0.8) * 1000); // Add jitter
-        }
+        long delayMs = getDelayMs(primaryTry, tryingPrimary);
 
         /*
          * Clone the original request to ensure that each try starts with the original (unmutated) request. We cannot
@@ -174,7 +178,7 @@ public final class RequestRetryPolicy implements HttpPipelinePolicy {
                  * secondary at all (considerSecondary==false)). This will ensure primaryTry is correct when passed to
                  * calculate the delay.
                  */
-                int newPrimaryTry = (!tryingPrimary || !considerSecondary) ? primaryTry + 1 : primaryTry;
+                int newPrimaryTry = getNewPrimaryTry(considerSecondary, primaryTry, tryingPrimary);
 
                 Flux<ByteBuffer> responseBody = response.getBody();
                 if (responseBody == null) {
@@ -210,11 +214,7 @@ public final class RequestRetryPolicy implements HttpPipelinePolicy {
              */
             boolean retry = false;
             Throwable unwrappedThrowable = Exceptions.unwrap(throwable);
-            if (unwrappedThrowable instanceof IOException) {
-                retry = true;
-            } else if (unwrappedThrowable instanceof TimeoutException) {
-                retry = true;
-            }
+            retry = shouldRetryException(retry, unwrappedThrowable);
 
             if (retry && attempt < requestRetryOptions.getMaxTries()) {
                 /*
@@ -223,7 +223,7 @@ public final class RequestRetryPolicy implements HttpPipelinePolicy {
                  * secondary at all (considerSecondary==false)). This will ensure primaryTry is correct when passed to
                  * calculate the delay.
                  */
-                int newPrimaryTry = (!tryingPrimary || !considerSecondary) ? primaryTry + 1 : primaryTry;
+                int newPrimaryTry = getNewPrimaryTry(considerSecondary, primaryTry, tryingPrimary);
                 List<Throwable> suppressedLocal = suppressed == null ? new LinkedList<>() : suppressed;
                 suppressedLocal.add(unwrappedThrowable);
                 return attemptAsync(context, next, originalRequest, considerSecondary, newPrimaryTry, attempt + 1,
@@ -234,5 +234,181 @@ public final class RequestRetryPolicy implements HttpPipelinePolicy {
             }
             return Mono.error(throwable);
         });
+    }
+
+    private HttpResponse attemptSync(final HttpPipelineCallContext context, HttpPipelineNextSyncPolicy next,
+        final HttpRequest originalRequest, final boolean considerSecondary, final int primaryTry, final int attempt,
+        final List<Throwable> suppressed) {
+        // Determine which endpoint to try. It's primary if there is no secondary or if it is an odd number attempt.
+        final boolean tryingPrimary = !considerSecondary || (attempt % 2 != 0);
+
+        // Select the correct host and delay.
+        long delayMs = getDelayMs(primaryTry, tryingPrimary);
+
+        /*
+         * Clone the original request to ensure that each try starts with the original (unmutated) request. We cannot
+         * simply call httpRequest.buffer() because although the body will start emitting from the beginning of the
+         * stream, the buffers that were emitted will have already been consumed (their position set to their limit),
+         * so it is not a true reset. By adding the map function, we ensure that anything which consumes the
+         * ByteBuffers downstream will only actually consume a duplicate so the original is preserved. This only
+         * duplicates the ByteBuffer object, not the underlying data.
+         */
+        context.setHttpRequest(originalRequest.copy());
+        BinaryData originalRequestBody = originalRequest.getBodyAsBinaryData();
+        if (originalRequestBody != null && !originalRequestBody.isReplayable()) {
+            // Replayable bodies don't require this transformation.
+            // TODO (kasobol-msft) Remove this transformation in favor of
+            // BinaryData.toReplayableBinaryData()
+            // But this should be done together with removal of buffering in chunked uploads.
+            context.getHttpRequest().setBody(context.getHttpRequest().getBodyAsBinaryData().toReplayableBinaryData());
+        }
+        if (!tryingPrimary) {
+            UrlBuilder builder = UrlBuilder.parse(context.getHttpRequest().getUrl());
+            builder.setHost(this.requestRetryOptions.getSecondaryHost());
+            try {
+                context.getHttpRequest().setUrl(builder.toUrl());
+            } catch (MalformedURLException e) {
+                throw LOGGER.logExceptionAsWarning(new IllegalArgumentException("'url' must be a valid URL", e));
+            }
+        }
+        /*
+        Update the RETRY_COUNT_CONTEXT to log retries.
+         */
+        context.setData(HttpLoggingPolicy.RETRY_COUNT_CONTEXT, attempt);
+
+        /*
+        Reset progress if progress is tracked.
+         */
+        ProgressReporter progressReporter = Contexts.with(context.getContext()).getHttpRequestProgressReporter();
+        if (progressReporter != null) {
+            progressReporter.reset();
+        }
+
+        try {
+            /*
+             We want to send the request with a given timeout, but we don't want to kickoff that timeout-bound operation
+             until after the retry backoff delay, so we call delaySubscription.
+             */
+            HttpResponse response = next.clone().processSync();
+
+            // Default try timeout is Integer.MAX_VALUE seconds, if it's that don't set a timeout as that's about 68 years
+            // and would likely never complete.
+            // TODO (alzimmer): Think about not adding this if it's over a certain length, like 1 year.
+            if (this.requestRetryOptions.getTryTimeoutDuration().getSeconds() != Integer.MAX_VALUE) {
+                try {
+                    Thread.sleep(this.requestRetryOptions.getTryTimeoutDuration().toMillis());
+                } catch (InterruptedException ie) {
+                    throw LOGGER.logExceptionAsError(new RuntimeException(ie));
+                }
+            }
+
+            // Only add delaySubscription if there is going to be a delay.
+            if (delayMs > 0) {
+                try {
+                    Thread.sleep(delayMs);
+                } catch (InterruptedException ie) {
+                    throw LOGGER.logExceptionAsError(new RuntimeException(ie));
+                }
+            }
+
+            boolean newConsiderSecondary = considerSecondary;
+            boolean retry = false;
+            int statusCode = response.getStatusCode();
+
+            /*
+             * If attempt was against the secondary & it returned a StatusNotFound (404), then the resource was not
+             * found. This may be due to replication delay. So, in this case, we'll never try the secondary again for
+             * this operation.
+             */
+            if (!tryingPrimary && statusCode == 404) {
+                newConsiderSecondary = false;
+                retry = true;
+            } else if (statusCode == 503 || statusCode == 500) {
+                retry = true;
+            }
+
+            if (retry && attempt < requestRetryOptions.getMaxTries()) {
+                int newPrimaryTry = getNewPrimaryTry(considerSecondary, primaryTry, tryingPrimary);
+
+                if (response.getBody() != null) {
+                    response.getBodyAsBinaryData().toByteBuffer();
+                }
+                return attemptSync(context, next, originalRequest, newConsiderSecondary, newPrimaryTry,
+                        attempt + 1, suppressed);
+
+            }
+            return response;
+        } catch (RuntimeException throwable) {
+            /*
+             * It is likely that many users will not realize that their Flux must be replayable and get an error upon
+             * retries when the provided data length does not match the length of the exact data. We cannot enforce the
+             * desired Flux behavior, so we provide a hint when this is likely the root cause.
+             */
+            if (throwable instanceof IllegalStateException && attempt > 1) {
+                throw LOGGER.logExceptionAsError((new IllegalStateException("The request failed because the size of the contents of "
+                    + "the provided data did not match the provided data size upon attempting to retry. This is likely "
+                    + "caused by the data not being replayable. To support retries, all Fluxes must produce the same "
+                    + "data for each subscriber. Please ensure this behavior.", throwable)));
+            }
+
+            boolean retry = false;
+            Throwable unwrappedThrowable = Exceptions.unwrap(throwable);
+            retry = shouldRetryException(retry, unwrappedThrowable);
+
+            if (retry && attempt < requestRetryOptions.getMaxTries()) {
+
+                int newPrimaryTry = getNewPrimaryTry(considerSecondary, primaryTry, tryingPrimary);
+                List<Throwable> suppressedLocal = suppressed == null ? new LinkedList<>() : suppressed;
+                suppressedLocal.add(unwrappedThrowable);
+                return attemptSync(context, next, originalRequest, considerSecondary, newPrimaryTry, attempt + 1,
+                    suppressedLocal);
+            }
+            if (suppressed != null) {
+                suppressed.forEach(throwable::addSuppressed);
+            }
+            throw LOGGER.logExceptionAsError(throwable);
+        }
+    }
+
+    private long getDelayMs(int primaryTry, boolean tryingPrimary) {
+        long delayMs;
+        if (tryingPrimary) {
+            // The first attempt returns 0 delay.
+            delayMs = this.requestRetryOptions.calculateDelayInMs(primaryTry);
+        } else {
+            // Delay with some jitter before trying the secondary.
+            delayMs = (long) ((ThreadLocalRandom.current().nextFloat() / 2 + 0.8) * 1000); // Add jitter
+        }
+        return delayMs;
+    }
+
+    private static int getNewPrimaryTry(boolean considerSecondary, int primaryTry, boolean tryingPrimary) {
+        /*
+         * We increment primaryTry if we are about to try the primary again (which is when we consider the
+         * secondary and tried the secondary this time (tryingPrimary==false) or we do not consider the
+         * secondary at all (considerSecondary==false)). This will ensure primaryTry is correct when passed to
+         * calculate the delay.
+         */
+        int newPrimaryTry = (!tryingPrimary || !considerSecondary) ? primaryTry + 1 : primaryTry;
+        return newPrimaryTry;
+    }
+
+    /**
+     * IOException is a catch-all for IO related errors. Technically it includes many types which may not be
+     * network exceptions, but we should not hit those unless there is a bug in our logic. In either case, it is
+     * better to optimistically retry instead of failing too soon. A Timeout Exception is a client-side timeout
+     * coming from Rx.
+     *
+     * @param retry initially set to false
+     * @param unwrappedThrowable the upstream network exception
+     * @return a boolean indicating if should retry exception
+     */
+    private static boolean shouldRetryException(boolean retry, Throwable unwrappedThrowable) {
+        if (unwrappedThrowable instanceof IOException) {
+            retry = true;
+        } else if (unwrappedThrowable instanceof TimeoutException) {
+            retry = true;
+        }
+        return retry;
     }
 }
