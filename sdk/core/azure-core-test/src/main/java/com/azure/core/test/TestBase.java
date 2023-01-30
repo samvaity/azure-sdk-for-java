@@ -29,6 +29,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
@@ -292,7 +293,8 @@ public abstract class TestBase implements BeforeEachCallback {
      * @return true if test proxy is to be used.
      */
     static boolean useTestProxy() {
-        return enableTestProxy;
+        // this can be temp until we enable for all clients
+        return Objects.equals(Configuration.getGlobalConfiguration().get("AZURE_USE_TEST_PROXY"), "TRUE");
     }
 
     /**
