@@ -37,6 +37,7 @@
     <javaModulesSurefireArgLine>
       --add-exports com.azure.core/com.azure.core.implementation.http=ALL-UNNAMED
       --add-opens com.azure.data.appconfiguration/com.azure.data.appconfiguration=ALL-UNNAMED
+      --add-opens com.azure.core/com.azure.core.implementation.util=ALL-UNNAMED
     </javaModulesSurefireArgLine>
     <graalvm.enable>true</graalvm.enable>
   </properties>

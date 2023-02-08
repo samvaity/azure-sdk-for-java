@@ -7,6 +7,7 @@ import com.azure.core.http.HttpClient;
 import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.rest.Response;
 import com.azure.core.test.TestBase;
+import com.azure.core.test.TestProxyTestBase;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.CoreUtils;
 import com.azure.core.util.logging.ClientLogger;
@@ -43,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public abstract class ConfigurationClientTestBase extends TestBase {
+public abstract class ConfigurationClientTestBase extends TestProxyTestBase {
     private static final String AZURE_APPCONFIG_CONNECTION_STRING = "AZURE_APPCONFIG_CONNECTION_STRING";
     private static final String KEY_PREFIX = "key";
     private static final String LABEL_PREFIX = "label";
@@ -66,8 +67,7 @@ public abstract class ConfigurationClientTestBase extends TestBase {
 
     <T> T clientSetup(Function<ConfigurationClientCredentials, T> clientBuilder) {
         if (CoreUtils.isNullOrEmpty(connectionString)) {
-            connectionString = interceptorManager.isPlaybackMode() ? FAKE_CONNECTION_STRING
-                                   : Configuration.getGlobalConfiguration().get(AZURE_APPCONFIG_CONNECTION_STRING);
+            connectionString = Configuration.getGlobalConfiguration().get(AZURE_APPCONFIG_CONNECTION_STRING);
         }
 
         Objects.requireNonNull(connectionString, "AZURE_APPCONFIG_CONNECTION_STRING expected to be set.");
