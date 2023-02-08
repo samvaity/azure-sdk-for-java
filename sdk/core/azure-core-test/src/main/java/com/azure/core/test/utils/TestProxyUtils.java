@@ -37,6 +37,9 @@ public class TestProxyUtils {
         "(?:User ID=)(?<secret>.*)(?:;)", "(?:<PrimaryKey>)(?<secret>.*)(?:</PrimaryKey>)",
         "(?:<SecondaryKey>)(?<secret>.*)(?:</SecondaryKey>)"));
 
+    public static final List<String> IGNORED_HEADERS =
+        new ArrayList<>(Arrays.asList("Connection", "Content-Length"));
+
     private static final String URL_REGEX = "(?<=http://|https://)([^/?]+)";
     private static final List<String> HEADERS_TO_REDACT = new ArrayList<>(Arrays.asList("Ocp-Apim-Subscription-Key"));
     private static final String REDACTED_VALUE = "REDACTED";
@@ -189,6 +192,18 @@ public class TestProxyUtils {
     }
 
     private static List<TestProxySanitizer> addDefaultRegexSanitizers() {
+        List<TestProxySanitizer> userDelegationSanitizers = getUserDelegationSanitizers();
+
+        userDelegationSanitizers.addAll(BODY_REGEX_TO_REDACT.stream()
+            .map(bodyRegex -> new TestProxySanitizer(bodyRegex, REDACTED_VALUE, TestProxySanitizerType.BODY_REGEX).setGroupForReplace("secret"))
+            .collect(Collectors.toList()));
+
+        // can add default url and header regex sanitizer same way
+        return userDelegationSanitizers;
+
+    }
+
+    private static List<TestProxySanitizer> addCustomMatcher() {
         List<TestProxySanitizer> userDelegationSanitizers = getUserDelegationSanitizers();
 
         userDelegationSanitizers.addAll(BODY_REGEX_TO_REDACT.stream()

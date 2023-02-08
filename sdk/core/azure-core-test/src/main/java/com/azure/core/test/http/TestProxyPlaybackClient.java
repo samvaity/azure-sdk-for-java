@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.stream.Collectors;
 
+import static com.azure.core.test.utils.TestProxyUtils.IGNORED_HEADERS;
 import static com.azure.core.test.utils.TestProxyUtils.getSanitizerRequests;
 import static com.azure.core.test.utils.TestProxyUtils.loadSanitizers;
 
@@ -63,6 +64,7 @@ public class TestProxyPlaybackClient implements HttpClient {
         try (HttpResponse response = client.sendSync(request, Context.NONE)) {
             xRecordingId = response.getHeaderValue("x-recording-id");
             addProxySanitization();
+            addCustomMatcherRequest();
             String body = response.getBodyAsString().block();
             // The test proxy stores variables in a map with no guaranteed order.
             // The Java implementation of recording did not use a map, but relied on the order
@@ -106,5 +108,16 @@ public class TestProxyPlaybackClient implements HttpClient {
                 request.setHeader("x-recording-id", xRecordingId);
                 client.sendSync(request, Context.NONE);
             });
+    }
+
+    private void addCustomMatcherRequest() {
+
+        String requestBody = String.format("{\"excludedHeaders\":\"%s\"}", String.join(",",IGNORED_HEADERS));;
+        HttpRequest request
+            = new HttpRequest(HttpMethod.POST, String.format("%s/Admin/setmatcher", TestProxyUtils.getProxyUrl()))
+            .setBody(requestBody);
+        request.setHeader("x-abstraction-identifier", "CustomDefaultMatcher");
+        request.setHeader("x-recording-id", xRecordingId);
+        client.sendSync(request, Context.NONE);
     }
 }
