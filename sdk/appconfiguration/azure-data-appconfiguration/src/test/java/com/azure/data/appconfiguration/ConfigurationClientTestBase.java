@@ -8,6 +8,8 @@ import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.rest.Response;
 import com.azure.core.test.TestBase;
 import com.azure.core.test.TestProxyTestBase;
+import com.azure.core.test.models.TestProxySanitizer;
+import com.azure.core.test.models.TestProxySanitizerType;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.CoreUtils;
 import com.azure.core.util.logging.ClientLogger;
@@ -53,16 +55,25 @@ public abstract class ConfigurationClientTestBase extends TestProxyTestBase {
 
     public static final String FAKE_CONNECTION_STRING =
         "Endpoint=http://localhost:8080;Id=0000000000000;Secret=fakeSecrePlaceholder";
+
     static String connectionString;
 
     private final ClientLogger logger = new ClientLogger(ConfigurationClientTestBase.class);
 
     String keyPrefix;
     String labelPrefix;
+    private static final String DOMAIN_NAME_REPLACE_REGEX = "Endpoint=https://([^/?]+)";
+    private static final String DOMAIN_NAME_REPLACE_VALUE = "https://REDACTED.azconfig.io";
+    static List<TestProxySanitizer> customSanitizer = new ArrayList<>();
+    static {
+        customSanitizer.add(new TestProxySanitizer(DOMAIN_NAME_REPLACE_REGEX, DOMAIN_NAME_REPLACE_VALUE, TestProxySanitizerType.URL));
+        customSanitizer.add(new TestProxySanitizer("Sync-Token", "REDACTED", TestProxySanitizerType.HEADER));
+    }
 
     void beforeTestSetup() {
         keyPrefix = testResourceNamer.randomName(KEY_PREFIX, PREFIX_LENGTH);
         labelPrefix = testResourceNamer.randomName(LABEL_PREFIX, PREFIX_LENGTH);
+        interceptorManager.addRecordSanitizers(customSanitizer);
     }
 
     <T> T clientSetup(Function<ConfigurationClientCredentials, T> clientBuilder) {
