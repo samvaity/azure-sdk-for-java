@@ -16,9 +16,9 @@ import com.azure.core.credential.TokenCredential;
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
-import com.azure.core.test.TestBase;
-import com.azure.core.test.TestMode;
 import com.azure.core.test.TestProxyTestBase;
+import com.azure.core.test.models.HeaderlessMatcher;
+import com.azure.core.test.models.TestProxyMatcher;
 import com.azure.identity.AzureAuthorityHosts;
 import com.azure.identity.ClientSecretCredentialBuilder;
 import com.azure.identity.DefaultAzureCredentialBuilder;
@@ -30,13 +30,13 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static com.azure.ai.formrecognizer.documentanalysis.TestUtils.AZURE_CLIENT_ID;
 import static com.azure.ai.formrecognizer.documentanalysis.TestUtils.AZURE_FORM_RECOGNIZER_CLIENT_SECRET;
 import static com.azure.ai.formrecognizer.documentanalysis.TestUtils.AZURE_TENANT_ID;
-import static com.azure.ai.formrecognizer.documentanalysis.TestUtils.INVALID_KEY;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public abstract class DocumentModelAdministrationClientTestBase extends TestProxyTestBase {
@@ -51,6 +51,7 @@ public abstract class DocumentModelAdministrationClientTestBase extends TestProx
         durationTestMode = interceptorManager.isPlaybackMode()
             ? TestUtils.ONE_NANO_DURATION : Constants.DEFAULT_POLL_INTERVAL;
         builder = new DocumentModelAdministrationClientBuilder();
+        interceptorManager.addMatchers(Arrays.asList(new HeaderlessMatcher()));
         if (interceptorManager.isPlaybackMode()) {
             playbackClient = interceptorManager.getPlaybackClient();
             builder.httpClient(playbackClient);
