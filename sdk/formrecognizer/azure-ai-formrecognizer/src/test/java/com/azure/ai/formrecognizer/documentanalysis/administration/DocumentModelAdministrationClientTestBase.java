@@ -16,8 +16,7 @@ import com.azure.core.credential.TokenCredential;
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
-import com.azure.core.test.TestBase;
-import com.azure.core.test.TestMode;
+import com.azure.core.test.TestProxyTestBase;
 import com.azure.identity.AzureAuthorityHosts;
 import com.azure.identity.ClientSecretCredentialBuilder;
 import com.azure.identity.DefaultAzureCredentialBuilder;
@@ -35,12 +34,12 @@ import java.util.function.Consumer;
 import static com.azure.ai.formrecognizer.documentanalysis.TestUtils.AZURE_CLIENT_ID;
 import static com.azure.ai.formrecognizer.documentanalysis.TestUtils.AZURE_FORM_RECOGNIZER_CLIENT_SECRET;
 import static com.azure.ai.formrecognizer.documentanalysis.TestUtils.AZURE_TENANT_ID;
-import static com.azure.ai.formrecognizer.documentanalysis.TestUtils.INVALID_KEY;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public abstract class DocumentModelAdministrationClientTestBase extends TestBase {
+public abstract class DocumentModelAdministrationClientTestBase extends TestProxyTestBase {
     Duration durationTestMode;
     DocumentModelAdministrationClientBuilder builder;
+    private HttpClient playbackClient;
     /**
      * Use duration of nearly zero value for PLAYBACK test mode, otherwise, use default duration value for LIVE mode.
      */
@@ -49,6 +48,13 @@ public abstract class DocumentModelAdministrationClientTestBase extends TestBase
         durationTestMode = interceptorManager.isPlaybackMode()
             ? TestUtils.ONE_NANO_DURATION : Constants.DEFAULT_POLL_INTERVAL;
         builder = new DocumentModelAdministrationClientBuilder();
+        // register playback client or record policy depending on test mode
+        if (interceptorManager.isPlaybackMode()) {
+            playbackClient = interceptorManager.getPlaybackClient();
+            builder.httpClient(playbackClient);
+        } else {
+            builder.addPolicy(interceptorManager.getRecordPolicy());
+        }
     }
 
     DocumentModelAdministrationClientBuilder getDocumentModelAdminClientBuilder(HttpClient httpClient,
@@ -58,19 +64,16 @@ public abstract class DocumentModelAdministrationClientTestBase extends TestBase
         DocumentAnalysisAudience audience = TestUtils.getAudience(endpoint);
         builder
             .endpoint(endpoint)
-            .httpClient(httpClient == null ? interceptorManager.getPlaybackClient() : httpClient)
+            .httpClient(httpClient == null ? playbackClient : httpClient)
             .httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS))
             .serviceVersion(serviceVersion)
             .audience(audience);
 
-        if (getTestMode() == TestMode.PLAYBACK) {
-            builder.credential(new AzureKeyCredential(INVALID_KEY));
+        // use RECORD mode
+        if (useKeyCredential) {
+            builder.credential(new AzureKeyCredential(TestUtils.AZURE_FORM_RECOGNIZER_API_KEY_CONFIGURATION));
         } else {
-            if (useKeyCredential) {
-                builder.credential(new AzureKeyCredential(TestUtils.AZURE_FORM_RECOGNIZER_API_KEY_CONFIGURATION));
-            } else {
-                builder.credential(getCredentialByAuthority(endpoint));
-            }
+            builder.credential(getCredentialByAuthority(endpoint));
         }
 
         return builder;
@@ -140,8 +143,7 @@ public abstract class DocumentModelAdministrationClientTestBase extends TestBase
     }
 
     private String getEndpoint() {
-        return interceptorManager.isPlaybackMode()
-            ? "https://localhost:8080"
-            : TestUtils.AZURE_FORM_RECOGNIZER_ENDPOINT_CONFIGURATION;
+        // use RECORD mode endpoint
+        return TestUtils.AZURE_FORM_RECOGNIZER_ENDPOINT_CONFIGURATION;
     }
 }
