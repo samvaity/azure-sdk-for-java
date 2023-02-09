@@ -8,21 +8,16 @@ package com.azure.core.test.models;
  */
 public class TestProxySanitizer {
     private final TestProxySanitizerType testProxySanitizerType;
-    private final String regexKey;
-    private final String redactedValue;
+    private String regex;
+    private String replacementText;
 
-    private String groupForReplace;
 
     /**
      * Creates an instance of TestProxySanitizer
-     * @param regexKey the regex or the json key to lookup for redaction
-     * @param redactedValue the replacement text for the regex matched content
      * @param testProxySanitizerType the type of sanitizer
      */
-    public TestProxySanitizer(String regexKey, String redactedValue, TestProxySanitizerType testProxySanitizerType) {
+    public TestProxySanitizer(TestProxySanitizerType testProxySanitizerType) {
         this.testProxySanitizerType = testProxySanitizerType;
-        this.regexKey = regexKey;
-        this.redactedValue = redactedValue;
     }
 
     /**
@@ -38,33 +33,14 @@ public class TestProxySanitizer {
      * @return the regex key to lookup for redaction
      */
     public String getRegex() {
-        return regexKey;
+        return regex;
     }
 
     /**
      * Get the  replacement for regex matched content
      * @return the replacement for regex matched content
      */
-    public String getRedactedValue() {
-        return redactedValue;
-    }
-
-    /**
-     * Get the group for replace
-     * @return the group for replace.
-     */
-    public String getGroupForReplace() {
-        return groupForReplace;
-    }
-
-    /**
-     * Set the group for replace.
-     *
-     * @param groupForReplace The name of the group to replace.
-     * @return the {@link TestProxySanitizer} itself.
-     */
-    public TestProxySanitizer setGroupForReplace(String groupForReplace) {
-        this.groupForReplace = groupForReplace;
-        return this;
+    public String getReplacementText() {
+        return replacementText;
     }
 }
