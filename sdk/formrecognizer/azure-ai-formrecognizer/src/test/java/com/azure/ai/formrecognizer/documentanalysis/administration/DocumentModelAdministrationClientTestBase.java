@@ -67,13 +67,15 @@ public abstract class DocumentModelAdministrationClientTestBase extends TestProx
             builder.addPolicy(interceptorManager.getRecordPolicy());
         }
 
-
+        if (getTestMode() == TestMode.PLAYBACK) {
+            builder.credential(new AzureKeyCredential(INVALID_KEY));
+        } else {
             if (useKeyCredential) {
                 builder.credential(new AzureKeyCredential(TestUtils.AZURE_FORM_RECOGNIZER_API_KEY_CONFIGURATION));
             } else {
                 builder.credential(getCredentialByAuthority(endpoint));
             }
-
+        }
         return builder;
     }
 
