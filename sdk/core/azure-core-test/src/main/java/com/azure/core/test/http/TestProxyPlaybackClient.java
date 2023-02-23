@@ -5,6 +5,8 @@ package com.azure.core.test.http;
 
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.HttpMethod;
+import com.azure.core.http.HttpPipelineCallContext;
+import com.azure.core.http.HttpPipelineNextSyncPolicy;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.HttpResponse;
 import com.azure.core.test.models.TestProxyRequestMatcher;
@@ -111,6 +113,15 @@ public class TestProxyPlaybackClient implements HttpClient {
         }
         TestProxyUtils.changeHeaders(request, xRecordingId, "playback");
         return client.send(request);
+    }
+
+    @Override
+    public HttpResponse sendSync(HttpRequest request, Context context) {
+        if (xRecordingId == null) {
+            throw new RuntimeException("Playback was not started before a request was sent.");
+        }
+        TestProxyUtils.changeHeaders(request, xRecordingId, "playback");
+        return client.sendSync(request, context);
     }
 
     /**

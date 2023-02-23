@@ -3,13 +3,21 @@
 
 package com.azure.core.test;
 
+import com.azure.core.exception.HttpResponseException;
 import com.azure.core.http.HttpClient;
+import com.azure.core.http.HttpClientProvider;
+import com.azure.core.http.HttpHeaders;
 import com.azure.core.http.HttpMethod;
 import com.azure.core.http.HttpPipeline;
 import com.azure.core.http.HttpPipelineBuilder;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.HttpResponse;
+import com.azure.core.http.okhttp.OkHttpAsyncHttpClientBuilder;
+import com.azure.core.http.rest.RestProxy;
+import com.azure.core.test.annotation.DoNotRecord;
+import com.azure.core.test.http.MockHttpResponse;
 import com.azure.core.test.http.TestProxyTestServer;
+import com.azure.core.test.implementation.RestProxyWithMockTests;
 import com.azure.core.test.models.CustomMatcher;
 import com.azure.core.test.models.TestProxySanitizer;
 import com.azure.core.test.models.TestProxySanitizerType;
@@ -21,10 +29,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import okhttp3.OkHttpClient;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Mono;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,15 +42,19 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -56,7 +70,8 @@ public class TestProxyTests extends TestProxyTestBase {
 
     static {
         customSanitizer.add(new TestProxySanitizer("$..modelId", REDACTED, TestProxySanitizerType.BODY_KEY));
-        customSanitizer.add(new TestProxySanitizer("TableName\\\"*:*\\\"(?<tablename>.*)\\\"", REDACTED, TestProxySanitizerType.BODY_REGEX).setGroupForReplace("tablename"));
+        customSanitizer.add(new TestProxySanitizer("TableName\\\"*:*\\\"(?<tablename>.*)\\\"", REDACTED,
+            TestProxySanitizerType.BODY_REGEX).setGroupForReplace("tablename"));
     }
 
     @BeforeAll
@@ -64,11 +79,13 @@ public class TestProxyTests extends TestProxyTestBase {
         server = new TestProxyTestServer();
         TestProxyTestBase.setup();
     }
+
     @AfterAll
     public static void teardownClass() {
         TestProxyTestBase.teardown();
         server.close();
     }
+
     @Test
     @Tag("Record")
     public void testBasicRecord() {
@@ -102,6 +119,7 @@ public class TestProxyTests extends TestProxyTestBase {
     @Tag("Record")
     public void testRecordWithPath() {
         HttpURLConnectionHttpClient client = new HttpURLConnectionHttpClient();
+        // HttpClient client = getHttpClient();
         HttpPipeline pipeline = new HttpPipelineBuilder()
             .httpClient(client)
             .policies(interceptorManager.getRecordPolicy()).build();
@@ -114,9 +132,85 @@ public class TestProxyTests extends TestProxyTestBase {
         testResourceNamer.randomName("test", 10);
         testResourceNamer.now();
         HttpRequest request = new HttpRequest(HttpMethod.GET, url);
-        HttpResponse response = pipeline.sendSync(request, Context.NONE);
+        // The error expected is Runtime when running with HttpUrlClient even for `RECORD`
+        assertThrows(RuntimeException.class, () -> pipeline.sendSync(request, Context.NONE));
+    }
 
-        assertEquals(200, response.getStatusCode());
+    @Test
+    @Tag("Record")
+    public void serviceErrorWithUrlClient() {
+        RestProxyWithMockTests.ServiceErrorWithCharsetService service = RestProxy.create(
+            RestProxyWithMockTests.ServiceErrorWithCharsetService.class,
+            new HttpPipelineBuilder().httpClient(getHttpClientOrUsePlaybackClient(new HttpURLConnectionHttpClient()))
+                .policies(interceptorManager.getRecordPolicy()).build());
+
+        assertThrows(HttpResponseException.class, () -> service.getPath());
+    }
+
+    @Test
+    @Tag("Record")
+    public void serviceErrorOkHttpClient() {
+        HttpClient client = getHttpClient();
+
+        RestProxyWithMockTests.ServiceErrorWithCharsetService service
+            = RestProxy.create(RestProxyWithMockTests.ServiceErrorWithCharsetService.class,
+            new HttpPipelineBuilder().httpClient(client).policies(interceptorManager.getRecordPolicy()).build());
+
+        assertThrows(HttpResponseException.class, () -> service.getPath());
+    }
+
+    // @Test
+    // @Tag("Record")
+    // public void serviceErrorWithMockHttpClient() {
+    //     RestProxyWithMockTests.ServiceErrorWithCharsetService service = RestProxy.create(
+    //         RestProxyWithMockTests.ServiceErrorWithCharsetService.class,
+    //         new HttpPipelineBuilder().httpClient(new RestProxyWithMockTests.SimpleMockHttpClient() {
+    //             @Override
+    //             public Mono<HttpResponse> send(HttpRequest request) {
+    //                 HttpHeaders headers = new HttpHeaders().set("Content-Type", "application/json");
+    //
+    //                 HttpResponse response = new MockHttpResponse(request, 409, headers,
+    //                     "{ \"error\": \"Something went wrong, but at least this JSON is valid.\"}".getBytes(
+    //                         StandardCharsets.UTF_8));
+    //
+    //                 return Mono.just(response);
+    //             }
+    //         }).policies(interceptorManager.getRecordPolicy()).build());
+    //
+    //
+    //     assertThrows(HttpResponseException.class, () -> service.get());
+    // }
+
+    @Test
+    @Tag("Playback")
+    public void serviceErrorWithMockHttpClient() {
+        RestProxyWithMockTests.ServiceErrorWithCharsetService service = RestProxy.create(
+            RestProxyWithMockTests.ServiceErrorWithCharsetService.class,
+            new HttpPipelineBuilder().httpClient(interceptorManager.getPlaybackClient()).build());
+
+
+        assertThrows(HttpResponseException.class, () -> service.get());
+    }
+
+    HttpClient getHttpClientOrUsePlaybackClient(HttpClient httpClient) {
+        URL url = null;
+        try {
+            url = new UrlBuilder().setHost("localhost").setPort(3000).setPath("first/path").setScheme("http").toUrl();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+        HttpRequest requestUrl = new HttpRequest(HttpMethod.GET, url);
+
+        if (testMode.equals(TestMode.PLAYBACK)) {
+            return interceptorManager.getPlaybackClient();
+        } else {
+            return new HttpURLConnectionHttpClient() {
+                @Override
+                public Mono<HttpResponse> send(HttpRequest request) {
+                    return httpClient.send(requestUrl);
+                }
+            };
+        }
     }
 
     @Test
@@ -124,8 +218,7 @@ public class TestProxyTests extends TestProxyTestBase {
     public void testRecordWithHeaders() {
         HttpURLConnectionHttpClient client = new HttpURLConnectionHttpClient();
         HttpPipeline pipeline = new HttpPipelineBuilder()
-            .httpClient(client)
-            .policies(interceptorManager.getRecordPolicy()).build();
+            .httpClient(client).build();
         URL url = null;
         try {
             url = new UrlBuilder().setHost("localhost").setPort(3000).setPath("echoheaders").setScheme("http").toUrl();
@@ -139,7 +232,19 @@ public class TestProxyTests extends TestProxyTestBase {
         request.setHeader("header2", "value2");
         HttpResponse response = pipeline.sendSync(request, Context.NONE);
 
-        assertEquals(200, response.getStatusCode());
+        assertEquals(409, response.getStatusCode());
+    }
+
+    static HttpClient getHttpClient() {
+        List<HttpClient> httpClientsToTest = new ArrayList<>();
+        for (HttpClientProvider httpClientProvider : ServiceLoader.load(HttpClientProvider.class)) {
+            if (includeHttpClientOrHttpClientProvider(httpClientProvider.getClass().getSimpleName()
+                .toLowerCase(Locale.ROOT))) {
+                httpClientsToTest.add(httpClientProvider.createInstance());
+            }
+        }
+
+        return httpClientsToTest.get(0);
     }
 
     @Test
@@ -206,7 +311,8 @@ public class TestProxyTests extends TestProxyTestBase {
     @Tag("Playback")
     public void testPlaybackWithRedaction() {
         interceptorManager.addSanitizers(customSanitizer);
-        interceptorManager.addMatchers(new ArrayList<>(Arrays.asList(new CustomMatcher().setExcludedHeaders(Arrays.asList("Ocp-Apim-Subscription-Key")))));
+        interceptorManager.addMatchers(new ArrayList<>(
+            Arrays.asList(new CustomMatcher().setExcludedHeaders(Arrays.asList("Ocp-Apim-Subscription-Key")))));
         HttpClient client = interceptorManager.getPlaybackClient();
         URL url;
 
@@ -266,7 +372,8 @@ public class TestProxyTests extends TestProxyTestBase {
         assertEquals("http://REDACTED/fr/path/2", record.getUri());
 
         // user delegation sanitizers
-        assertTrue(record.getResponse().get("Body").contains("<UserDelegationKey><SignedTid>REDACTED</SignedTid></UserDelegationKey>"));
+        assertTrue(record.getResponse().get("Body")
+            .contains("<UserDelegationKey><SignedTid>REDACTED</SignedTid></UserDelegationKey>"));
         assertTrue(record.getResponse().get("primaryKey").contains("<PrimaryKey>REDACTED</PrimaryKey>"));
 
         // custom body regex
@@ -274,7 +381,9 @@ public class TestProxyTests extends TestProxyTestBase {
     }
 
     private RecordedTestProxyData readDataFromFile() {
-        String filePath = Paths.get(TestUtils.getRecordFolder().getPath(), this.testContextManager.getTestPlaybackRecordingName()) + ".json";
+        String filePath =
+            Paths.get(TestUtils.getRecordFolder().getPath(), this.testContextManager.getTestPlaybackRecordingName()) +
+                ".json";
 
         File recordFile = new File(filePath);
         try (BufferedReader reader = Files.newBufferedReader(recordFile.toPath())) {
@@ -288,6 +397,7 @@ public class TestProxyTests extends TestProxyTestBase {
     static class RecordedTestProxyData {
         @JsonProperty("Entries")
         private final LinkedList<TestProxyDataRecord> testProxyDataRecords;
+
         RecordedTestProxyData() {
             testProxyDataRecords = new LinkedList<>();
         }

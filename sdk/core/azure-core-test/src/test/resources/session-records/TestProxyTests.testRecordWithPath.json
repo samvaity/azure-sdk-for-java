@@ -1,0 +1,24 @@
+{
+  "Entries": [
+    {
+      "RequestUri": "http://REDACTED/first/path",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2",
+        "Connection": "keep-alive",
+        "User-Agent": "Java/17.0.1"
+      },
+      "RequestBody": null,
+      "StatusCode": 409,
+      "ResponseHeaders": {
+        "Content-Type": "application/json",
+        "Transfer-Encoding": "chunked"
+      },
+      "ResponseBody": null
+    }
+  ],
+  "Variables": {
+    "0": "test01954",
+    "1": "2023-02-23T23:50:01.213501Z"
+  }
+}

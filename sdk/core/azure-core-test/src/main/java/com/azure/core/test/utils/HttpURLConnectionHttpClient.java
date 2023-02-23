@@ -10,11 +10,14 @@ import com.azure.core.http.HttpRequest;
 import com.azure.core.http.HttpResponse;
 import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
+import com.azure.core.util.logging.ClientLogger;
+import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.HttpURLConnection;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -27,6 +30,7 @@ import java.util.Map;
  * A {@link HttpClient} that uses the JDK {@link HttpURLConnection}.
  */
 public class HttpURLConnectionHttpClient implements HttpClient {
+    static final ClientLogger LOGGER = new ClientLogger(HttpURLConnectionHttpClient.class);
 
     @Override
     public HttpResponse sendSync(HttpRequest request, Context context) {
@@ -41,8 +45,15 @@ public class HttpURLConnectionHttpClient implements HttpClient {
             connection.connect();
 
             return createHttpResponse(connection, request);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            Throwable unwrapped = Exceptions.unwrap(e);
+            if (unwrapped instanceof RuntimeException) {
+                throw LOGGER.logExceptionAsError((RuntimeException) unwrapped);
+            } else if (unwrapped instanceof IOException) {
+                throw LOGGER.logExceptionAsError(new UncheckedIOException((IOException) unwrapped));
+            } else {
+                throw LOGGER.logExceptionAsError(new RuntimeException(unwrapped));
+            }
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -61,8 +72,15 @@ public class HttpURLConnectionHttpClient implements HttpClient {
             setBodyOnRequest(request, connection);
             connection.connect();
             return Mono.just(createHttpResponse(connection, request));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            Throwable unwrapped = Exceptions.unwrap(e);
+            if (unwrapped instanceof RuntimeException) {
+                throw LOGGER.logExceptionAsError((RuntimeException) unwrapped);
+            } else if (unwrapped instanceof IOException) {
+                throw LOGGER.logExceptionAsError(new UncheckedIOException((IOException) unwrapped));
+            } else {
+                throw LOGGER.logExceptionAsError(new RuntimeException(unwrapped));
+            }
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -75,7 +93,6 @@ public class HttpURLConnectionHttpClient implements HttpClient {
         if (connection == null) {
             return null;
         }
-
 
         return new HttpURLResponse(connection, request);
     }

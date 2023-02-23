@@ -176,10 +176,14 @@ public class RestProxyWithMockTests extends RestProxyTests {
 
     @Host("http://localhost")
     @ServiceInterface(name = "ServiceErrorWithCharsetService")
-    interface ServiceErrorWithCharsetService {
+    public interface ServiceErrorWithCharsetService {
         @Get("/get")
         @ExpectedResponses({400})
         HttpBinJSON get();
+
+        @Get("/first/path")
+        @ExpectedResponses({400})
+        HttpBinJSON getPath();
     }
 
     @Test
@@ -429,7 +433,7 @@ public class RestProxyWithMockTests extends RestProxyTests {
         assertTrue(value.contains(expectedSubstring), "Expected \"" + value + "\" to contain \"" + expectedSubstring + "\".");
     }
 
-    private abstract static class SimpleMockHttpClient implements HttpClient {
+    public abstract static class SimpleMockHttpClient implements HttpClient {
 
         @Override
         public abstract Mono<HttpResponse> send(HttpRequest request);

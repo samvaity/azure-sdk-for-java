@@ -3,6 +3,7 @@
 
 package com.azure.core.test.http;
 
+import com.azure.core.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import reactor.core.publisher.Mono;
 import reactor.netty.DisposableServer;
@@ -28,7 +29,10 @@ public class TestProxyTestServer implements Closeable {
             .port(3000)
             .route(routes -> routes
                 .get("/", (req, res) -> res.status(HttpResponseStatus.OK).sendString(Mono.just("hello world")))
-                .get("/first/path", (req, res) -> res.status(HttpResponseStatus.OK).sendString(Mono.just("first path")))
+                .get("/first/path", (req, res) -> {
+                    return res.status(HttpResponseStatus.CONFLICT)
+                        .addHeader("Content-Type", "application/json");
+                })
                 .get("/echoheaders", (req, res) -> {
                     for (Map.Entry<String, String> requestHeader : req.requestHeaders()) {
                         res.addHeader(requestHeader.getKey(), requestHeader.getValue());
