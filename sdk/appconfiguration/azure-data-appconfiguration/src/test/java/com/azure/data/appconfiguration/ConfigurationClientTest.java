@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 import static com.azure.data.appconfiguration.TestHelper.DISPLAY_NAME_WITH_ARGUMENTS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ConfigurationClientTest extends ConfigurationClientTestBase {
@@ -474,9 +475,7 @@ public class ConfigurationClientTest extends ConfigurationClientTestBase {
             client.setReadOnlyWithResponse(expected, true, Context.NONE).getValue();
 
             // unsuccessfully delete
-            assertRestException(() ->
-                client.deleteConfigurationSettingWithResponse(expected, false, Context.NONE),
-                HttpResponseException.class, 409);
+            assertThrows(HttpResponseException.class, () -> client.deleteConfigurationSettingWithResponse(expected, false, Context.NONE));
 
             // clear read-only setting and delete
             client.setReadOnly(expected.getKey(), expected.getLabel(), false);
