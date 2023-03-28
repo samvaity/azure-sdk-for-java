@@ -106,7 +106,7 @@ public class TableClientTest extends TableClientTestBase {
         final ClientSecretCredential credential = new ClientSecretCredentialBuilder()
             .clientId(Configuration.getGlobalConfiguration().get("TABLES_CLIENT_ID", "clientId"))
             .clientSecret(Configuration.getGlobalConfiguration().get("TABLES_CLIENT_SECRET", "clientSecret"))
-            .tenantId(testResourceNamer.randomUuid())
+            .tenantId(Configuration.getGlobalConfiguration().get("TABLES_TENANT_ID", "tenantId"))
             .additionallyAllowedTenants("*")
             .build();
 

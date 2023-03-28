@@ -35,6 +35,7 @@ Licensed under the MIT License.
   <properties>
     <!-- Configures the Java 9+ run to perform the required module exports, opens, and reads that are necessary for testing but shouldn't be part of the module-info. -->
     <javaModulesSurefireArgLine>
+      --add-opens com.azure.core/com.azure.core.implementation.util=ALL-UNNAMED
       --add-opens com.azure.data.tables/com.azure.data.tables=ALL-UNNAMED
       --add-opens com.azure.data.tables/com.azure.data.tables.implementation=ALL-UNNAMED
       --add-opens com.azure.data.tables/com.azure.data.tables.implementation.models=ALL-UNNAMED
@@ -85,7 +86,7 @@ Licensed under the MIT License.
     <dependency>
       <groupId>com.azure</groupId>
       <artifactId>azure-core-test</artifactId>
-      <version>1.15.0</version> <!-- {x-version-update;com.azure:azure-core-test;dependency} -->
+      <version>1.16.0-beta.1</version> <!-- {x-version-update;com.azure:azure-core-test;dependency} -->
       <scope>test</scope>
     </dependency>
     <dependency>
