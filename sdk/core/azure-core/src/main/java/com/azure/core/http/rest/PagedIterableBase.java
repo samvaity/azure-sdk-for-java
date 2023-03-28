@@ -5,8 +5,15 @@ package com.azure.core.http.rest;
 
 import com.azure.core.util.CoreUtils;
 import com.azure.core.util.IterableStream;
+import com.azure.core.util.paging.ContinuablePage;
+import com.azure.core.util.paging.ContinuablePagedFluxCore;
 import com.azure.core.util.paging.ContinuablePagedIterable;
+import com.azure.core.util.paging.ContinuationState;
+import com.azure.core.util.paging.PageRetriever;
 import com.azure.core.util.paging.PageRetrieverSync;
+import reactor.core.CoreSubscriber;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -80,5 +87,56 @@ public class PagedIterableBase<T, P extends PagedResponse<T>> extends Continuabl
      */
     public PagedIterableBase(Supplier<PageRetrieverSync<String, P>> provider) {
         super(provider, null, token -> !CoreUtils.isNullOrEmpty(token));
+    }
+
+    /**
+     * Creates a Flux of {@link PagedResponse} starting from the first page.
+     *
+     * <p><strong>Code sample</strong></p>
+     * <!-- src_embed com.azure.core.http.rest.pagedfluxbase.bypage -->
+     * <pre>
+     * &#47;&#47; Start processing the results from first page
+     * pagedFluxBase.byPage&#40;&#41;
+     *     .log&#40;&#41;
+     *     .doOnSubscribe&#40;ignoredVal -&gt; System.out.println&#40;
+     *         &quot;Subscribed to paged flux processing pages starting from first page&quot;&#41;&#41;
+     *     .subscribe&#40;page -&gt; System.out.printf&#40;&quot;Processing page containing item values: %s%n&quot;,
+     *         page.getElements&#40;&#41;.stream&#40;&#41;.map&#40;String::valueOf&#41;.collect&#40;Collectors.joining&#40;&quot;, &quot;&#41;&#41;&#41;,
+     *         error -&gt; System.err.println&#40;&quot;An error occurred: &quot; + error&#41;,
+     *         &#40;&#41; -&gt; System.out.println&#40;&quot;Processing complete.&quot;&#41;&#41;;
+     * </pre>
+     * <!-- end com.azure.core.http.rest.pagedfluxbase.bypage -->
+     *
+     * @return A {@link PagedFluxBase} starting from the first page
+     */
+    public Stream<P> byPage() {
+        return super.byPage();
+    }
+
+    /**
+     * Creates a Flux of {@link PagedResponse} starting from the next page associated with the given continuation token.
+     * To start from first page, use {@link #byPage()} instead.
+     *
+     * <p><strong>Code sample</strong></p>
+     * <!-- src_embed com.azure.core.http.rest.pagedfluxbase.bypage#String -->
+     * <pre>
+     * &#47;&#47; Start processing the results from a page associated with the continuation token
+     * String continuationToken = getContinuationToken&#40;&#41;;
+     * pagedFluxBase.byPage&#40;continuationToken&#41;
+     *     .log&#40;&#41;
+     *     .doOnSubscribe&#40;ignoredVal -&gt; System.out.println&#40;
+     *         &quot;Subscribed to paged flux processing page starting from &quot; + continuationToken&#41;&#41;
+     *     .subscribe&#40;page -&gt; System.out.printf&#40;&quot;Processing page containing item values: %s%n&quot;,
+     *         page.getElements&#40;&#41;.stream&#40;&#41;.map&#40;String::valueOf&#41;.collect&#40;Collectors.joining&#40;&quot;, &quot;&#41;&#41;&#41;,
+     *         error -&gt; System.err.println&#40;&quot;An error occurred: &quot; + error&#41;,
+     *         &#40;&#41; -&gt; System.out.println&#40;&quot;Processing complete.&quot;&#41;&#41;;
+     * </pre>
+     * <!-- end com.azure.core.http.rest.pagedfluxbase.bypage#String -->
+     *
+     * @param continuationToken The continuation token used to fetch the next page
+     * @return A {@link PagedFluxBase} starting from the page associated with the continuation token
+     */
+    public Flux<P> byPage(String continuationToken) {
+        return super.byPage(continuationToken);
     }
 }

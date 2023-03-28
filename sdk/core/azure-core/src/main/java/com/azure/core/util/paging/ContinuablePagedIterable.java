@@ -5,6 +5,9 @@ package com.azure.core.util.paging;
 
 import com.azure.core.util.IterableStream;
 import com.azure.core.util.logging.ClientLogger;
+import reactor.core.CoreSubscriber;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Iterator;
 import java.util.Objects;
@@ -190,6 +193,85 @@ public class ContinuablePagedIterable<C, T, P extends ContinuablePage<C, T>> ext
     public Iterable<P> iterableByPage(C continuationToken, int preferredPageSize) {
         return iterableByPageInternal(continuationToken, preferredPageSize,
             () -> this.pagedFlux.byPage(continuationToken, preferredPageSize).toIterable(batchSize));
+    }
+
+    public Flux<P> byPage() {
+        return byPageInternal(this.pageRetrieverProvider, null, this.defaultPageSize);
+    }
+
+    public Flux<P> byPage(C continuationToken) {
+        if (continuationToken == null) {
+            return Flux.empty();
+        }
+        return byPageInternal(this.pageRetrieverProvider, continuationToken, this.defaultPageSize);
+    }
+
+    public Flux<P> byPage(int preferredPageSize) {
+        if (preferredPageSize <= 0) {
+            return Flux.error(new IllegalArgumentException("preferredPageSize > 0 required but provided: "
+                + preferredPageSize));
+        }
+        return byPage(this.pageRetrieverProvider, null, preferredPageSize);
+    }
+
+    public Flux<P> byPage(C continuationToken, int preferredPageSize) {
+        if (preferredPageSize <= 0) {
+            return Flux.error(new IllegalArgumentException("preferredPageSize > 0 required but provided: "
+                + preferredPageSize));
+        }
+        if (continuationToken == null) {
+            return Flux.empty();
+        }
+        return byPage(this.pageRetrieverProvider, continuationToken, preferredPageSize);
+    }
+
+    /**
+     * Get a Flux of {@link ContinuablePage} created by concat-ing Flux instances returned Page Retriever Function
+     * calls.
+     *
+     * @param provider the provider that when called returns Page Retriever Function
+     * @param continuationToken the token to identify the pages to be retrieved
+     * @param pageSize the preferred page size
+     * @return a Flux of {@link ContinuablePage} identified by the given continuation token
+     */
+    private Flux<P> byPageInternal(Supplier<PageRetriever<C, P>> provider, C continuationToken, Integer pageSize) {
+        return Flux.defer(() -> {
+            final PageRetriever<C, P> pageRetriever = provider.get();
+            final ContinuationState<C> state = new ContinuationState<>(continuationToken, getContinuationPredicate());
+            return retrievePages(state, pageRetriever, pageSize);
+        });
+    }
+
+    /**
+     * Get a Flux of {@link ContinuablePage} created by concat-ing child Flux instances returned Page Retriever Function
+     * calls. The first child Flux of {@link ContinuablePage} is identified by the continuation-token in the state.
+     *
+     * @param state the state to be used across multiple Page Retriever Function calls
+     * @param pageRetriever the Page Retriever Function
+     * @param pageSize the preferred page size
+     * @return a Flux of {@link ContinuablePage}
+     */
+    private Flux<P> retrievePages(ContinuationState<C> state, PageRetriever<C, P> pageRetriever, Integer pageSize) {
+        /*
+         * The second argument for 'expand' is an initial capacity hint to the expand subscriber to indicate what size
+         * buffer it should instantiate. 4 is used as PageRetriever's 'get' returns a Flux so an implementation may
+         * return multiple pages, but in the case only one page is retrieved the buffer won't need to be resized or
+         * request additional pages from the service.
+         */
+        return retrievePage(state, pageRetriever, pageSize)
+            .expand(page -> {
+                state.setLastContinuationToken(page.getContinuationToken());
+                return Flux.defer(() -> retrievePage(state, pageRetriever, pageSize));
+            }, 4);
+    }
+
+    private Flux<P> retrievePage(ContinuationState<C> state, PageRetriever<C, P> pageRetriever, Integer pageSize) {
+        if (state.isDone()) {
+            return Flux.empty();
+        } else {
+            return pageRetriever.get(state.getLastContinuationToken(), pageSize)
+                .switchIfEmpty(Mono.fromRunnable(() -> state.setLastContinuationToken(null)));
+        }
     }
 
     private Stream<P> streamByPageInternal(C continuationToken, Integer preferredPageSize,

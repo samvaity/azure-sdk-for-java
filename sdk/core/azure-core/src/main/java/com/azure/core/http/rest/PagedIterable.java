@@ -3,12 +3,16 @@
 
 package com.azure.core.http.rest;
 
+import com.azure.core.http.HttpRequest;
 import com.azure.core.util.IterableStream;
+import com.azure.core.util.paging.PageRetriever;
 import com.azure.core.util.paging.PageRetrieverSync;
+import reactor.core.publisher.Flux;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -185,9 +189,23 @@ public class PagedIterable<T> extends PagedIterableBase<T, PagedResponse<T>> {
      * @param <S> The mapped type.
      * @return A PagedIterable of type S.
      */
-    @SuppressWarnings("deprecation")
     public <S> PagedIterable<S> mapPage(Function<T, S> mapper) {
-        return new PagedIterable<>(pagedFlux.mapPage(mapper));
+        Supplier<PageRetrieverSync<String, PagedResponse<T>>> provider = () -> (continuationToken, pageSize) -> {
+            Iterable<PagedResponse<T>> pageStream = (continuationToken == null)
+                ? iterableByPage()
+                : iterableByPage(continuationToken);
+            return pageStream.forEach(tPagedResponse -> mapPagedResponse(mapper));
+        };
+        return PagedFlux.create(provider);
+    }
+
+    private <S> Function<PagedResponse<T>, PagedResponse<S>> mapPagedResponse(Function<T, S> mapper) {
+        return pagedResponse -> new PagedResponseBase<HttpRequest, S>(pagedResponse.getRequest(),
+            pagedResponse.getStatusCode(),
+            pagedResponse.getHeaders(),
+            pagedResponse.getValue().stream().map(mapper).collect(Collectors.toList()),
+            pagedResponse.getContinuationToken(),
+            null);
     }
 
     /**
