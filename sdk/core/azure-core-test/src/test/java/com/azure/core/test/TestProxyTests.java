@@ -53,7 +53,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 // These tests override the environment variable so they can test playback and record in the same test run.
 // This strategy fails if we are in a LIVE test mode, so we'll just skip these entirely if that's the case.
 @DisabledIfEnvironmentVariable(named = "AZURE_TEST_MODE", matches = "(LIVE|live|Live)")
-public class TestProxyTests extends TestProxyTestBase {
+public class TestProxyTests extends TestBase {
     static TestProxyTestServer server;
     private static final ObjectMapper RECORD_MAPPER = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 

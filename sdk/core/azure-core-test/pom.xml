@@ -34,6 +34,8 @@
 
   <properties>
     <javaModulesSurefireArgLine>
+      --add-opens com.azure.core/com.azure.core.implementation.util=ALL-UNNAMED
+
       --add-exports org.junit.platform.commons/org.junit.platform.commons.util=ALL-UNNAMED
       --add-exports org.junit.platform.commons/org.junit.platform.commons.logging=ALL-UNNAMED
 
@@ -111,6 +113,22 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-compress</artifactId>
       <version>1.22</version>  <!-- {x-version-update;org.apache.commons:commons-compress;external_dependency} -->
+    </dependency>
+    <dependency>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-data-tables</artifactId>
+      <version>12.4.0-beta.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-identity</artifactId>
+      <version>1.8.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-identity</artifactId>
+      <version>1.9.0-beta.2</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
