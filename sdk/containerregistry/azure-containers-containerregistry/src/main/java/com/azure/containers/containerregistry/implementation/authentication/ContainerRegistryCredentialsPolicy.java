@@ -169,6 +169,7 @@ public final class ContainerRegistryCredentialsPolicy extends BearerTokenAuthent
 
     @Override
     public HttpResponse processSync(HttpPipelineCallContext context, HttpPipelineNextSyncPolicy next) {
+        System.out.println(context.getHttpRequest().getUrl());
         if ("http".equals(context.getHttpRequest().getUrl().getProtocol())) {
             throw LOGGER.logExceptionAsError(
                 new RuntimeException("token credentials require a URL using the HTTPS protocol scheme"));

@@ -15,6 +15,7 @@ import com.azure.core.implementation.serializer.HttpResponseDecoder;
 import com.azure.core.util.Base64Url;
 import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
+import com.azure.core.util.UrlBuilder;
 import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.core.util.serializer.SerializerEncoding;
 import reactor.core.publisher.Mono;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
 import java.nio.ByteBuffer;
 import java.util.EnumSet;
 import java.util.function.Consumer;
@@ -69,7 +71,18 @@ public class SyncRestProxy extends RestProxyBase {
                 request.setBody(RestProxyUtils.validateLengthSync(request));
             }
 
+            HttpRequest originalRequest = request;
+            UrlBuilder originalUrlBuilder = UrlBuilder.parse(originalRequest.getUrl());
+
             final HttpResponse response = send(request, context);
+            UrlBuilder contextReq = UrlBuilder.parse(response.getRequest().getUrl());
+            contextReq.setPath(originalUrlBuilder.getPath());
+            contextReq.setQuery(originalUrlBuilder.getQuery().toString());
+            try {
+                response.getRequest().setUrl(originalUrlBuilder.toUrl());
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
             decodedResponse = this.decoder.decodeSync(response, methodParser);
             return handleRestReturnType(decodedResponse, methodParser, methodParser.getReturnType(), context, options,
                 errorOptions);

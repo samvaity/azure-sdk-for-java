@@ -79,23 +79,20 @@ public class TestProxyUtils {
      * @throws RuntimeException Construction of one of the URLs failed.
      */
     public static void changeHeaders(HttpRequest request, String xRecordingId, String mode) {
-        UrlBuilder proxyUrlBuilder = UrlBuilder.parse(request.getUrl());
-        proxyUrlBuilder.setScheme(PROXY_URL_SCHEME);
-        proxyUrlBuilder.setHost(PROXY_URL_HOST);
-        proxyUrlBuilder.setPort(PROXY_URL_PORT);
-
-        UrlBuilder originalUrlBuilder = UrlBuilder.parse(request.getUrl());
-        originalUrlBuilder.setPath("");
-        originalUrlBuilder.setQuery("");
-
+        HttpHeaders headers = request.getHeaders();
+        headers.add("x-recording-mode", mode);
+        headers.add("x-recording-id", xRecordingId);
         try {
-            URL originalUrl = originalUrlBuilder.toUrl();
-
-            HttpHeaders headers = request.getHeaders();
-
-            headers.add("x-recording-upstream-base-uri", originalUrl.toString());
-            headers.add("x-recording-mode", mode);
-            headers.add("x-recording-id", xRecordingId);
+            if (headers.get("x-recording-upstream-base-uri") == null) {
+                UrlBuilder originalUrlBuilder = UrlBuilder.parse(request.getUrl());
+                originalUrlBuilder.setPath("");
+                originalUrlBuilder.setQuery("");
+                headers.add("x-recording-upstream-base-uri", originalUrlBuilder.toUrl().toString());
+            }
+            UrlBuilder proxyUrlBuilder = UrlBuilder.parse(request.getUrl());
+            proxyUrlBuilder.setScheme(PROXY_URL_SCHEME);
+            proxyUrlBuilder.setHost(PROXY_URL_HOST);
+            proxyUrlBuilder.setPort(PROXY_URL_PORT);
             request.setUrl(proxyUrlBuilder.toUrl());
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);

@@ -15,12 +15,14 @@ import com.azure.core.test.models.TestProxySanitizer;
 import com.azure.core.test.utils.HttpURLConnectionHttpClient;
 import com.azure.core.test.utils.TestProxyUtils;
 import com.azure.core.util.Context;
+import com.azure.core.util.UrlBuilder;
 import com.azure.core.util.serializer.JacksonAdapter;
 import com.azure.core.util.serializer.SerializerAdapter;
 import com.azure.core.util.serializer.SerializerEncoding;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -100,8 +102,18 @@ public class TestProxyRecordPolicy implements HttpPipelinePolicy {
 
     @Override
     public HttpResponse processSync(HttpPipelineCallContext context, HttpPipelineNextSyncPolicy next) {
-        TestProxyUtils.changeHeaders(context.getHttpRequest(), xRecordingId, "record");
+        HttpRequest originalRequest = context.getHttpRequest();
+        UrlBuilder originalUrlBuilder = UrlBuilder.parse(originalRequest.getUrl());
+        TestProxyUtils.changeHeaders(originalRequest, xRecordingId, "record");
         HttpResponse response = next.processSync();
+        UrlBuilder contextReq = UrlBuilder.parse(context.getHttpRequest().getUrl());
+        contextReq.setPath(originalUrlBuilder.getPath());
+        contextReq.setQuery(originalUrlBuilder.getQuery().toString());
+        try {
+            originalRequest.setUrl(originalUrlBuilder.toUrl());
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
         TestProxyUtils.checkForTestProxyErrors(response);
         return response;
     }
@@ -109,8 +121,18 @@ public class TestProxyRecordPolicy implements HttpPipelinePolicy {
     @Override
     public Mono<HttpResponse> process(HttpPipelineCallContext context, HttpPipelineNextPolicy next) {
         HttpRequest request = context.getHttpRequest();
+        HttpRequest originalRequest = context.getHttpRequest();
+        UrlBuilder originalUrlBuilder = UrlBuilder.parse(originalRequest.getUrl());
         TestProxyUtils.changeHeaders(request, xRecordingId, "record");
         return next.process().map(response -> {
+            UrlBuilder contextReq = UrlBuilder.parse(context.getHttpRequest().getUrl());
+            contextReq.setPath(originalUrlBuilder.getPath());
+            contextReq.setQuery(originalUrlBuilder.getQuery().toString());
+            try {
+                request.setUrl(originalUrlBuilder.toUrl());
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
             TestProxyUtils.checkForTestProxyErrors(response);
             return response;
         });
