@@ -39,7 +39,6 @@ import java.util.function.Function;
 
 import static com.azure.ai.formrecognizer.documentanalysis.implementation.util.Constants.DEFAULT_POLL_INTERVAL;
 import static com.azure.ai.formrecognizer.documentanalysis.implementation.util.Transforms.getHttpResponseException;
-import static com.azure.ai.formrecognizer.documentanalysis.implementation.util.Utility.enableSyncRestProxy;
 import static com.azure.ai.formrecognizer.documentanalysis.implementation.util.Utility.getAnalyzeDocumentOptions;
 import static com.azure.ai.formrecognizer.documentanalysis.implementation.util.Utility.getTracingContext;
 
@@ -171,7 +170,7 @@ public final class DocumentAnalysisClient {
                 + " be null or empty"));
         }
         final AnalyzeDocumentOptions finalAnalyzeDocumentOptions = getAnalyzeDocumentOptions(analyzeDocumentOptions);
-        context = enableSyncRestProxy(getTracingContext(context));
+        context = getTracingContext(context);
         Context finalContext = context;
         return SyncPoller.createPoller(
             DEFAULT_POLL_INTERVAL,
@@ -283,7 +282,7 @@ public final class DocumentAnalysisClient {
         }
 
         final AnalyzeDocumentOptions finalAnalyzeDocumentOptions = getAnalyzeDocumentOptions(analyzeDocumentOptions);
-        context = enableSyncRestProxy(getTracingContext(context));
+        context = getTracingContext(context);
         Context finalContext = context;
         return SyncPoller.createPoller(
             DEFAULT_POLL_INTERVAL,

@@ -176,9 +176,6 @@ public final class Utility {
     public static String generateRandomModelID() {
         return UUID.randomUUID().toString();
     }
-    public static Context enableSyncRestProxy(Context context) {
-        return context.addData(HTTP_REST_PROXY_SYNC_PROXY_ENABLE, true);
-    }
 
     public static Context getTracingContext(Context context) {
         if (context == null) {

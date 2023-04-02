@@ -70,7 +70,6 @@ import static com.azure.ai.formrecognizer.documentanalysis.implementation.util.T
 import static com.azure.ai.formrecognizer.documentanalysis.implementation.util.Transforms.getHttpResponseException;
 import static com.azure.ai.formrecognizer.documentanalysis.implementation.util.Transforms.getInnerCopyAuthorization;
 import static com.azure.ai.formrecognizer.documentanalysis.implementation.util.Transforms.toInnerDocTypes;
-import static com.azure.ai.formrecognizer.documentanalysis.implementation.util.Utility.enableSyncRestProxy;
 import static com.azure.ai.formrecognizer.documentanalysis.implementation.util.Utility.getBuildDocumentModelOptions;
 import static com.azure.ai.formrecognizer.documentanalysis.implementation.util.Utility.getComposeModelOptions;
 import static com.azure.ai.formrecognizer.documentanalysis.implementation.util.Utility.getCopyAuthorizationOptions;
@@ -254,7 +253,7 @@ public final class DocumentModelAdministrationClient {
             modelId = Utility.generateRandomModelID();
         }
         String finalModelId = modelId;
-        context = enableSyncRestProxy(getTracingContext(context));
+        context = getTracingContext(context);
         Context finalContext = context;
 
         return SyncPoller.createPoller(
@@ -318,7 +317,7 @@ public final class DocumentModelAdministrationClient {
     public Response<ResourceDetails> getResourceDetailsWithResponse(Context context) {
         try {
             Response<com.azure.ai.formrecognizer.documentanalysis.implementation.models.ResourceDetails> response =
-                miscellaneousImpl.getResourceInfoWithResponse(enableSyncRestProxy(getTracingContext(context)));
+                miscellaneousImpl.getResourceInfoWithResponse(getTracingContext(context));
 
             return new SimpleResponse<>(response, Transforms.toAccountProperties(response.getValue()));
         } catch (ErrorResponseException ex) {
@@ -374,7 +373,7 @@ public final class DocumentModelAdministrationClient {
         }
         try {
             return
-                documentModelsImpl.deleteModelWithResponse(modelId, enableSyncRestProxy(getTracingContext(context)));
+                documentModelsImpl.deleteModelWithResponse(modelId, getTracingContext(context));
         } catch (ErrorResponseException ex) {
             throw LOGGER.logExceptionAsError(getHttpResponseException(ex));
         }
@@ -462,7 +461,7 @@ public final class DocumentModelAdministrationClient {
         try {
             Response<CopyAuthorization> response =
                 documentModelsImpl.authorizeModelCopyWithResponse(authorizeCopyRequest,
-                    enableSyncRestProxy(getTracingContext(context)));
+                    getTracingContext(context));
 
             return new SimpleResponse<>(response, Transforms.toCopyAuthorization(response.getValue()));
         } catch (ErrorResponseException ex) {
@@ -586,7 +585,7 @@ public final class DocumentModelAdministrationClient {
 
         final ComposeDocumentModelRequest composeRequest =
             getComposeDocumentModelRequest(componentModelIds, composeDocumentModelOptions, modelId);
-        context = enableSyncRestProxy(getTracingContext(context));
+        context = getTracingContext(context);
 
         Context finalContext = context;
         return SyncPoller.createPoller(
@@ -687,7 +686,7 @@ public final class DocumentModelAdministrationClient {
 
     SyncPoller<OperationResult, DocumentModelDetails> beginCopyDocumentModelToSync(String sourceModelId,
         DocumentModelCopyAuthorization target, Context context) {
-        context = enableSyncRestProxy(getTracingContext(context));
+        context = getTracingContext(context);
         Context finalContext = context;
         return SyncPoller.createPoller(
             DEFAULT_POLL_INTERVAL,
@@ -750,7 +749,7 @@ public final class DocumentModelAdministrationClient {
     }
 
     PagedIterable<DocumentModelSummary> listDocumentModelsSync(Context context) {
-        context = enableSyncRestProxy(getTracingContext(context));
+        context = getTracingContext(context);
         Context finalContext = context;
         return new PagedIterable<>(() -> listFirstPageModelInfo(finalContext),
             continuationToken -> listNextPageModelInfo(continuationToken, finalContext));
@@ -860,7 +859,7 @@ public final class DocumentModelAdministrationClient {
         }
         try {
             Response<com.azure.ai.formrecognizer.documentanalysis.implementation.models.DocumentModelDetails> response =
-                documentModelsImpl.getModelWithResponse(modelId, enableSyncRestProxy(getTracingContext(context)));
+                documentModelsImpl.getModelWithResponse(modelId, getTracingContext(context));
 
             return new SimpleResponse<>(response, Transforms.toDocumentModelDetails(response.getValue()));
         } catch (ErrorResponseException ex) {
@@ -935,7 +934,7 @@ public final class DocumentModelAdministrationClient {
         }
         try {
             Response<com.azure.ai.formrecognizer.documentanalysis.implementation.models.OperationDetails> response =
-                miscellaneousImpl.getOperationWithResponse(operationId, enableSyncRestProxy(getTracingContext(context)));
+                miscellaneousImpl.getOperationWithResponse(operationId, getTracingContext(context));
 
             return new SimpleResponse<>(response, Transforms.toOperationDetails(response.getValue()));
         } catch (ErrorResponseException ex) {
@@ -1001,7 +1000,7 @@ public final class DocumentModelAdministrationClient {
     }
 
     PagedIterable<OperationSummary> listOperationsSync(Context context) {
-        context = enableSyncRestProxy(getTracingContext(context));
+        context = getTracingContext(context);
         Context finalContext = context;
         return new PagedIterable<>(() -> listFirstPageOperationInfo(finalContext),
             continuationToken -> listNextPageOperationInfo(continuationToken, finalContext));
@@ -1153,7 +1152,7 @@ public final class DocumentModelAdministrationClient {
             classifierId = Utility.generateRandomModelID();
         }
         String finalId = classifierId;
-        context = enableSyncRestProxy(getTracingContext(context));
+        context = getTracingContext(context);
         Context finalContext = context;
 
         return SyncPoller.createPoller(
@@ -1218,7 +1217,7 @@ public final class DocumentModelAdministrationClient {
     }
 
     PagedIterable<DocumentClassifierDetails> listDocumentClassifiersSync(Context context) {
-        context = enableSyncRestProxy(getTracingContext(context));
+        context = getTracingContext(context);
         Context finalContext = context;
         return new PagedIterable<>(() -> listFirstPageClassifiers(finalContext),
             continuationToken -> listNextPageClassifiers(continuationToken, finalContext));
@@ -1328,7 +1327,7 @@ public final class DocumentModelAdministrationClient {
         try {
             Response<com.azure.ai.formrecognizer.documentanalysis.implementation.models.DocumentClassifierDetails>
                 response =
-                documentClassifiersImpl.getClassifierWithResponse(classifierId, enableSyncRestProxy(getTracingContext(context)));
+                documentClassifiersImpl.getClassifierWithResponse(classifierId, getTracingContext(context));
 
             return new SimpleResponse<>(response, Transforms.fromInnerDocumentClassifierDetails(response.getValue()));
         } catch (ErrorResponseException ex) {
@@ -1384,7 +1383,7 @@ public final class DocumentModelAdministrationClient {
         }
         try {
             return
-                documentClassifiersImpl.deleteClassifierWithResponse(classifierId, enableSyncRestProxy(getTracingContext(context)));
+                documentClassifiersImpl.deleteClassifierWithResponse(classifierId, getTracingContext(context));
         } catch (ErrorResponseException ex) {
             throw LOGGER.logExceptionAsError(getHttpResponseException(ex));
         }
