@@ -3,12 +3,17 @@
 
 package com.azure.core.http.rest;
 
+import com.azure.core.http.HttpRequest;
 import com.azure.core.util.IterableStream;
+import com.azure.core.util.paging.PageRetriever;
 import com.azure.core.util.paging.PageRetrieverSync;
+import reactor.core.publisher.Flux;
 
+import java.util.Iterator;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -187,8 +192,17 @@ public class PagedIterable<T> extends PagedIterableBase<T, PagedResponse<T>> {
      */
     @SuppressWarnings("deprecation")
     public <S> PagedIterable<S> mapPage(Function<T, S> mapper) {
-        return new PagedIterable<>(pagedFlux.mapPage(mapper));
+
+        Supplier<PageRetrieverSync<String, PagedResponse<S>>> provider = () -> (continuationToken, pageSize) -> {
+            Iterable<PagedResponse<T>> iterable = (continuationToken == null)
+                ? iterableByPage()
+                : iterableByPage(continuationToken);
+            return mapPagedResponse(iterable, mapper));
+        };
+        return new PagedIterable(provider);
+
     }
+
 
     /**
      * Create PagedIterable backed by Page Retriever Function Supplier.
@@ -199,5 +213,18 @@ public class PagedIterable<T> extends PagedIterableBase<T, PagedResponse<T>> {
     private PagedIterable(Supplier<PageRetrieverSync<String, PagedResponse<T>>> provider, boolean ignored) {
         super(provider);
         this.pagedFlux = null;
+    }
+
+    private <S> PagedResponse<S> mapPagedResponse(Iterable<PagedResponse<T>> pagedResponseIterable, Function<T,S> mapper) {
+        PagedResponse<S> pagedResponseBaseIterable;;
+        pagedResponseIterable.forEach(pagedResponse -> {
+            pagedResponseBaseIterable = new PagedResponseBase<HttpRequest, S>(pagedResponse.getRequest(),
+                pagedResponse.getStatusCode(),
+                pagedResponse.getHeaders(),
+                pagedResponse.getElements().stream().map(mapper).collect(Collectors.toList()),
+                pagedResponse.getContinuationToken(),
+                null);
+        }
+        return pagedResponseBaseIterable;
     }
 }
