@@ -157,23 +157,6 @@ public class TestUtils {
         return AzureAuthorityHosts.AZURE_PUBLIC_CLOUD;
     }
 
-    public static ContainerRegistryAudience getAudience(String endpoint) {
-        String authority = getAuthority(endpoint);
-        switch (authority) {
-            case AzureAuthorityHosts.AZURE_PUBLIC_CLOUD:
-                return ContainerRegistryAudience.AZURE_RESOURCE_MANAGER_PUBLIC_CLOUD;
-
-            case AzureAuthorityHosts.AZURE_CHINA:
-                return ContainerRegistryAudience.AZURE_RESOURCE_MANAGER_CHINA;
-
-            case AzureAuthorityHosts.AZURE_GOVERNMENT:
-                return ContainerRegistryAudience.AZURE_RESOURCE_MANAGER_GOVERNMENT;
-
-            default:
-                return null;
-        }
-    }
-
     static AzureProfile getAzureProfile(String authority) {
         switch (authority) {
             case AzureAuthorityHosts.AZURE_PUBLIC_CLOUD: return new AzureProfile(TENANT_ID, SUBSCRIPTION_ID, AzureEnvironment.AZURE);

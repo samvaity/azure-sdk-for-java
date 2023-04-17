@@ -15,7 +15,7 @@ import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.rest.PagedResponse;
 import com.azure.core.http.rest.Response;
-import com.azure.core.test.TestBase;
+import com.azure.core.test.TestProxyTestBase;
 import com.azure.core.util.CoreUtils;
 
 import java.time.OffsetDateTime;
@@ -41,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ContainerRegistryClientsTestBase extends TestBase {
+public class ContainerRegistryClientsTestBase extends TestProxyTestBase {
 
     private static final Pattern JSON_PROPERTY_VALUE_REDACTION_PATTERN
         = Pattern.compile("(\".*_token\":\"(.*)\".*)");
@@ -128,6 +128,10 @@ public class ContainerRegistryClientsTestBase extends TestBase {
             .httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS)
                 .addAllowedHeaderName("Docker-Content-Digest")
                 .addAllowedHeaderName("Range")
+                .addAllowedHeaderName("x-recording-upstream-base-uri")
+                .addAllowedHeaderName("x-recording-upstream-base-uri")
+                .addAllowedHeaderName("x-recording-mode")
+                .addAllowedHeaderName("x-recording-id")
                 .addAllowedHeaderName("Content-Range"))
             .addPolicy(interceptorManager.getRecordPolicy(redactors))
             .credential(credential);

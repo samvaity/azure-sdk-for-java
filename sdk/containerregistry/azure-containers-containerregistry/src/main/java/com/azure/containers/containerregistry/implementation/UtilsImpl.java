@@ -142,8 +142,6 @@ public final class UtilsImpl {
         policies.add(new AddDatePolicy());
         policies.add(new ContainerRegistryRedirectPolicy());
 
-        policies.addAll(perRetryPolicies);
-
         // We generally put credential policy between BeforeRetry and AfterRetry policies and put Logging policy in the end.
         // However since ACR uses the rest endpoints of the service in the credential policy,
         // we want to be able to use the same pipeline (minus the credential policy) to have uniformity in the policy
@@ -155,6 +153,7 @@ public final class UtilsImpl {
         HttpLoggingPolicy loggingPolicy = new HttpLoggingPolicy(logOptions);
         ArrayList<HttpPipelinePolicy> credentialPolicies = clone(policies);
         HttpPolicyProviders.addAfterRetryPolicies(credentialPolicies);
+        credentialPolicies.addAll(perRetryPolicies);
         credentialPolicies.add(loggingPolicy);
 
         if (audience == null)  {
@@ -176,8 +175,9 @@ public final class UtilsImpl {
 
         ContainerRegistryCredentialsPolicy credentialsPolicy = new ContainerRegistryCredentialsPolicy(tokenService);
 
-        policies.add(credentialsPolicy);
         HttpPolicyProviders.addAfterRetryPolicies(policies);
+        policies.add(credentialsPolicy);
+        policies.addAll(perRetryPolicies);
         policies.add(loggingPolicy);
 
         return new HttpPipelineBuilder()
