@@ -128,6 +128,7 @@ public class ContainerRegistryClientsTestBase extends TestProxyTestBase {
             .httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS)
                 .addAllowedHeaderName("Docker-Content-Digest")
                 .addAllowedHeaderName("Range")
+                .addAllowedHeaderName("Authorization")
                 .addAllowedHeaderName("x-recording-upstream-base-uri")
                 .addAllowedHeaderName("x-recording-upstream-base-uri")
                 .addAllowedHeaderName("x-recording-mode")
