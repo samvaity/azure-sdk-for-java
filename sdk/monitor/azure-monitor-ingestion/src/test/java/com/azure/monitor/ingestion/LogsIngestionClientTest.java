@@ -3,14 +3,24 @@
 
 package com.azure.monitor.ingestion;
 
+import com.azure.core.credential.AccessToken;
 import com.azure.core.exception.HttpResponseException;
+import com.azure.core.http.policy.HttpLogDetailLevel;
+import com.azure.core.http.policy.HttpLogOptions;
+import com.azure.core.http.policy.RetryPolicy;
+import com.azure.core.http.policy.RetryStrategy;
 import com.azure.core.http.rest.RequestOptions;
 import com.azure.core.http.rest.Response;
+import com.azure.core.test.TestMode;
 import com.azure.core.util.BinaryData;
 import com.azure.monitor.ingestion.models.LogsUploadException;
 import com.azure.monitor.ingestion.models.LogsUploadOptions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -22,11 +32,41 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * Test cases for {@link LogsIngestionClient}.
  */
 public class LogsIngestionClientTest extends LogsIngestionTestBase {
+    LogsIngestionClientBuilder clientBuilder1;
 
+    @BeforeEach
+    public void setup() {
+        LogsIngestionClientBuilder clientBuilder = new LogsIngestionClientBuilder()
+            .retryPolicy(new RetryPolicy(new RetryStrategy() {
+                @Override
+                public int getMaxRetries() {
+                    return 0;
+                }
+
+                @Override
+                public Duration calculateRetryDelay(int i) {
+                    return null;
+                }
+            }));
+        if (getTestMode() == TestMode.PLAYBACK) {
+            clientBuilder
+                .credential(request -> Mono.just(new AccessToken("fakeToken", OffsetDateTime.now().plusDays(1))))
+                .httpClient(interceptorManager.getPlaybackClient());
+        } else if (getTestMode() == TestMode.RECORD) {
+            clientBuilder
+                .addPolicy(interceptorManager.getRecordPolicy())
+                .credential(getCredential());
+        } else if (getTestMode() == TestMode.LIVE) {
+            clientBuilder.credential(getCredential());
+        }
+        this.clientBuilder1 = clientBuilder
+            .httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS))
+            .endpoint(dataCollectionEndpoint);
+    }
     @Test
     public void testUploadLogs() {
         List<Object> logs = getObjects(10);
-        LogsIngestionClient client = clientBuilder.buildClient();
+        LogsIngestionClient client = clientBuilder1.buildClient();
         client.upload(dataCollectionRuleId, streamName, logs);
     }
 
@@ -35,7 +75,7 @@ public class LogsIngestionClientTest extends LogsIngestionTestBase {
         List<Object> logs = getObjects(10000);
 
         AtomicInteger count = new AtomicInteger();
-        LogsIngestionClient client = clientBuilder
+        LogsIngestionClient client = clientBuilder1
                 .addPolicy(new BatchCountPolicy(count))
                 .buildClient();
         client.upload(dataCollectionRuleId, streamName, logs);
@@ -47,7 +87,7 @@ public class LogsIngestionClientTest extends LogsIngestionTestBase {
         List<Object> logs = getObjects(10000);
 
         AtomicInteger count = new AtomicInteger();
-        LogsIngestionClient client = clientBuilder
+        LogsIngestionClient client = clientBuilder1
                 .addPolicy(new BatchCountPolicy(count))
                 .buildClient();
         client.upload(dataCollectionRuleId, streamName, logs, new LogsUploadOptions().setMaxConcurrency(3));
@@ -59,7 +99,7 @@ public class LogsIngestionClientTest extends LogsIngestionTestBase {
         List<Object> logs = getObjects(100000);
         AtomicInteger count = new AtomicInteger();
 
-        LogsIngestionClient client = clientBuilder
+        LogsIngestionClient client = clientBuilder1
                 .addPolicy(new PartialFailurePolicy(count))
                 .buildClient();
 
@@ -78,7 +118,7 @@ public class LogsIngestionClientTest extends LogsIngestionTestBase {
         LogsUploadOptions logsUploadOptions = new LogsUploadOptions()
                 .setLogsUploadErrorConsumer(error -> failedLogsCount.addAndGet(error.getFailedLogs().size()));
 
-        LogsIngestionClient client = clientBuilder
+        LogsIngestionClient client = clientBuilder1
                 .addPolicy(new PartialFailurePolicy(count))
                 .buildClient();
 
@@ -97,7 +137,7 @@ public class LogsIngestionClientTest extends LogsIngestionTestBase {
                     throw error.getResponseException();
                 });
 
-        LogsIngestionClient client = clientBuilder
+        LogsIngestionClient client = clientBuilder1
                 .addPolicy(new PartialFailurePolicy(count))
                 .buildClient();
 
@@ -109,7 +149,7 @@ public class LogsIngestionClientTest extends LogsIngestionTestBase {
     @Test
     public void testUploadLogsProtocolMethod() {
         List<Object> logs = getObjects(10);
-        LogsIngestionClient client = clientBuilder.buildClient();
+        LogsIngestionClient client = clientBuilder1.buildClient();
         Response<Void> response = client.uploadWithResponse(dataCollectionRuleId, streamName,
                 BinaryData.fromObject(logs), new RequestOptions().setHeader("Content-Encoding", "gzip"));
         assertEquals(204, response.getStatusCode());
@@ -118,7 +158,7 @@ public class LogsIngestionClientTest extends LogsIngestionTestBase {
     @Test
     public void testUploadLargeLogsProtocolMethod() {
         List<Object> logs = getObjects(1000000);
-        LogsIngestionClient client = clientBuilder.buildClient();
+        LogsIngestionClient client = clientBuilder1.buildClient();
 
         HttpResponseException responseException = assertThrows(HttpResponseException.class,
                 () -> client.uploadWithResponse(dataCollectionRuleId, streamName, BinaryData.fromObject(logs),
