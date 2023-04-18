@@ -94,12 +94,16 @@ public class ContainerRegistryClientsTestBase extends TestProxyTestBase {
         List<Function<String, String>> redactors = new ArrayList<>();
         redactors.add(data -> redact(data, JSON_PROPERTY_VALUE_REDACTION_PATTERN.matcher(data), "REDACTED"));
 
-        return new ContainerRegistryClientBuilder()
+        ContainerRegistryClientBuilder builder = new ContainerRegistryClientBuilder()
             .endpoint(getEndpoint(endpoint))
-            .httpClient(httpClient == null ? interceptorManager.getPlaybackClient() : httpClient)
+            .httpClient(interceptorManager.isPlaybackMode()  ? interceptorManager.getPlaybackClient() : httpClient)
             .httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS))
-            .addPolicy(interceptorManager.getRecordPolicy(redactors))
             .credential(credential);
+
+        if (interceptorManager.isRecordMode()) {
+            builder.addPolicy(interceptorManager.getRecordPolicy());
+        }
+        return builder;
     }
 
     ContainerRegistryClientBuilder getContainerRegistryBuilder(HttpClient httpClient, TokenCredential credential) {
@@ -121,10 +125,10 @@ public class ContainerRegistryClientsTestBase extends TestProxyTestBase {
         List<Function<String, String>> redactors = new ArrayList<>();
         redactors.add(data -> redact(data, JSON_PROPERTY_VALUE_REDACTION_PATTERN.matcher(data), "REDACTED"));
 
-        return new ContainerRegistryContentClientBuilder()
+        ContainerRegistryContentClientBuilder builder = new ContainerRegistryContentClientBuilder()
             .endpoint(getEndpoint(endpoint))
             .repositoryName(repositoryName)
-            .httpClient(httpClient == null ? interceptorManager.getPlaybackClient() : httpClient)
+            .httpClient(interceptorManager.isPlaybackMode() ? interceptorManager.getPlaybackClient() : httpClient)
             .httpLogOptions(new HttpLogOptions().setLogLevel(HttpLogDetailLevel.BODY_AND_HEADERS)
                 .addAllowedHeaderName("Docker-Content-Digest")
                 .addAllowedHeaderName("Range")
@@ -134,8 +138,12 @@ public class ContainerRegistryClientsTestBase extends TestProxyTestBase {
                 .addAllowedHeaderName("x-recording-mode")
                 .addAllowedHeaderName("x-recording-id")
                 .addAllowedHeaderName("Content-Range"))
-            .addPolicy(interceptorManager.getRecordPolicy(redactors))
             .credential(credential);
+
+        if (interceptorManager.isRecordMode()) {
+            builder.addPolicy(interceptorManager.getRecordPolicy());
+        }
+        return builder;
     }
 
     List<String> getChildArtifacts(Collection<ArtifactManifestPlatform> artifacts) {

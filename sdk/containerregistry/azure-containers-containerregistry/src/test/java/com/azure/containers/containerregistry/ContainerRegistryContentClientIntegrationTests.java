@@ -512,7 +512,7 @@ public class ContainerRegistryContentClientIntegrationTests extends ContainerReg
     }
 
     private ContainerRegistryContentClient getContentClient(String repositoryName, HttpClient httpClient) {
-        return getContentClientBuilder(repositoryName, buildSyncAssertingClient(httpClient == null ? interceptorManager.getPlaybackClient() : httpClient)).buildClient();
+        return getContentClientBuilder(repositoryName, buildSyncAssertingClient(interceptorManager.isPlaybackMode() ? interceptorManager.getPlaybackClient() : httpClient)).buildClient();
     }
 
     private ContainerRegistryContentAsyncClient getBlobAsyncClient(String repositoryName, HttpClient httpClient) {
