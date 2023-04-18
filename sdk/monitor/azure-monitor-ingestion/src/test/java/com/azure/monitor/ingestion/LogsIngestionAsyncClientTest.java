@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static com.azure.monitor.ingestion.implementation.Utils.gzipRequest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -149,7 +150,7 @@ public class LogsIngestionAsyncClientTest extends LogsIngestionTestBase {
         List<Object> logs = getObjects(10);
         LogsIngestionAsyncClient client = clientBuilder1.buildAsyncClient();
         StepVerifier.create(client.uploadWithResponse(dataCollectionRuleId, streamName,
-                        BinaryData.fromObject(logs), new RequestOptions().setHeader("Content-Encoding", "gzip")))
+                BinaryData.fromBytes(gzipRequest(BinaryData.fromObject(logs).toBytes())), new RequestOptions().setHeader("Content-Encoding", "gzip")))
                 .assertNext(response -> assertEquals(204, response.getStatusCode()))
                 .verifyComplete();
     }
