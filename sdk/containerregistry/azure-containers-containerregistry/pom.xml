@@ -58,6 +58,12 @@
       <version>1.13.2</version> <!-- {x-version-update;com.azure:azure-core-http-netty;dependency} -->
     </dependency>
     <dependency>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-core-test</artifactId>
+      <version>1.16.1</version> <!-- {x-version-update;com.azure:azure-core-test;dependency} -->
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>5.9.1</version> <!-- {x-version-update;org.junit.jupiter:junit-jupiter-api;external_dependency} -->
@@ -85,12 +91,6 @@
       <groupId>io.projectreactor</groupId>
       <artifactId>reactor-test</artifactId>
       <version>3.4.27</version> <!-- {x-version-update;io.projectreactor:reactor-test;external_dependency} -->
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.azure</groupId>
-      <artifactId>azure-core-test</artifactId>
-      <version>1.16.1</version> <!-- {x-version-update;com.azure:azure-core-test;dependency} -->
       <scope>test</scope>
     </dependency>
     <dependency>

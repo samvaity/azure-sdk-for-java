@@ -52,7 +52,7 @@ public class TokenServiceImpl {
                 if (token != null) {
                     String accessToken = token.getAccessToken();
                     OffsetDateTime expirationTime = JsonWebToken.retrieveExpiration(accessToken);
-                    return new AccessToken(accessToken, expirationTime);
+                    return new AccessToken(accessToken, expirationTime == null ? OffsetDateTime.MAX : expirationTime);
                 }
 
                 return null;
@@ -72,7 +72,7 @@ public class TokenServiceImpl {
                 if (token != null) {
                     String refreshToken = token.getRefreshToken();
                     OffsetDateTime expirationTime = JsonWebToken.retrieveExpiration(refreshToken);
-                    return new AccessToken(refreshToken, expirationTime);
+                    return new AccessToken(refreshToken, expirationTime == null ? OffsetDateTime.MAX : expirationTime);
                 }
 
                 return null;

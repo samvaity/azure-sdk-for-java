@@ -16,6 +16,8 @@ import com.azure.core.http.HttpRequest;
 import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
 import com.azure.core.test.TestMode;
+import com.azure.core.test.models.TestProxySanitizer;
+import com.azure.core.test.models.TestProxySanitizerType;
 import com.azure.core.util.BinaryData;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.Context;
@@ -30,6 +32,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -68,8 +71,8 @@ public class TestUtils {
     public static final String ANONYMOUS_REGISTRY_ENDPOINT = CONFIGURATION.get("CONTAINERREGISTRY_ANONREGISTRY_ENDPOINT");
     public static final long SLEEP_TIME_IN_MILLISECONDS = 5000;
     public static final String ANONYMOUS_REGISTRY_NAME = CONFIGURATION.get("CONTAINERREGISTRY_ANONREGISTRY_NAME");
-    public static final String REGISTRY_ENDPOINT_PLAYBACK = "https://pallavitcontainerregistry.azurecr.io";
-    public static final String REGISTRY_NAME_PLAYBACK = "pallavitcontainerregistry";
+    public static final String REGISTRY_ENDPOINT_PLAYBACK = "https://REDACTED";
+    public static final String REGISTRY_NAME_PLAYBACK = "REDACTED";
     public static final int HTTP_STATUS_CODE_202 = 202;
     public static final String CONTAINERREGISTRY_CLIENT_SECRET = CONFIGURATION.get("CONTAINERREGISTRY_CLIENT_SECRET");
     public static final BiFunction<HttpRequest, Context, Boolean> SKIP_AUTH_TOKEN_REQUEST_FUNCTION = (request, context) -> request.getUrl().toString().contains("oauth2");

@@ -175,9 +175,9 @@ public final class UtilsImpl {
 
         ContainerRegistryCredentialsPolicy credentialsPolicy = new ContainerRegistryCredentialsPolicy(tokenService);
 
-        HttpPolicyProviders.addAfterRetryPolicies(policies);
         policies.add(credentialsPolicy);
         policies.addAll(perRetryPolicies);
+        HttpPolicyProviders.addAfterRetryPolicies(policies);
         policies.add(loggingPolicy);
 
         return new HttpPipelineBuilder()

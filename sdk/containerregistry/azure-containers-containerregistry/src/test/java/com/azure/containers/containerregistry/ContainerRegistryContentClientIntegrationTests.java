@@ -23,6 +23,7 @@ import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.parallel.Execution;
@@ -282,6 +283,8 @@ public class ContainerRegistryContentClientIntegrationTests extends ContainerReg
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("getHttpClients")
     public void downloadBlob(HttpClient httpClient) throws IOException {
+        // TODO (limolkova) record once TestProxy disables auto redirects
+        assumeTrue(interceptorManager.isLiveMode());
         BinaryData content = generateStream((int) (CHUNK_SIZE * 2.1d));
         client = getContentClient("oci-artifact", httpClient);
         UploadRegistryBlobResult uploadResult = client.uploadBlob(content);
@@ -295,6 +298,9 @@ public class ContainerRegistryContentClientIntegrationTests extends ContainerReg
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("getHttpClients")
     public void downloadSmallBlob(HttpClient httpClient) throws IOException {
+        // TODO (limolkova) record once TestProxy disables auto redirects
+        assumeTrue(interceptorManager.isLiveMode());
+
         BinaryData content = generateStream(CHUNK_SIZE - 1);
         client = getContentClient("oci-artifact", httpClient);
         UploadRegistryBlobResult uploadResult = client.uploadBlob(content);
@@ -308,6 +314,9 @@ public class ContainerRegistryContentClientIntegrationTests extends ContainerReg
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("getHttpClients")
     public void downloadBlobAsync(HttpClient httpClient) throws IOException {
+        // TODO (limolkova) record once TestProxy disables auto redirects
+        assumeTrue(interceptorManager.isLiveMode());
+
         asyncClient = getBlobAsyncClient("oci-artifact", httpClient);
 
         BinaryData content = generateStream((int) (CHUNK_SIZE * 2.5));
@@ -329,6 +338,9 @@ public class ContainerRegistryContentClientIntegrationTests extends ContainerReg
     @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
     @MethodSource("getHttpClients")
     public void downloadSmallBlobAsync(HttpClient httpClient) throws IOException {
+        // TODO (limolkova) record once TestProxy disables auto redirects
+        assumeTrue(interceptorManager.isLiveMode());
+
         asyncClient = getBlobAsyncClient("oci-artifact", httpClient);
 
         BinaryData content = generateStream(CHUNK_SIZE / 2);
@@ -512,7 +524,7 @@ public class ContainerRegistryContentClientIntegrationTests extends ContainerReg
     }
 
     private ContainerRegistryContentClient getContentClient(String repositoryName, HttpClient httpClient) {
-        return getContentClientBuilder(repositoryName, buildSyncAssertingClient(httpClient == null ? interceptorManager.getPlaybackClient() : httpClient)).buildClient();
+        return getContentClientBuilder(repositoryName, buildSyncAssertingClient(interceptorManager.isPlaybackMode() ? interceptorManager.getPlaybackClient() : httpClient)).buildClient();
     }
 
     private ContainerRegistryContentAsyncClient getBlobAsyncClient(String repositoryName, HttpClient httpClient) {
