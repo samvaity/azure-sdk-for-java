@@ -16,22 +16,27 @@ To see additional help and options, run:
 > `autorest --help`
 
 ### Generation
-There are two swagger specifications for KeyVault Administration: rbac and backuprestore. They use the following tags: `--tag=rbac` & `--tag=backuprestore`.
+There are three swagger specifications for KeyVault Administration: `rbac`, `backuprestore` and `settings`. They use the following tags respectively: `--tag=rbac`, `--tag=backuprestore`, `--tag=settings`.
 
 ```ps
 cd <swagger-folder>
-autorest --use=@microsoft.azure/autorest.java@4.0.0 --tag=${package}
+autorest --use=@autorest/java@4.1.15 --tag=${package}
 ```
 
 e.g.
 ```ps
 cd <swagger-folder>
-autorest --use=@microsoft.azure/autorest.java@4.0.0 --tag=rbac
+autorest --use=@autorest/java@4.1.15 --tag=rbac
 ```
 
 ```ps
 cd <swagger-folder>
-autorest --use=@microsoft.azure/autorest.java@4.0.0 --tag=backuprestore
+autorest --use=@autorest/java@4.1.15 --tag=backuprestore
+```
+
+```ps
+cd <swagger-folder>
+autorest --use=@autorest/java@4.1.15 --tag=settings
 ```
 
 ## Code generation settings
@@ -53,7 +58,7 @@ context-client-method-parameter: true
 These settings apply only when `--tag=rbac` is specified on the command line.
 
 ``` yaml $(tag) == 'rbac'
-input-file: https://github.com/Azure/azure-rest-api-specs/blob/e2ef44b87405b412403ccb005bfb3975411adf60/specification/keyvault/data-plane/Microsoft.KeyVault/stable/7.3/rbac.json
+input-file: https://github.com/Azure/azure-rest-api-specs/blob/551275acb80e1f8b39036b79dfc35a8f63b601a7/specification/keyvault/data-plane/Microsoft.KeyVault/stable/7.4/rbac.json
 title: KeyVaultAccessControlClient
 ```
 
@@ -61,6 +66,14 @@ title: KeyVaultAccessControlClient
 These settings apply only when `--tag=backuprestore` is specified on the command line.
 
 ``` yaml $(tag) == 'backuprestore'
-input-file: https://github.com/Azure/azure-rest-api-specs/blob/e2ef44b87405b412403ccb005bfb3975411adf60/specification/keyvault/data-plane/Microsoft.KeyVault/stable/7.3/backuprestore.json
+input-file: https://github.com/Azure/azure-rest-api-specs/blob/551275acb80e1f8b39036b79dfc35a8f63b601a7/specification/keyvault/data-plane/Microsoft.KeyVault/stable/7.4/backuprestore.json
 title: KeyVaultBackupClient
+```
+
+### Tag: settings
+These settings apply only when `--tag=settings` is specified on the command line.
+
+``` yaml $(tag) == 'settings'
+input-file: https://github.com/Azure/azure-rest-api-specs/tree/551275acb80e1f8b39036b79dfc35a8f63b601a7/specification/keyvault/data-plane/Microsoft.KeyVault/stable/7.4/settings.json
+title: KeyVaultSettingsClient
 ```

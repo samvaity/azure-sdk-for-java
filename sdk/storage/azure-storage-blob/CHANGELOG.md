@@ -1,5 +1,34 @@
 # Release History
 
+## 12.23.0-beta.1 (Unreleased)
+
+### Features Added
+
+### Breaking Changes
+
+### Bugs Fixed
+
+### Other Changes
+
+## 12.22.0 (2023-04-13)
+
+### Features Added
+- Added new method `StorageAccountInfo.isHierarchicalNamespaceEnabled()` to determine whether storage account has hierarchical namespace enabled.  
+- Added support for 2022-11-02 service version.
+- Added support for reading and writing a block blob via SeekableByteChannel.
+
+### Bugs Fixed
+- Fixed bug for when `FindBlobsOptions.setMaxResultsPerPage(Integer)` was set and `.byPage()` was called on `BlobServiceAsyncClient.findBlobsByTags(FindBlobsOptions)`, number of results being returned was greater than the specified max results.
+
+## 12.22.0-beta.1 (2023-03-28)
+
+### Features Added
+- Added support for 2022-11-02 service version.
+- Added support for reading and writing a block blob via SeekableByteChannel.
+
+### Bugs Fixed
+- Fixed bug for when `FindBlobsOptions.setMaxResultsPerPage(Integer)` was set and `.byPage()` was called on `BlobServiceAsyncClient.findBlobsByTags(FindBlobsOptions)`, number of results being returned was greater than the specified max results.
+
 ## 12.21.1 (2023-03-16)
 
 ### Other Changes
@@ -10,7 +39,6 @@
 - Upgraded `azure-core-http-netty` from `1.13.0` to version `1.13.1`.
 - Upgraded `azure-core` from `1.36.0` to version `1.37.0`.
 - Upgraded `azure-storage-internal-avro` from `12.6.0` to version `12.6.1`.
-
 
 ## 12.21.0 (2023-02-21)
 

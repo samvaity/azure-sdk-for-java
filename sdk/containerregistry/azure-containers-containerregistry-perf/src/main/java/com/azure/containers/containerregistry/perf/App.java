@@ -24,7 +24,9 @@ public class App {
     public static void main(String[] args) {
         PerfStressProgram.run(new Class<?>[]{
             GetManifestPropertiesTest.class,
-            ListRepositoryTests.class
+            ListRepositoryTests.class,
+            UploadBlobTests.class,
+            DownloadBlobTests.class
         }, args);
     }
 }
