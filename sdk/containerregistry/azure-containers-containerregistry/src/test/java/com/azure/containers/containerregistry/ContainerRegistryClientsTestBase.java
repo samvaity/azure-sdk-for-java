@@ -18,17 +18,12 @@ import com.azure.core.http.rest.Response;
 import com.azure.core.test.TestProxyTestBase;
 import com.azure.core.test.models.TestProxySanitizer;
 import com.azure.core.test.models.TestProxySanitizerType;
-import com.azure.core.util.CoreUtils;
 
-import java.security.PublicKey;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.azure.containers.containerregistry.TestUtils.HELLO_WORLD_REPOSITORY_NAME;
@@ -93,6 +88,7 @@ public class ContainerRegistryClientsTestBase extends TestProxyTestBase {
             sanitizers.add(new TestProxySanitizer("service=(?<service>[^\\u0026]+)\\u0026", "REDACTED", TestProxySanitizerType.BODY_REGEX).setGroupForReplace("service"));
             sanitizers.add(new TestProxySanitizer("WWW-Authenticate", "realm=\\u0022https://(?<realm>[^\\u0022]+)\\u0022", "REDACTED", TestProxySanitizerType.HEADER).setGroupForReplace("realm"));
             sanitizers.add(new TestProxySanitizer("WWW-Authenticate", "service=\\u0022(?<service>[^\\u0022]+)\\u0022", "REDACTED", TestProxySanitizerType.HEADER).setGroupForReplace("service"));
+            sanitizers.add(new TestProxySanitizer("sha256:(?<secret>.*)", "REDACTED", TestProxySanitizerType.URL).setGroupForReplace("secret"));
 
             interceptorManager.addSanitizers(sanitizers);
         }
@@ -128,7 +124,7 @@ public class ContainerRegistryClientsTestBase extends TestProxyTestBase {
 
     ContainerRegistryContentClientBuilder getContentClientBuilder(String repositoryName, HttpClient httpClient,
         TokenCredential credential) {
-        return getContentClientBuilder(repositoryName, httpClient, credential, REGISTRY_ENDPOINT);
+        return getContentClientBuilder(repositoryName, httpClient, credential, interceptorManager.isPlaybackMode() ? REGISTRY_ENDPOINT_PLAYBACK : REGISTRY_ENDPOINT);
     }
 
     ContainerRegistryContentClientBuilder getContentClientBuilder(String repositoryName, HttpClient httpClient,

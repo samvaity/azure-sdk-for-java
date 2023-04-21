@@ -6,9 +6,9 @@
       "RequestHeaders": {
         "Accept": "application/json",
         "Content-Length": "0",
-        "Date": "Tue, 18 Apr 2023 16:57:02 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "d19c0220-d3f7-4a5a-9343-a4df4ed9b250"
+        "Date": "Fri, 21 Apr 2023 21:14:08 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "f98b50f2-026b-4dfd-9a0e-2d3847e6a274"
       },
       "RequestBody": null,
       "StatusCode": 401,
@@ -22,7 +22,7 @@
         "Connection": "keep-alive",
         "Content-Length": "217",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:02 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:08 GMT",
         "Docker-Distribution-Api-Version": "registry/2.0",
         "Server": "openresty",
         "Strict-Transport-Security": [
@@ -31,7 +31,7 @@
         ],
         "WWW-Authenticate": "Bearer realm=\u0022https://REDACTED\u0022,service=\u0022REDACTED\u0022,scope=\u0022repository:library/alpine:metadata_read\u0022",
         "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "2678854c-8789-4677-819d-d4bc87a94a35"
+        "X-Ms-Correlation-Request-Id": "ad7dbd97-0471-4ecc-aa08-8ad932707a0c"
       },
       "ResponseBody": {
         "errors": [
@@ -56,21 +56,21 @@
         "Accept": "application/json",
         "Content-Length": "62",
         "Content-Type": "application/x-www-form-urlencoded",
-        "Date": "Tue, 18 Apr 2023 16:57:02 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "681733f5-8eb5-4639-affc-00d48029c5e1"
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "6ed05987-71e8-47a6-af4a-12f3277a9bd3"
       },
       "RequestBody": "grant_type=access_token\u0026service=REDACTED\u0026access_token=REDACTED",
       "StatusCode": 200,
       "ResponseHeaders": {
         "Connection": "keep-alive",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
         "Server": "openresty",
         "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
         "Transfer-Encoding": "chunked",
-        "X-Ms-Correlation-Request-Id": "2b4dfaa7-7ab6-481b-8faf-8d5ae083b827",
-        "x-ms-ratelimit-remaining-calls-per-second": "333.166667"
+        "X-Ms-Correlation-Request-Id": "2d972cc2-7620-4555-ab3d-c1bfb46b6d28",
+        "x-ms-ratelimit-remaining-calls-per-second": "333.133333"
       },
       "ResponseBody": {
         "refresh_token": "Sanitized"
@@ -83,330 +83,20 @@
         "Accept": "application/json",
         "Content-Length": "116",
         "Content-Type": "application/x-www-form-urlencoded",
-        "Date": "Tue, 18 Apr 2023 16:57:02 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "1691a940-7f7f-4215-a840-a44417e2c501"
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "e927a96a-cd4c-4aba-97c2-9606a6de96b6"
       },
       "RequestBody": "service=REDACTED\u0026scope=repository%3Alibrary%2Falpine%3Ametadata_read\u0026refresh_token=REDACTED\u0026grant_type=refresh_token",
       "StatusCode": 200,
       "ResponseHeaders": {
         "Connection": "keep-alive",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
         "Server": "openresty",
         "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
         "Transfer-Encoding": "chunked",
-        "X-Ms-Correlation-Request-Id": "36ee69e9-96ef-4aa2-8e23-a7efa0e1e3e7",
-        "x-ms-ratelimit-remaining-calls-per-second": "333.15"
-      },
-      "ResponseBody": {
-        "access_token": "Sanitized"
-      }
-    },
-    {
-      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_tags/v1?api-version=2021-07-01",
-      "RequestMethod": "GET",
-      "RequestHeaders": {
-        "Accept": "application/json",
-        "Authorization": "Sanitized",
-        "Content-Length": "0",
-        "Date": "Tue, 18 Apr 2023 16:57:02 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "d19c0220-d3f7-4a5a-9343-a4df4ed9b250"
-      },
-      "RequestBody": null,
-      "StatusCode": 200,
-      "ResponseHeaders": {
-        "Access-Control-Expose-Headers": [
-          "Docker-Content-Digest",
-          "WWW-Authenticate",
-          "Link",
-          "X-Ms-Correlation-Request-Id"
-        ],
-        "Connection": "keep-alive",
-        "Content-Length": "383",
-        "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "Docker-Distribution-Api-Version": "registry/2.0",
-        "Server": "openresty",
-        "Strict-Transport-Security": [
-          "max-age=31536000; includeSubDomains",
-          "max-age=31536000; includeSubDomains"
-        ],
-        "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "9dc413e8-2870-43b6-b6f3-2c0565e5a5fe"
-      },
-      "ResponseBody": {
-        "registry": "limolkovaacr.azurecr.io",
-        "imageName": "library/alpine",
-        "tag": {
-          "name": "v1",
-          "digest": "sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126",
-          "createdTime": "2022-12-06T19:47:35.6668892Z",
-          "lastUpdateTime": "2023-03-29T21:46:29.7830562Z",
-          "signed": false,
-          "changeableAttributes": {
-            "deleteEnabled": true,
-            "writeEnabled": true,
-            "readEnabled": true,
-            "listEnabled": true
-          }
-        }
-      }
-    },
-    {
-      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126?api-version=2021-07-01",
-      "RequestMethod": "PATCH",
-      "RequestHeaders": {
-        "Accept": "application/json",
-        "Content-Length": "81",
-        "Content-Type": "application/json",
-        "Date": "Tue, 18 Apr 2023 16:57:02 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "1f469b76-6bd2-4ddd-b4f7-00625fb7c213"
-      },
-      "RequestBody": {
-        "deleteEnabled": false,
-        "writeEnabled": true,
-        "listEnabled": true,
-        "readEnabled": true
-      },
-      "StatusCode": 401,
-      "ResponseHeaders": {
-        "Access-Control-Expose-Headers": [
-          "Docker-Content-Digest",
-          "WWW-Authenticate",
-          "Link",
-          "X-Ms-Correlation-Request-Id"
-        ],
-        "Connection": "keep-alive",
-        "Content-Length": "218",
-        "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "Docker-Distribution-Api-Version": "registry/2.0",
-        "Server": "openresty",
-        "Strict-Transport-Security": [
-          "max-age=31536000; includeSubDomains",
-          "max-age=31536000; includeSubDomains"
-        ],
-        "WWW-Authenticate": "Bearer realm=\u0022https://REDACTED\u0022,service=\u0022REDACTED\u0022,scope=\u0022repository:library/alpine:metadata_write\u0022",
-        "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "cd0b8600-ae4d-45db-a8cb-1b265dd52f2f"
-      },
-      "ResponseBody": {
-        "errors": [
-          {
-            "code": "UNAUTHORIZED",
-            "message": "authentication required, visit https://aka.ms/acr/authorization for more information.",
-            "detail": [
-              {
-                "Type": "repository",
-                "Name": "library/alpine",
-                "Action": "metadata_write"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "RequestUri": "https://REDACTED/oauth2/token?api-version=2021-07-01",
-      "RequestMethod": "POST",
-      "RequestHeaders": {
-        "Accept": "application/json",
-        "Content-Length": "117",
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Date": "Tue, 18 Apr 2023 16:57:02 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "65dfce89-ca72-4c2c-b36c-410456b21344"
-      },
-      "RequestBody": "service=REDACTED\u0026scope=repository%3Alibrary%2Falpine%3Ametadata_write\u0026refresh_token=REDACTED\u0026grant_type=refresh_token",
-      "StatusCode": 200,
-      "ResponseHeaders": {
-        "Connection": "keep-alive",
-        "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "Server": "openresty",
-        "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
-        "Transfer-Encoding": "chunked",
-        "X-Ms-Correlation-Request-Id": "e1d043d4-5264-4b8b-b415-9addbcef1452",
-        "x-ms-ratelimit-remaining-calls-per-second": "333.133333"
-      },
-      "ResponseBody": {
-        "access_token": "Sanitized"
-      }
-    },
-    {
-      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126?api-version=2021-07-01",
-      "RequestMethod": "PATCH",
-      "RequestHeaders": {
-        "Accept": "application/json",
-        "Authorization": "Sanitized",
-        "Content-Length": "81",
-        "Content-Type": "application/json",
-        "Date": "Tue, 18 Apr 2023 16:57:02 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "1f469b76-6bd2-4ddd-b4f7-00625fb7c213"
-      },
-      "RequestBody": {
-        "deleteEnabled": false,
-        "writeEnabled": true,
-        "listEnabled": true,
-        "readEnabled": true
-      },
-      "StatusCode": 200,
-      "ResponseHeaders": {
-        "Access-Control-Expose-Headers": [
-          "Docker-Content-Digest",
-          "WWW-Authenticate",
-          "Link",
-          "X-Ms-Correlation-Request-Id"
-        ],
-        "Connection": "keep-alive",
-        "Content-Length": "1351",
-        "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "Docker-Distribution-Api-Version": "registry/2.0",
-        "Server": "openresty",
-        "Strict-Transport-Security": [
-          "max-age=31536000; includeSubDomains",
-          "max-age=31536000; includeSubDomains"
-        ],
-        "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "4678ef43-4c8b-4547-ad42-913e1fefc719"
-      },
-      "ResponseBody": {
-        "registry": "limolkovaacr.azurecr.io",
-        "imageName": "library/alpine",
-        "manifest": {
-          "digest": "sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126",
-          "imageSize": 22609792,
-          "createdTime": "2023-03-29T21:46:29.6869949Z",
-          "lastUpdateTime": "2023-03-29T21:46:29.6869949Z",
-          "mediaType": "application/vnd.docker.distribution.manifest.list.v2\u002Bjson",
-          "tags": [
-            "latest",
-            "v1",
-            "v2",
-            "v3",
-            "v4"
-          ],
-          "changeableAttributes": {
-            "deleteEnabled": false,
-            "writeEnabled": true,
-            "readEnabled": true,
-            "listEnabled": true
-          },
-          "references": [
-            {
-              "digest": "sha256:b6ca290b6b4cdcca5b3db3ffa338ee0285c11744b4a6abaa9627746ee3291d8d",
-              "architecture": "amd64",
-              "os": "linux"
-            },
-            {
-              "digest": "sha256:888fd5bcc23ddd20ac7248182033eb0db7073dd4ca92556f68d3c91b4de309d4",
-              "architecture": "arm",
-              "os": "linux"
-            },
-            {
-              "digest": "sha256:a99f6ddb5a7f037b423eb17c052956e1d9c8eee03941b319f2d6939bd846a67b",
-              "architecture": "arm",
-              "os": "linux"
-            },
-            {
-              "digest": "sha256:b5a5b7ce4eabc8414bf367761a28f4e8b16952ce5de537c15ed917b71b245f11",
-              "architecture": "arm64",
-              "os": "linux"
-            },
-            {
-              "digest": "sha256:3f57972158a12207fe5a2332005e6baf7bd73873e78b3f3a846df4fc93c3b7e6",
-              "architecture": "386",
-              "os": "linux"
-            },
-            {
-              "digest": "sha256:74021d4e48aac79ab98a79790eb91788ed120fd1401170d9961aa6367bcbf9e5",
-              "architecture": "ppc64le",
-              "os": "linux"
-            },
-            {
-              "digest": "sha256:d0730329aea18749d75deff83b1607886eef6ad96e82fa6ad96af87b73bae611",
-              "architecture": "s390x",
-              "os": "linux"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_tags/v1?api-version=2021-07-01",
-      "RequestMethod": "GET",
-      "RequestHeaders": {
-        "Accept": "application/json",
-        "Content-Length": "0",
-        "Date": "Tue, 18 Apr 2023 16:57:02 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "31b9c644-1c8c-4074-b5ed-2bc4716df7cd"
-      },
-      "RequestBody": null,
-      "StatusCode": 401,
-      "ResponseHeaders": {
-        "Access-Control-Expose-Headers": [
-          "Docker-Content-Digest",
-          "WWW-Authenticate",
-          "Link",
-          "X-Ms-Correlation-Request-Id"
-        ],
-        "Connection": "keep-alive",
-        "Content-Length": "217",
-        "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "Docker-Distribution-Api-Version": "registry/2.0",
-        "Server": "openresty",
-        "Strict-Transport-Security": [
-          "max-age=31536000; includeSubDomains",
-          "max-age=31536000; includeSubDomains"
-        ],
-        "WWW-Authenticate": "Bearer realm=\u0022https://REDACTED\u0022,service=\u0022REDACTED\u0022,scope=\u0022repository:library/alpine:metadata_read\u0022",
-        "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "258c4e53-dc80-4fd6-87f6-6cdc8d8f9093"
-      },
-      "ResponseBody": {
-        "errors": [
-          {
-            "code": "UNAUTHORIZED",
-            "message": "authentication required, visit https://aka.ms/acr/authorization for more information.",
-            "detail": [
-              {
-                "Type": "repository",
-                "Name": "library/alpine",
-                "Action": "metadata_read"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "RequestUri": "https://REDACTED/oauth2/token?api-version=2021-07-01",
-      "RequestMethod": "POST",
-      "RequestHeaders": {
-        "Accept": "application/json",
-        "Content-Length": "116",
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Date": "Tue, 18 Apr 2023 16:57:02 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "d9cb1ecf-740a-474b-9f6b-16bd20ebc9de"
-      },
-      "RequestBody": "service=REDACTED\u0026scope=repository%3Alibrary%2Falpine%3Ametadata_read\u0026refresh_token=REDACTED\u0026grant_type=refresh_token",
-      "StatusCode": 200,
-      "ResponseHeaders": {
-        "Connection": "keep-alive",
-        "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "Server": "openresty",
-        "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
-        "Transfer-Encoding": "chunked",
-        "X-Ms-Correlation-Request-Id": "e047af0e-ffab-4610-969e-eeee22a8af38",
+        "X-Ms-Correlation-Request-Id": "60b78ea6-f15d-45b5-9dbc-858430928506",
         "x-ms-ratelimit-remaining-calls-per-second": "333.116667"
       },
       "ResponseBody": {
@@ -420,9 +110,9 @@
         "Accept": "application/json",
         "Authorization": "Sanitized",
         "Content-Length": "0",
-        "Date": "Tue, 18 Apr 2023 16:57:02 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "31b9c644-1c8c-4074-b5ed-2bc4716df7cd"
+        "Date": "Fri, 21 Apr 2023 21:14:08 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "f98b50f2-026b-4dfd-9a0e-2d3847e6a274"
       },
       "RequestBody": null,
       "StatusCode": 200,
@@ -436,7 +126,7 @@
         "Connection": "keep-alive",
         "Content-Length": "383",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
         "Docker-Distribution-Api-Version": "registry/2.0",
         "Server": "openresty",
         "Strict-Transport-Security": [
@@ -444,7 +134,7 @@
           "max-age=31536000; includeSubDomains"
         ],
         "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "d6139050-5eba-4258-a802-b9bd7edcdb1e"
+        "X-Ms-Correlation-Request-Id": "fe71adfb-6b44-43d6-986b-6437af87f1fa"
       },
       "ResponseBody": {
         "registry": "limolkovaacr.azurecr.io",
@@ -465,15 +155,15 @@
       }
     },
     {
-      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126?api-version=2021-07-01",
+      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:REDACTED",
       "RequestMethod": "PATCH",
       "RequestHeaders": {
         "Accept": "application/json",
         "Content-Length": "81",
         "Content-Type": "application/json",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "a5355926-f6f4-4d2e-a5f6-9bba2994ccb9"
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "e2ba4cf4-2cb7-4e78-8daa-5239bb7c120c"
       },
       "RequestBody": {
         "deleteEnabled": false,
@@ -492,7 +182,7 @@
         "Connection": "keep-alive",
         "Content-Length": "218",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
         "Docker-Distribution-Api-Version": "registry/2.0",
         "Server": "openresty",
         "Strict-Transport-Security": [
@@ -501,7 +191,7 @@
         ],
         "WWW-Authenticate": "Bearer realm=\u0022https://REDACTED\u0022,service=\u0022REDACTED\u0022,scope=\u0022repository:library/alpine:metadata_write\u0022",
         "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "c17cad2b-bfde-41be-895a-d6444b51ff67"
+        "X-Ms-Correlation-Request-Id": "92579662-d1b6-4be7-b858-3a48bd250587"
       },
       "ResponseBody": {
         "errors": [
@@ -526,20 +216,20 @@
         "Accept": "application/json",
         "Content-Length": "117",
         "Content-Type": "application/x-www-form-urlencoded",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "4e71fbf3-6f41-46c6-9d31-0eb837a0f70e"
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "c089dcab-83e4-49e5-b299-950e604f7702"
       },
       "RequestBody": "service=REDACTED\u0026scope=repository%3Alibrary%2Falpine%3Ametadata_write\u0026refresh_token=REDACTED\u0026grant_type=refresh_token",
       "StatusCode": 200,
       "ResponseHeaders": {
         "Connection": "keep-alive",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
         "Server": "openresty",
         "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
         "Transfer-Encoding": "chunked",
-        "X-Ms-Correlation-Request-Id": "2c5ea96b-2355-4ae9-a618-9ef1edf81766",
+        "X-Ms-Correlation-Request-Id": "dbc39bd8-841b-468a-8f41-84181488cbf1",
         "x-ms-ratelimit-remaining-calls-per-second": "333.1"
       },
       "ResponseBody": {
@@ -547,16 +237,16 @@
       }
     },
     {
-      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126?api-version=2021-07-01",
+      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:REDACTED",
       "RequestMethod": "PATCH",
       "RequestHeaders": {
         "Accept": "application/json",
         "Authorization": "Sanitized",
         "Content-Length": "81",
         "Content-Type": "application/json",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "a5355926-f6f4-4d2e-a5f6-9bba2994ccb9"
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "e2ba4cf4-2cb7-4e78-8daa-5239bb7c120c"
       },
       "RequestBody": {
         "deleteEnabled": false,
@@ -575,7 +265,7 @@
         "Connection": "keep-alive",
         "Content-Length": "1351",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
         "Docker-Distribution-Api-Version": "registry/2.0",
         "Server": "openresty",
         "Strict-Transport-Security": [
@@ -583,7 +273,7 @@
           "max-age=31536000; includeSubDomains"
         ],
         "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "e9b4de1c-4bdf-4632-b6d9-171a01ec9914"
+        "X-Ms-Correlation-Request-Id": "40aa2d19-51f9-49fc-ad21-e3b02f0a6192"
       },
       "ResponseBody": {
         "registry": "limolkovaacr.azurecr.io",
@@ -653,9 +343,9 @@
       "RequestHeaders": {
         "Accept": "application/json",
         "Content-Length": "0",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "a607dd99-fc6f-4aef-99c5-12c917c786ab"
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "efb5b4ea-5a95-49e9-aa46-a4f6d437e1c5"
       },
       "RequestBody": null,
       "StatusCode": 401,
@@ -669,7 +359,7 @@
         "Connection": "keep-alive",
         "Content-Length": "217",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
         "Docker-Distribution-Api-Version": "registry/2.0",
         "Server": "openresty",
         "Strict-Transport-Security": [
@@ -678,7 +368,7 @@
         ],
         "WWW-Authenticate": "Bearer realm=\u0022https://REDACTED\u0022,service=\u0022REDACTED\u0022,scope=\u0022repository:library/alpine:metadata_read\u0022",
         "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "736a0e63-7f4c-40cb-befb-a3fc9c86783a"
+        "X-Ms-Correlation-Request-Id": "c584b95f-4449-4b07-9963-9e6871e253c0"
       },
       "ResponseBody": {
         "errors": [
@@ -697,30 +387,136 @@
       }
     },
     {
-      "RequestUri": "https://REDACTED/oauth2/exchange?api-version=2021-07-01",
+      "RequestUri": "https://REDACTED/oauth2/token?api-version=2021-07-01",
       "RequestMethod": "POST",
       "RequestHeaders": {
         "Accept": "application/json",
-        "Content-Length": "62",
+        "Content-Length": "116",
         "Content-Type": "application/x-www-form-urlencoded",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "92fef3f0-06e1-4664-9066-b732fac55027"
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "5f1ac99b-6ae1-4e32-9539-84618ff5d486"
       },
-      "RequestBody": "grant_type=access_token\u0026service=REDACTED\u0026access_token=REDACTED",
+      "RequestBody": "service=REDACTED\u0026scope=repository%3Alibrary%2Falpine%3Ametadata_read\u0026refresh_token=REDACTED\u0026grant_type=refresh_token",
       "StatusCode": 200,
       "ResponseHeaders": {
         "Connection": "keep-alive",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
         "Server": "openresty",
         "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
         "Transfer-Encoding": "chunked",
-        "X-Ms-Correlation-Request-Id": "4d4b4944-7b8c-4aa7-96bf-13614094deb4",
+        "X-Ms-Correlation-Request-Id": "297370b7-0ffa-4d85-aec5-3da3a0758af8",
         "x-ms-ratelimit-remaining-calls-per-second": "333.083333"
       },
       "ResponseBody": {
-        "refresh_token": "Sanitized"
+        "access_token": "Sanitized"
+      }
+    },
+    {
+      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_tags/v1?api-version=2021-07-01",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json",
+        "Authorization": "Sanitized",
+        "Content-Length": "0",
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "efb5b4ea-5a95-49e9-aa46-a4f6d437e1c5"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Expose-Headers": [
+          "Docker-Content-Digest",
+          "WWW-Authenticate",
+          "Link",
+          "X-Ms-Correlation-Request-Id"
+        ],
+        "Connection": "keep-alive",
+        "Content-Length": "383",
+        "Content-Type": "application/json; charset=utf-8",
+        "Date": "Fri, 21 Apr 2023 21:14:09 GMT",
+        "Docker-Distribution-Api-Version": "registry/2.0",
+        "Server": "openresty",
+        "Strict-Transport-Security": [
+          "max-age=31536000; includeSubDomains",
+          "max-age=31536000; includeSubDomains"
+        ],
+        "X-Content-Type-Options": "nosniff",
+        "X-Ms-Correlation-Request-Id": "7bac1cc5-e7b2-423b-859c-34a9aacdfac5"
+      },
+      "ResponseBody": {
+        "registry": "limolkovaacr.azurecr.io",
+        "imageName": "library/alpine",
+        "tag": {
+          "name": "v1",
+          "digest": "sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126",
+          "createdTime": "2022-12-06T19:47:35.6668892Z",
+          "lastUpdateTime": "2023-03-29T21:46:29.7830562Z",
+          "signed": false,
+          "changeableAttributes": {
+            "deleteEnabled": true,
+            "writeEnabled": true,
+            "readEnabled": true,
+            "listEnabled": true
+          }
+        }
+      }
+    },
+    {
+      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:REDACTED",
+      "RequestMethod": "PATCH",
+      "RequestHeaders": {
+        "Accept": "application/json",
+        "Content-Length": "81",
+        "Content-Type": "application/json",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "086fb7d3-8a3e-4f9a-b1d0-9739d5dcf1b9"
+      },
+      "RequestBody": {
+        "deleteEnabled": false,
+        "writeEnabled": true,
+        "listEnabled": true,
+        "readEnabled": true
+      },
+      "StatusCode": 401,
+      "ResponseHeaders": {
+        "Access-Control-Expose-Headers": [
+          "Docker-Content-Digest",
+          "WWW-Authenticate",
+          "Link",
+          "X-Ms-Correlation-Request-Id"
+        ],
+        "Connection": "keep-alive",
+        "Content-Length": "218",
+        "Content-Type": "application/json; charset=utf-8",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "Docker-Distribution-Api-Version": "registry/2.0",
+        "Server": "openresty",
+        "Strict-Transport-Security": [
+          "max-age=31536000; includeSubDomains",
+          "max-age=31536000; includeSubDomains"
+        ],
+        "WWW-Authenticate": "Bearer realm=\u0022https://REDACTED\u0022,service=\u0022REDACTED\u0022,scope=\u0022repository:library/alpine:metadata_write\u0022",
+        "X-Content-Type-Options": "nosniff",
+        "X-Ms-Correlation-Request-Id": "efdaadfa-62ad-4580-b270-c877e07c7203"
+      },
+      "ResponseBody": {
+        "errors": [
+          {
+            "code": "UNAUTHORIZED",
+            "message": "authentication required, visit https://aka.ms/acr/authorization for more information.",
+            "detail": [
+              {
+                "Type": "repository",
+                "Name": "library/alpine",
+                "Action": "metadata_write"
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -728,22 +524,22 @@
       "RequestMethod": "POST",
       "RequestHeaders": {
         "Accept": "application/json",
-        "Content-Length": "116",
+        "Content-Length": "117",
         "Content-Type": "application/x-www-form-urlencoded",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "69fe8c9e-22d7-45d9-a0dc-992d3930c5c5"
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "2437d216-5f2d-4f68-b4d0-1887549d1e10"
       },
-      "RequestBody": "service=REDACTED\u0026scope=repository%3Alibrary%2Falpine%3Ametadata_read\u0026refresh_token=REDACTED\u0026grant_type=refresh_token",
+      "RequestBody": "service=REDACTED\u0026scope=repository%3Alibrary%2Falpine%3Ametadata_write\u0026refresh_token=REDACTED\u0026grant_type=refresh_token",
       "StatusCode": 200,
       "ResponseHeaders": {
         "Connection": "keep-alive",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
         "Server": "openresty",
         "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
         "Transfer-Encoding": "chunked",
-        "X-Ms-Correlation-Request-Id": "9377ccf1-4865-4606-a164-8ffe5f0b3606",
+        "X-Ms-Correlation-Request-Id": "0d20eb30-8288-47ae-816b-67e8bc1bba8a",
         "x-ms-ratelimit-remaining-calls-per-second": "333.066667"
       },
       "ResponseBody": {
@@ -751,149 +547,16 @@
       }
     },
     {
-      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_tags/v1?api-version=2021-07-01",
-      "RequestMethod": "GET",
-      "RequestHeaders": {
-        "Accept": "application/json",
-        "Authorization": "Sanitized",
-        "Content-Length": "0",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "a607dd99-fc6f-4aef-99c5-12c917c786ab"
-      },
-      "RequestBody": null,
-      "StatusCode": 200,
-      "ResponseHeaders": {
-        "Access-Control-Expose-Headers": [
-          "Docker-Content-Digest",
-          "WWW-Authenticate",
-          "Link",
-          "X-Ms-Correlation-Request-Id"
-        ],
-        "Connection": "keep-alive",
-        "Content-Length": "383",
-        "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
-        "Docker-Distribution-Api-Version": "registry/2.0",
-        "Server": "openresty",
-        "Strict-Transport-Security": [
-          "max-age=31536000; includeSubDomains",
-          "max-age=31536000; includeSubDomains"
-        ],
-        "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "31f9202d-6082-45cc-84bd-1499ee5b659f"
-      },
-      "ResponseBody": {
-        "registry": "limolkovaacr.azurecr.io",
-        "imageName": "library/alpine",
-        "tag": {
-          "name": "v1",
-          "digest": "sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126",
-          "createdTime": "2022-12-06T19:47:35.6668892Z",
-          "lastUpdateTime": "2023-03-29T21:46:29.7830562Z",
-          "signed": false,
-          "changeableAttributes": {
-            "deleteEnabled": true,
-            "writeEnabled": true,
-            "readEnabled": true,
-            "listEnabled": true
-          }
-        }
-      }
-    },
-    {
-      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126?api-version=2021-07-01",
-      "RequestMethod": "PATCH",
-      "RequestHeaders": {
-        "Accept": "application/json",
-        "Content-Length": "81",
-        "Content-Type": "application/json",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "bfd02744-020f-4e0d-8f4e-9168d06c2f8c"
-      },
-      "RequestBody": {
-        "deleteEnabled": false,
-        "writeEnabled": true,
-        "listEnabled": true,
-        "readEnabled": true
-      },
-      "StatusCode": 401,
-      "ResponseHeaders": {
-        "Access-Control-Expose-Headers": [
-          "Docker-Content-Digest",
-          "WWW-Authenticate",
-          "Link",
-          "X-Ms-Correlation-Request-Id"
-        ],
-        "Connection": "keep-alive",
-        "Content-Length": "218",
-        "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
-        "Docker-Distribution-Api-Version": "registry/2.0",
-        "Server": "openresty",
-        "Strict-Transport-Security": [
-          "max-age=31536000; includeSubDomains",
-          "max-age=31536000; includeSubDomains"
-        ],
-        "WWW-Authenticate": "Bearer realm=\u0022https://REDACTED\u0022,service=\u0022REDACTED\u0022,scope=\u0022repository:library/alpine:metadata_write\u0022",
-        "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "a51c5672-2ac2-4314-856c-168e7be026c0"
-      },
-      "ResponseBody": {
-        "errors": [
-          {
-            "code": "UNAUTHORIZED",
-            "message": "authentication required, visit https://aka.ms/acr/authorization for more information.",
-            "detail": [
-              {
-                "Type": "repository",
-                "Name": "library/alpine",
-                "Action": "metadata_write"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "RequestUri": "https://REDACTED/oauth2/token?api-version=2021-07-01",
-      "RequestMethod": "POST",
-      "RequestHeaders": {
-        "Accept": "application/json",
-        "Content-Length": "117",
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "ba7f6015-3c95-4eec-8b0d-cd4f4b26e54d"
-      },
-      "RequestBody": "service=REDACTED\u0026scope=repository%3Alibrary%2Falpine%3Ametadata_write\u0026refresh_token=REDACTED\u0026grant_type=refresh_token",
-      "StatusCode": 200,
-      "ResponseHeaders": {
-        "Connection": "keep-alive",
-        "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
-        "Server": "openresty",
-        "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
-        "Transfer-Encoding": "chunked",
-        "X-Ms-Correlation-Request-Id": "990b95dc-3a61-4e08-a1e0-925c1a1b30b8",
-        "x-ms-ratelimit-remaining-calls-per-second": "333.05"
-      },
-      "ResponseBody": {
-        "access_token": "Sanitized"
-      }
-    },
-    {
-      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126?api-version=2021-07-01",
+      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:REDACTED",
       "RequestMethod": "PATCH",
       "RequestHeaders": {
         "Accept": "application/json",
         "Authorization": "Sanitized",
         "Content-Length": "81",
         "Content-Type": "application/json",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "bfd02744-020f-4e0d-8f4e-9168d06c2f8c"
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "086fb7d3-8a3e-4f9a-b1d0-9739d5dcf1b9"
       },
       "RequestBody": {
         "deleteEnabled": false,
@@ -912,7 +575,7 @@
         "Connection": "keep-alive",
         "Content-Length": "1351",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
         "Docker-Distribution-Api-Version": "registry/2.0",
         "Server": "openresty",
         "Strict-Transport-Security": [
@@ -920,190 +583,7 @@
           "max-age=31536000; includeSubDomains"
         ],
         "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "5a62b677-ee2a-4566-ba09-a2739d939fc2"
-      },
-      "ResponseBody": {
-        "registry": "limolkovaacr.azurecr.io",
-        "imageName": "library/alpine",
-        "manifest": {
-          "digest": "sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126",
-          "imageSize": 22609792,
-          "createdTime": "2023-03-29T21:46:29.6869949Z",
-          "lastUpdateTime": "2023-03-29T21:46:29.6869949Z",
-          "mediaType": "application/vnd.docker.distribution.manifest.list.v2\u002Bjson",
-          "tags": [
-            "latest",
-            "v1",
-            "v2",
-            "v3",
-            "v4"
-          ],
-          "changeableAttributes": {
-            "deleteEnabled": false,
-            "writeEnabled": true,
-            "readEnabled": true,
-            "listEnabled": true
-          },
-          "references": [
-            {
-              "digest": "sha256:b6ca290b6b4cdcca5b3db3ffa338ee0285c11744b4a6abaa9627746ee3291d8d",
-              "architecture": "amd64",
-              "os": "linux"
-            },
-            {
-              "digest": "sha256:888fd5bcc23ddd20ac7248182033eb0db7073dd4ca92556f68d3c91b4de309d4",
-              "architecture": "arm",
-              "os": "linux"
-            },
-            {
-              "digest": "sha256:a99f6ddb5a7f037b423eb17c052956e1d9c8eee03941b319f2d6939bd846a67b",
-              "architecture": "arm",
-              "os": "linux"
-            },
-            {
-              "digest": "sha256:b5a5b7ce4eabc8414bf367761a28f4e8b16952ce5de537c15ed917b71b245f11",
-              "architecture": "arm64",
-              "os": "linux"
-            },
-            {
-              "digest": "sha256:3f57972158a12207fe5a2332005e6baf7bd73873e78b3f3a846df4fc93c3b7e6",
-              "architecture": "386",
-              "os": "linux"
-            },
-            {
-              "digest": "sha256:74021d4e48aac79ab98a79790eb91788ed120fd1401170d9961aa6367bcbf9e5",
-              "architecture": "ppc64le",
-              "os": "linux"
-            },
-            {
-              "digest": "sha256:d0730329aea18749d75deff83b1607886eef6ad96e82fa6ad96af87b73bae611",
-              "architecture": "s390x",
-              "os": "linux"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126?api-version=2021-07-01",
-      "RequestMethod": "PATCH",
-      "RequestHeaders": {
-        "Accept": "application/json",
-        "Content-Length": "81",
-        "Content-Type": "application/json",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "b79cb021-9e60-4451-af1a-4438dce556ac"
-      },
-      "RequestBody": {
-        "deleteEnabled": false,
-        "writeEnabled": true,
-        "listEnabled": true,
-        "readEnabled": true
-      },
-      "StatusCode": 401,
-      "ResponseHeaders": {
-        "Access-Control-Expose-Headers": [
-          "Docker-Content-Digest",
-          "WWW-Authenticate",
-          "Link",
-          "X-Ms-Correlation-Request-Id"
-        ],
-        "Connection": "keep-alive",
-        "Content-Length": "218",
-        "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
-        "Docker-Distribution-Api-Version": "registry/2.0",
-        "Server": "openresty",
-        "Strict-Transport-Security": [
-          "max-age=31536000; includeSubDomains",
-          "max-age=31536000; includeSubDomains"
-        ],
-        "WWW-Authenticate": "Bearer realm=\u0022https://REDACTED\u0022,service=\u0022REDACTED\u0022,scope=\u0022repository:library/alpine:metadata_write\u0022",
-        "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "3c2cf08c-f0bb-4183-b5a3-dff5aadf96ce"
-      },
-      "ResponseBody": {
-        "errors": [
-          {
-            "code": "UNAUTHORIZED",
-            "message": "authentication required, visit https://aka.ms/acr/authorization for more information.",
-            "detail": [
-              {
-                "Type": "repository",
-                "Name": "library/alpine",
-                "Action": "metadata_write"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "RequestUri": "https://REDACTED/oauth2/token?api-version=2021-07-01",
-      "RequestMethod": "POST",
-      "RequestHeaders": {
-        "Accept": "application/json",
-        "Content-Length": "117",
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "7782739d-a136-4e45-b42f-8d562134588a"
-      },
-      "RequestBody": "service=REDACTED\u0026scope=repository%3Alibrary%2Falpine%3Ametadata_write\u0026refresh_token=REDACTED\u0026grant_type=refresh_token",
-      "StatusCode": 200,
-      "ResponseHeaders": {
-        "Connection": "keep-alive",
-        "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
-        "Server": "openresty",
-        "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
-        "Transfer-Encoding": "chunked",
-        "X-Ms-Correlation-Request-Id": "11392769-ef00-45ff-9db8-221fa63c1109",
-        "x-ms-ratelimit-remaining-calls-per-second": "333.033333"
-      },
-      "ResponseBody": {
-        "access_token": "Sanitized"
-      }
-    },
-    {
-      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126?api-version=2021-07-01",
-      "RequestMethod": "PATCH",
-      "RequestHeaders": {
-        "Accept": "application/json",
-        "Authorization": "Sanitized",
-        "Content-Length": "81",
-        "Content-Type": "application/json",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "b79cb021-9e60-4451-af1a-4438dce556ac"
-      },
-      "RequestBody": {
-        "deleteEnabled": false,
-        "writeEnabled": true,
-        "listEnabled": true,
-        "readEnabled": true
-      },
-      "StatusCode": 200,
-      "ResponseHeaders": {
-        "Access-Control-Expose-Headers": [
-          "Docker-Content-Digest",
-          "WWW-Authenticate",
-          "Link",
-          "X-Ms-Correlation-Request-Id"
-        ],
-        "Connection": "keep-alive",
-        "Content-Length": "1351",
-        "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
-        "Docker-Distribution-Api-Version": "registry/2.0",
-        "Server": "openresty",
-        "Strict-Transport-Security": [
-          "max-age=31536000; includeSubDomains",
-          "max-age=31536000; includeSubDomains"
-        ],
-        "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "36495dce-981e-42de-b961-756c4f3bfeb9"
+        "X-Ms-Correlation-Request-Id": "7d873189-8c6c-4d8f-a166-ee0e0fc6f52a"
       },
       "ResponseBody": {
         "registry": "limolkovaacr.azurecr.io",
@@ -1173,9 +653,9 @@
       "RequestHeaders": {
         "Accept": "application/json",
         "Content-Length": "0",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "c82fb3b1-246d-4792-9f70-32903ec9a914"
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "dfc882c8-0b68-4e4f-9129-158dbfbc5a28"
       },
       "RequestBody": null,
       "StatusCode": 401,
@@ -1189,7 +669,7 @@
         "Connection": "keep-alive",
         "Content-Length": "217",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
         "Docker-Distribution-Api-Version": "registry/2.0",
         "Server": "openresty",
         "Strict-Transport-Security": [
@@ -1198,7 +678,7 @@
         ],
         "WWW-Authenticate": "Bearer realm=\u0022https://REDACTED\u0022,service=\u0022REDACTED\u0022,scope=\u0022repository:library/alpine:metadata_read\u0022",
         "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "2fe32654-2089-4ab6-b197-34a2847df45e"
+        "X-Ms-Correlation-Request-Id": "2c68de9f-f62b-4193-ad1a-968f83f70e8f"
       },
       "ResponseBody": {
         "errors": [
@@ -1223,21 +703,21 @@
         "Accept": "application/json",
         "Content-Length": "62",
         "Content-Type": "application/x-www-form-urlencoded",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "1f05ecce-1270-49a3-b2cb-45e0d78fa86a"
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "ee716f70-e6ec-4c94-ba31-b1cb8f643d75"
       },
       "RequestBody": "grant_type=access_token\u0026service=REDACTED\u0026access_token=REDACTED",
       "StatusCode": 200,
       "ResponseHeaders": {
         "Connection": "keep-alive",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
         "Server": "openresty",
         "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
         "Transfer-Encoding": "chunked",
-        "X-Ms-Correlation-Request-Id": "03b5e5dd-1087-4670-824c-106260d9f79b",
-        "x-ms-ratelimit-remaining-calls-per-second": "333.016667"
+        "X-Ms-Correlation-Request-Id": "a5c43967-0b09-45b9-b801-c1a9e5f7dde8",
+        "x-ms-ratelimit-remaining-calls-per-second": "333.05"
       },
       "ResponseBody": {
         "refresh_token": "Sanitized"
@@ -1250,21 +730,21 @@
         "Accept": "application/json",
         "Content-Length": "116",
         "Content-Type": "application/x-www-form-urlencoded",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "d07908d3-b0b0-4cbd-bc15-8737757d5bf7"
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "4f6fbe3c-598a-49e3-9968-b1bc0b34c61f"
       },
       "RequestBody": "service=REDACTED\u0026scope=repository%3Alibrary%2Falpine%3Ametadata_read\u0026refresh_token=REDACTED\u0026grant_type=refresh_token",
       "StatusCode": 200,
       "ResponseHeaders": {
         "Connection": "keep-alive",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
         "Server": "openresty",
         "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
         "Transfer-Encoding": "chunked",
-        "X-Ms-Correlation-Request-Id": "a5998ef3-52ff-48c2-b3de-397c3a022661",
-        "x-ms-ratelimit-remaining-calls-per-second": "333"
+        "X-Ms-Correlation-Request-Id": "e37b1d45-f816-4358-9dc8-3be65bc4db2c",
+        "x-ms-ratelimit-remaining-calls-per-second": "333.033333"
       },
       "ResponseBody": {
         "access_token": "Sanitized"
@@ -1277,9 +757,9 @@
         "Accept": "application/json",
         "Authorization": "Sanitized",
         "Content-Length": "0",
-        "Date": "Tue, 18 Apr 2023 16:57:03 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "c82fb3b1-246d-4792-9f70-32903ec9a914"
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "dfc882c8-0b68-4e4f-9129-158dbfbc5a28"
       },
       "RequestBody": null,
       "StatusCode": 200,
@@ -1293,7 +773,7 @@
         "Connection": "keep-alive",
         "Content-Length": "383",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
         "Docker-Distribution-Api-Version": "registry/2.0",
         "Server": "openresty",
         "Strict-Transport-Security": [
@@ -1301,7 +781,7 @@
           "max-age=31536000; includeSubDomains"
         ],
         "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "4f55906e-cebd-4d02-9884-b7af6989658c"
+        "X-Ms-Correlation-Request-Id": "c6738339-3137-4197-acfd-1a8ff3aee510"
       },
       "ResponseBody": {
         "registry": "limolkovaacr.azurecr.io",
@@ -1322,15 +802,535 @@
       }
     },
     {
-      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126?api-version=2021-07-01",
+      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:REDACTED",
+      "RequestMethod": "PATCH",
+      "RequestHeaders": {
+        "Accept": "application/json",
+        "Content-Length": "81",
+        "Content-Type": "application/json",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "9b6ca7dd-eb79-44e2-9f6f-4eba2286310c"
+      },
+      "RequestBody": {
+        "deleteEnabled": false,
+        "writeEnabled": true,
+        "listEnabled": true,
+        "readEnabled": true
+      },
+      "StatusCode": 401,
+      "ResponseHeaders": {
+        "Access-Control-Expose-Headers": [
+          "Docker-Content-Digest",
+          "WWW-Authenticate",
+          "Link",
+          "X-Ms-Correlation-Request-Id"
+        ],
+        "Connection": "keep-alive",
+        "Content-Length": "218",
+        "Content-Type": "application/json; charset=utf-8",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "Docker-Distribution-Api-Version": "registry/2.0",
+        "Server": "openresty",
+        "Strict-Transport-Security": [
+          "max-age=31536000; includeSubDomains",
+          "max-age=31536000; includeSubDomains"
+        ],
+        "WWW-Authenticate": "Bearer realm=\u0022https://REDACTED\u0022,service=\u0022REDACTED\u0022,scope=\u0022repository:library/alpine:metadata_write\u0022",
+        "X-Content-Type-Options": "nosniff",
+        "X-Ms-Correlation-Request-Id": "39419595-f5f0-4e43-a857-fa0e64ba4818"
+      },
+      "ResponseBody": {
+        "errors": [
+          {
+            "code": "UNAUTHORIZED",
+            "message": "authentication required, visit https://aka.ms/acr/authorization for more information.",
+            "detail": [
+              {
+                "Type": "repository",
+                "Name": "library/alpine",
+                "Action": "metadata_write"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://REDACTED/oauth2/token?api-version=2021-07-01",
+      "RequestMethod": "POST",
+      "RequestHeaders": {
+        "Accept": "application/json",
+        "Content-Length": "117",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "d39797e7-e833-40e5-b247-d51a231f0dbe"
+      },
+      "RequestBody": "service=REDACTED\u0026scope=repository%3Alibrary%2Falpine%3Ametadata_write\u0026refresh_token=REDACTED\u0026grant_type=refresh_token",
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Connection": "keep-alive",
+        "Content-Type": "application/json; charset=utf-8",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "Server": "openresty",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+        "Transfer-Encoding": "chunked",
+        "X-Ms-Correlation-Request-Id": "ac77b923-4ef1-47bb-95ab-4af814be4e96",
+        "x-ms-ratelimit-remaining-calls-per-second": "333.016667"
+      },
+      "ResponseBody": {
+        "access_token": "Sanitized"
+      }
+    },
+    {
+      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:REDACTED",
+      "RequestMethod": "PATCH",
+      "RequestHeaders": {
+        "Accept": "application/json",
+        "Authorization": "Sanitized",
+        "Content-Length": "81",
+        "Content-Type": "application/json",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "9b6ca7dd-eb79-44e2-9f6f-4eba2286310c"
+      },
+      "RequestBody": {
+        "deleteEnabled": false,
+        "writeEnabled": true,
+        "listEnabled": true,
+        "readEnabled": true
+      },
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Expose-Headers": [
+          "Docker-Content-Digest",
+          "WWW-Authenticate",
+          "Link",
+          "X-Ms-Correlation-Request-Id"
+        ],
+        "Connection": "keep-alive",
+        "Content-Length": "1351",
+        "Content-Type": "application/json; charset=utf-8",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "Docker-Distribution-Api-Version": "registry/2.0",
+        "Server": "openresty",
+        "Strict-Transport-Security": [
+          "max-age=31536000; includeSubDomains",
+          "max-age=31536000; includeSubDomains"
+        ],
+        "X-Content-Type-Options": "nosniff",
+        "X-Ms-Correlation-Request-Id": "459e89e8-e05c-48ba-bdc1-4526875a84d9"
+      },
+      "ResponseBody": {
+        "registry": "limolkovaacr.azurecr.io",
+        "imageName": "library/alpine",
+        "manifest": {
+          "digest": "sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126",
+          "imageSize": 22609792,
+          "createdTime": "2023-03-29T21:46:29.6869949Z",
+          "lastUpdateTime": "2023-03-29T21:46:29.6869949Z",
+          "mediaType": "application/vnd.docker.distribution.manifest.list.v2\u002Bjson",
+          "tags": [
+            "latest",
+            "v1",
+            "v2",
+            "v3",
+            "v4"
+          ],
+          "changeableAttributes": {
+            "deleteEnabled": false,
+            "writeEnabled": true,
+            "readEnabled": true,
+            "listEnabled": true
+          },
+          "references": [
+            {
+              "digest": "sha256:b6ca290b6b4cdcca5b3db3ffa338ee0285c11744b4a6abaa9627746ee3291d8d",
+              "architecture": "amd64",
+              "os": "linux"
+            },
+            {
+              "digest": "sha256:888fd5bcc23ddd20ac7248182033eb0db7073dd4ca92556f68d3c91b4de309d4",
+              "architecture": "arm",
+              "os": "linux"
+            },
+            {
+              "digest": "sha256:a99f6ddb5a7f037b423eb17c052956e1d9c8eee03941b319f2d6939bd846a67b",
+              "architecture": "arm",
+              "os": "linux"
+            },
+            {
+              "digest": "sha256:b5a5b7ce4eabc8414bf367761a28f4e8b16952ce5de537c15ed917b71b245f11",
+              "architecture": "arm64",
+              "os": "linux"
+            },
+            {
+              "digest": "sha256:3f57972158a12207fe5a2332005e6baf7bd73873e78b3f3a846df4fc93c3b7e6",
+              "architecture": "386",
+              "os": "linux"
+            },
+            {
+              "digest": "sha256:74021d4e48aac79ab98a79790eb91788ed120fd1401170d9961aa6367bcbf9e5",
+              "architecture": "ppc64le",
+              "os": "linux"
+            },
+            {
+              "digest": "sha256:d0730329aea18749d75deff83b1607886eef6ad96e82fa6ad96af87b73bae611",
+              "architecture": "s390x",
+              "os": "linux"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:REDACTED",
+      "RequestMethod": "PATCH",
+      "RequestHeaders": {
+        "Accept": "application/json",
+        "Content-Length": "81",
+        "Content-Type": "application/json",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "8b3a6d16-a863-4234-b24d-06fdb3cf8663"
+      },
+      "RequestBody": {
+        "deleteEnabled": false,
+        "writeEnabled": true,
+        "listEnabled": true,
+        "readEnabled": true
+      },
+      "StatusCode": 401,
+      "ResponseHeaders": {
+        "Access-Control-Expose-Headers": [
+          "Docker-Content-Digest",
+          "WWW-Authenticate",
+          "Link",
+          "X-Ms-Correlation-Request-Id"
+        ],
+        "Connection": "keep-alive",
+        "Content-Length": "218",
+        "Content-Type": "application/json; charset=utf-8",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "Docker-Distribution-Api-Version": "registry/2.0",
+        "Server": "openresty",
+        "Strict-Transport-Security": [
+          "max-age=31536000; includeSubDomains",
+          "max-age=31536000; includeSubDomains"
+        ],
+        "WWW-Authenticate": "Bearer realm=\u0022https://REDACTED\u0022,service=\u0022REDACTED\u0022,scope=\u0022repository:library/alpine:metadata_write\u0022",
+        "X-Content-Type-Options": "nosniff",
+        "X-Ms-Correlation-Request-Id": "497d1a39-634e-4280-9300-02edef5496d4"
+      },
+      "ResponseBody": {
+        "errors": [
+          {
+            "code": "UNAUTHORIZED",
+            "message": "authentication required, visit https://aka.ms/acr/authorization for more information.",
+            "detail": [
+              {
+                "Type": "repository",
+                "Name": "library/alpine",
+                "Action": "metadata_write"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://REDACTED/oauth2/token?api-version=2021-07-01",
+      "RequestMethod": "POST",
+      "RequestHeaders": {
+        "Accept": "application/json",
+        "Content-Length": "117",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "116d9f2c-2fdb-462b-b1b2-ff1c56d4baa6"
+      },
+      "RequestBody": "service=REDACTED\u0026scope=repository%3Alibrary%2Falpine%3Ametadata_write\u0026refresh_token=REDACTED\u0026grant_type=refresh_token",
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Connection": "keep-alive",
+        "Content-Type": "application/json; charset=utf-8",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "Server": "openresty",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+        "Transfer-Encoding": "chunked",
+        "X-Ms-Correlation-Request-Id": "120c3b19-246c-4a2e-b22e-1574627abc58",
+        "x-ms-ratelimit-remaining-calls-per-second": "333"
+      },
+      "ResponseBody": {
+        "access_token": "Sanitized"
+      }
+    },
+    {
+      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:REDACTED",
+      "RequestMethod": "PATCH",
+      "RequestHeaders": {
+        "Accept": "application/json",
+        "Authorization": "Sanitized",
+        "Content-Length": "81",
+        "Content-Type": "application/json",
+        "Date": "Fri, 21 Apr 2023 21:14:10 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "8b3a6d16-a863-4234-b24d-06fdb3cf8663"
+      },
+      "RequestBody": {
+        "deleteEnabled": false,
+        "writeEnabled": true,
+        "listEnabled": true,
+        "readEnabled": true
+      },
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Expose-Headers": [
+          "Docker-Content-Digest",
+          "WWW-Authenticate",
+          "Link",
+          "X-Ms-Correlation-Request-Id"
+        ],
+        "Connection": "keep-alive",
+        "Content-Length": "1351",
+        "Content-Type": "application/json; charset=utf-8",
+        "Date": "Fri, 21 Apr 2023 21:14:11 GMT",
+        "Docker-Distribution-Api-Version": "registry/2.0",
+        "Server": "openresty",
+        "Strict-Transport-Security": [
+          "max-age=31536000; includeSubDomains",
+          "max-age=31536000; includeSubDomains"
+        ],
+        "X-Content-Type-Options": "nosniff",
+        "X-Ms-Correlation-Request-Id": "c5e3ccfa-d78f-4394-aeed-06a3f0017b99"
+      },
+      "ResponseBody": {
+        "registry": "limolkovaacr.azurecr.io",
+        "imageName": "library/alpine",
+        "manifest": {
+          "digest": "sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126",
+          "imageSize": 22609792,
+          "createdTime": "2023-03-29T21:46:29.6869949Z",
+          "lastUpdateTime": "2023-03-29T21:46:29.6869949Z",
+          "mediaType": "application/vnd.docker.distribution.manifest.list.v2\u002Bjson",
+          "tags": [
+            "latest",
+            "v1",
+            "v2",
+            "v3",
+            "v4"
+          ],
+          "changeableAttributes": {
+            "deleteEnabled": false,
+            "writeEnabled": true,
+            "readEnabled": true,
+            "listEnabled": true
+          },
+          "references": [
+            {
+              "digest": "sha256:b6ca290b6b4cdcca5b3db3ffa338ee0285c11744b4a6abaa9627746ee3291d8d",
+              "architecture": "amd64",
+              "os": "linux"
+            },
+            {
+              "digest": "sha256:888fd5bcc23ddd20ac7248182033eb0db7073dd4ca92556f68d3c91b4de309d4",
+              "architecture": "arm",
+              "os": "linux"
+            },
+            {
+              "digest": "sha256:a99f6ddb5a7f037b423eb17c052956e1d9c8eee03941b319f2d6939bd846a67b",
+              "architecture": "arm",
+              "os": "linux"
+            },
+            {
+              "digest": "sha256:b5a5b7ce4eabc8414bf367761a28f4e8b16952ce5de537c15ed917b71b245f11",
+              "architecture": "arm64",
+              "os": "linux"
+            },
+            {
+              "digest": "sha256:3f57972158a12207fe5a2332005e6baf7bd73873e78b3f3a846df4fc93c3b7e6",
+              "architecture": "386",
+              "os": "linux"
+            },
+            {
+              "digest": "sha256:74021d4e48aac79ab98a79790eb91788ed120fd1401170d9961aa6367bcbf9e5",
+              "architecture": "ppc64le",
+              "os": "linux"
+            },
+            {
+              "digest": "sha256:d0730329aea18749d75deff83b1607886eef6ad96e82fa6ad96af87b73bae611",
+              "architecture": "s390x",
+              "os": "linux"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_tags/v1?api-version=2021-07-01",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json",
+        "Content-Length": "0",
+        "Date": "Fri, 21 Apr 2023 21:14:11 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "95b38bd9-f9c5-423a-a0eb-fb788c09e064"
+      },
+      "RequestBody": null,
+      "StatusCode": 401,
+      "ResponseHeaders": {
+        "Access-Control-Expose-Headers": [
+          "Docker-Content-Digest",
+          "WWW-Authenticate",
+          "Link",
+          "X-Ms-Correlation-Request-Id"
+        ],
+        "Connection": "keep-alive",
+        "Content-Length": "217",
+        "Content-Type": "application/json; charset=utf-8",
+        "Date": "Fri, 21 Apr 2023 21:14:11 GMT",
+        "Docker-Distribution-Api-Version": "registry/2.0",
+        "Server": "openresty",
+        "Strict-Transport-Security": [
+          "max-age=31536000; includeSubDomains",
+          "max-age=31536000; includeSubDomains"
+        ],
+        "WWW-Authenticate": "Bearer realm=\u0022https://REDACTED\u0022,service=\u0022REDACTED\u0022,scope=\u0022repository:library/alpine:metadata_read\u0022",
+        "X-Content-Type-Options": "nosniff",
+        "X-Ms-Correlation-Request-Id": "e6068b70-4e8f-4811-bd08-f8588b44f351"
+      },
+      "ResponseBody": {
+        "errors": [
+          {
+            "code": "UNAUTHORIZED",
+            "message": "authentication required, visit https://aka.ms/acr/authorization for more information.",
+            "detail": [
+              {
+                "Type": "repository",
+                "Name": "library/alpine",
+                "Action": "metadata_read"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "RequestUri": "https://REDACTED/oauth2/exchange?api-version=2021-07-01",
+      "RequestMethod": "POST",
+      "RequestHeaders": {
+        "Accept": "application/json",
+        "Content-Length": "62",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Date": "Fri, 21 Apr 2023 21:14:11 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "550e0744-073c-4f66-ad92-9e6366795cd1"
+      },
+      "RequestBody": "grant_type=access_token\u0026service=REDACTED\u0026access_token=REDACTED",
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Connection": "keep-alive",
+        "Content-Type": "application/json; charset=utf-8",
+        "Date": "Fri, 21 Apr 2023 21:14:11 GMT",
+        "Server": "openresty",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+        "Transfer-Encoding": "chunked",
+        "X-Ms-Correlation-Request-Id": "757284b3-27f9-433b-9be0-58299d50f6f6",
+        "x-ms-ratelimit-remaining-calls-per-second": "332.983333"
+      },
+      "ResponseBody": {
+        "refresh_token": "Sanitized"
+      }
+    },
+    {
+      "RequestUri": "https://REDACTED/oauth2/token?api-version=2021-07-01",
+      "RequestMethod": "POST",
+      "RequestHeaders": {
+        "Accept": "application/json",
+        "Content-Length": "116",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Date": "Fri, 21 Apr 2023 21:14:11 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "4809f71e-2297-46d3-a09b-d8040037fdec"
+      },
+      "RequestBody": "service=REDACTED\u0026scope=repository%3Alibrary%2Falpine%3Ametadata_read\u0026refresh_token=REDACTED\u0026grant_type=refresh_token",
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Connection": "keep-alive",
+        "Content-Type": "application/json; charset=utf-8",
+        "Date": "Fri, 21 Apr 2023 21:14:11 GMT",
+        "Server": "openresty",
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+        "Transfer-Encoding": "chunked",
+        "X-Ms-Correlation-Request-Id": "ab277262-39c7-4661-8265-209caba16e58",
+        "x-ms-ratelimit-remaining-calls-per-second": "332.966667"
+      },
+      "ResponseBody": {
+        "access_token": "Sanitized"
+      }
+    },
+    {
+      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_tags/v1?api-version=2021-07-01",
+      "RequestMethod": "GET",
+      "RequestHeaders": {
+        "Accept": "application/json",
+        "Authorization": "Sanitized",
+        "Content-Length": "0",
+        "Date": "Fri, 21 Apr 2023 21:14:11 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "95b38bd9-f9c5-423a-a0eb-fb788c09e064"
+      },
+      "RequestBody": null,
+      "StatusCode": 200,
+      "ResponseHeaders": {
+        "Access-Control-Expose-Headers": [
+          "Docker-Content-Digest",
+          "WWW-Authenticate",
+          "Link",
+          "X-Ms-Correlation-Request-Id"
+        ],
+        "Connection": "keep-alive",
+        "Content-Length": "383",
+        "Content-Type": "application/json; charset=utf-8",
+        "Date": "Fri, 21 Apr 2023 21:14:11 GMT",
+        "Docker-Distribution-Api-Version": "registry/2.0",
+        "Server": "openresty",
+        "Strict-Transport-Security": [
+          "max-age=31536000; includeSubDomains",
+          "max-age=31536000; includeSubDomains"
+        ],
+        "X-Content-Type-Options": "nosniff",
+        "X-Ms-Correlation-Request-Id": "78ab91fd-8231-4aa6-aec6-8a1c7e8e5208"
+      },
+      "ResponseBody": {
+        "registry": "limolkovaacr.azurecr.io",
+        "imageName": "library/alpine",
+        "tag": {
+          "name": "v1",
+          "digest": "sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126",
+          "createdTime": "2022-12-06T19:47:35.6668892Z",
+          "lastUpdateTime": "2023-03-29T21:46:29.7830562Z",
+          "signed": false,
+          "changeableAttributes": {
+            "deleteEnabled": true,
+            "writeEnabled": true,
+            "readEnabled": true,
+            "listEnabled": true
+          }
+        }
+      }
+    },
+    {
+      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:REDACTED",
       "RequestMethod": "PATCH",
       "RequestHeaders": {
         "Accept": "application/json",
         "Content-Length": "80",
         "Content-Type": "application/json",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "b8fa7671-51c5-419d-ae85-e9c0b4350861"
+        "Date": "Fri, 21 Apr 2023 21:14:11 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "b2943973-b89c-44f7-8533-fc0234bf3338"
       },
       "RequestBody": {
         "deleteEnabled": true,
@@ -1349,7 +1349,7 @@
         "Connection": "keep-alive",
         "Content-Length": "218",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:11 GMT",
         "Docker-Distribution-Api-Version": "registry/2.0",
         "Server": "openresty",
         "Strict-Transport-Security": [
@@ -1358,7 +1358,7 @@
         ],
         "WWW-Authenticate": "Bearer realm=\u0022https://REDACTED\u0022,service=\u0022REDACTED\u0022,scope=\u0022repository:library/alpine:metadata_write\u0022",
         "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "daa34bf0-8c79-4a6f-8718-7e644dfad623"
+        "X-Ms-Correlation-Request-Id": "398111ee-ce42-46ee-b8b0-00c3875026a9"
       },
       "ResponseBody": {
         "errors": [
@@ -1383,37 +1383,37 @@
         "Accept": "application/json",
         "Content-Length": "117",
         "Content-Type": "application/x-www-form-urlencoded",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "ff0e608a-3ce5-43ce-a9b7-84c50e76cc54"
+        "Date": "Fri, 21 Apr 2023 21:14:11 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "2e0a95b3-aecc-4d02-9ef3-8b7dea6da228"
       },
       "RequestBody": "service=REDACTED\u0026scope=repository%3Alibrary%2Falpine%3Ametadata_write\u0026refresh_token=REDACTED\u0026grant_type=refresh_token",
       "StatusCode": 200,
       "ResponseHeaders": {
         "Connection": "keep-alive",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:11 GMT",
         "Server": "openresty",
         "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
         "Transfer-Encoding": "chunked",
-        "X-Ms-Correlation-Request-Id": "21cda1a7-d2e6-47ce-a502-a904e0eafc22",
-        "x-ms-ratelimit-remaining-calls-per-second": "332.983333"
+        "X-Ms-Correlation-Request-Id": "b34e5fb7-4d15-4775-8e87-80e22f3fcb96",
+        "x-ms-ratelimit-remaining-calls-per-second": "332.95"
       },
       "ResponseBody": {
         "access_token": "Sanitized"
       }
     },
     {
-      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:124c7d2707904eea7431fffe91522a01e5a861a624ee31d03372cc1d138a3126?api-version=2021-07-01",
+      "RequestUri": "https://REDACTED/acr/v1/library%2Falpine/_manifests/sha256:REDACTED",
       "RequestMethod": "PATCH",
       "RequestHeaders": {
         "Accept": "application/json",
         "Authorization": "Sanitized",
         "Content-Length": "80",
         "Content-Type": "application/json",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "b8fa7671-51c5-419d-ae85-e9c0b4350861"
+        "Date": "Fri, 21 Apr 2023 21:14:11 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "b2943973-b89c-44f7-8533-fc0234bf3338"
       },
       "RequestBody": {
         "deleteEnabled": true,
@@ -1432,7 +1432,7 @@
         "Connection": "keep-alive",
         "Content-Length": "1350",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:57:04 GMT",
+        "Date": "Fri, 21 Apr 2023 21:14:11 GMT",
         "Docker-Distribution-Api-Version": "registry/2.0",
         "Server": "openresty",
         "Strict-Transport-Security": [
@@ -1440,7 +1440,7 @@
           "max-age=31536000; includeSubDomains"
         ],
         "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "6b6b739f-41cd-46c8-a136-ff69b8192ae7"
+        "X-Ms-Correlation-Request-Id": "9779c0ee-68e0-48ae-88b9-b338e77252f2"
       },
       "ResponseBody": {
         "registry": "limolkovaacr.azurecr.io",

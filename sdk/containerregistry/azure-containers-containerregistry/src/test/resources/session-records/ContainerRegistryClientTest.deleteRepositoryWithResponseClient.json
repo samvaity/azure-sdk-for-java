@@ -6,9 +6,9 @@
       "RequestHeaders": {
         "Accept": "application/json",
         "Content-Length": "0",
-        "Date": "Tue, 18 Apr 2023 16:54:57 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "83f83174-07e9-4615-b7a0-fc19928187ca"
+        "Date": "Fri, 21 Apr 2023 21:12:01 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "ad32cbe2-5845-44b0-a0ac-e927258a2e79"
       },
       "RequestBody": null,
       "StatusCode": 401,
@@ -22,7 +22,7 @@
         "Connection": "keep-alive",
         "Content-Length": "217",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:54:57 GMT",
+        "Date": "Fri, 21 Apr 2023 21:12:01 GMT",
         "Docker-Distribution-Api-Version": "registry/2.0",
         "Server": "openresty",
         "Strict-Transport-Security": [
@@ -31,7 +31,7 @@
         ],
         "WWW-Authenticate": "Bearer realm=\u0022https://REDACTED\u0022,service=\u0022REDACTED\u0022,scope=\u0022repository:library/hello-seattle:delete\u0022",
         "X-Content-Type-Options": "nosniff",
-        "X-Ms-Correlation-Request-Id": "5ad2fefa-66d1-4efa-ad21-cb4800c6e881"
+        "X-Ms-Correlation-Request-Id": "4616d407-e57d-4438-b17c-f49656886ffc"
       },
       "ResponseBody": {
         "errors": [
@@ -56,21 +56,21 @@
         "Accept": "application/json",
         "Content-Length": "62",
         "Content-Type": "application/x-www-form-urlencoded",
-        "Date": "Tue, 18 Apr 2023 16:54:57 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "8fcf47f2-86b7-4bda-8bb2-da2095ddd265"
+        "Date": "Fri, 21 Apr 2023 21:12:01 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "69ab2dd0-c6da-46ea-93c1-e4f31119ff04"
       },
       "RequestBody": "grant_type=access_token\u0026service=REDACTED\u0026access_token=REDACTED",
       "StatusCode": 200,
       "ResponseHeaders": {
         "Connection": "keep-alive",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:54:57 GMT",
+        "Date": "Fri, 21 Apr 2023 21:12:01 GMT",
         "Server": "openresty",
         "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
         "Transfer-Encoding": "chunked",
-        "X-Ms-Correlation-Request-Id": "ea3f75d0-2dfc-4c8f-a46c-ebfc74515e34",
-        "x-ms-ratelimit-remaining-calls-per-second": "331.483333"
+        "X-Ms-Correlation-Request-Id": "19f37a0b-0124-4b19-ad3a-2e08ea725f43",
+        "x-ms-ratelimit-remaining-calls-per-second": "332.616667"
       },
       "ResponseBody": {
         "refresh_token": "Sanitized"
@@ -83,21 +83,21 @@
         "Accept": "application/json",
         "Content-Length": "116",
         "Content-Type": "application/x-www-form-urlencoded",
-        "Date": "Tue, 18 Apr 2023 16:54:57 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "b2f726a9-7dcd-4c90-9b2a-051fdfebfac1"
+        "Date": "Fri, 21 Apr 2023 21:12:01 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "47b80f7b-ba37-43d0-af48-7d75d88d10c6"
       },
       "RequestBody": "service=REDACTED\u0026scope=repository%3Alibrary%2Fhello-seattle%3Adelete\u0026refresh_token=REDACTED\u0026grant_type=refresh_token",
       "StatusCode": 200,
       "ResponseHeaders": {
         "Connection": "keep-alive",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:54:57 GMT",
+        "Date": "Fri, 21 Apr 2023 21:12:01 GMT",
         "Server": "openresty",
         "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
         "Transfer-Encoding": "chunked",
-        "X-Ms-Correlation-Request-Id": "7268742b-f4cd-458f-bb4e-c58cd221b191",
-        "x-ms-ratelimit-remaining-calls-per-second": "331.466667"
+        "X-Ms-Correlation-Request-Id": "41713171-ab85-4842-93ac-e67bbec3ecbc",
+        "x-ms-ratelimit-remaining-calls-per-second": "332.6"
       },
       "ResponseBody": {
         "access_token": "Sanitized"
@@ -110,9 +110,9 @@
         "Accept": "application/json",
         "Authorization": "Sanitized",
         "Content-Length": "0",
-        "Date": "Tue, 18 Apr 2023 16:54:57 GMT",
-        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.4; Windows 11; 10.0)",
-        "x-ms-client-request-id": "83f83174-07e9-4615-b7a0-fc19928187ca"
+        "Date": "Fri, 21 Apr 2023 21:12:01 GMT",
+        "User-Agent": "azsdk-java-azure-containers-containerregistry/1.1.0-beta.5 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "ad32cbe2-5845-44b0-a0ac-e927258a2e79"
       },
       "RequestBody": null,
       "StatusCode": 202,
@@ -126,7 +126,7 @@
         "Connection": "keep-alive",
         "Content-Length": "936",
         "Content-Type": "application/json; charset=utf-8",
-        "Date": "Tue, 18 Apr 2023 16:54:59 GMT",
+        "Date": "Fri, 21 Apr 2023 21:12:03 GMT",
         "Docker-Distribution-Api-Version": "registry/2.0",
         "Server": "openresty",
         "Strict-Transport-Security": [
@@ -134,10 +134,10 @@
           "max-age=31536000; includeSubDomains"
         ],
         "X-Content-Type-Options": "nosniff",
-        "X-Ms-Client-Request-Id": "83f83174-07e9-4615-b7a0-fc19928187ca",
-        "X-Ms-Correlation-Request-Id": "cccd6222-3bd3-4a35-8e05-ed639e3f143e",
+        "X-Ms-Client-Request-Id": "ad32cbe2-5845-44b0-a0ac-e927258a2e79",
+        "X-Ms-Correlation-Request-Id": "2851c1b5-fe1e-4fe7-bb79-5aa103e9e937",
         "X-Ms-Ratelimit-Remaining-Calls-Per-Second": "32.000000",
-        "X-Ms-Request-Id": "e347ef54-7115-4d8d-917e-54317f9b756b"
+        "X-Ms-Request-Id": "42141398-026e-44f0-8023-0485b32262af"
       },
       "ResponseBody": {
         "manifestsDeleted": [

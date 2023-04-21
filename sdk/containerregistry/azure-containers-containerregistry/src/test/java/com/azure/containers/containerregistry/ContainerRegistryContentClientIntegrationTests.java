@@ -83,6 +83,13 @@ public class ContainerRegistryContentClientIntegrationTests extends ContainerReg
             .build();
     }
 
+    private HttpClient buildAsyncAssertingClient(HttpClient httpClient) {
+        return new AssertingHttpClientBuilder(httpClient)
+            .skipRequest(SKIP_AUTH_TOKEN_REQUEST_FUNCTION)
+            .assertAsync()
+            .build();
+    }
+
     @BeforeAll
     static void beforeAll() {
         importImage(TestingHelpers.getTestMode(), HELLO_WORLD_REPOSITORY_NAME, Collections.singletonList("latest"));
@@ -528,7 +535,7 @@ public class ContainerRegistryContentClientIntegrationTests extends ContainerReg
     }
 
     private ContainerRegistryContentAsyncClient getBlobAsyncClient(String repositoryName, HttpClient httpClient) {
-        return getContentClientBuilder(repositoryName, httpClient).buildAsyncClient();
+        return getContentClientBuilder(repositoryName, buildAsyncAssertingClient(interceptorManager.isPlaybackMode() ? interceptorManager.getPlaybackClient() : httpClient)).buildAsyncClient();
     }
 
     private static BinaryData generateStream(int size) {

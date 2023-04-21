@@ -4,7 +4,6 @@
 
 package com.azure.containers.containerregistry;
 
-import com.azure.containers.containerregistry.models.ContainerRegistryAudience;
 import com.azure.containers.containerregistry.models.ManifestMediaType;
 import com.azure.containers.containerregistry.models.OciAnnotations;
 import com.azure.containers.containerregistry.models.OciDescriptor;
@@ -16,8 +15,6 @@ import com.azure.core.http.HttpRequest;
 import com.azure.core.management.AzureEnvironment;
 import com.azure.core.management.profile.AzureProfile;
 import com.azure.core.test.TestMode;
-import com.azure.core.test.models.TestProxySanitizer;
-import com.azure.core.test.models.TestProxySanitizerType;
 import com.azure.core.util.BinaryData;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.Context;
@@ -32,7 +29,6 @@ import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -67,11 +63,11 @@ public class TestUtils {
     public static final String TENANT_ID = CONFIGURATION.get("CONTAINERREGISTRY_TENANT_ID");
     public static final String CLIENT_ID = CONFIGURATION.get("CONTAINERREGISTRY_CLIENT_ID");
     public static final String REGISTRY_URI = "registry.hub.docker.com";
-    public static final String REGISTRY_ENDPOINT = CONFIGURATION.get("CONTAINERREGISTRY_ENDPOINT");
     public static final String ANONYMOUS_REGISTRY_ENDPOINT = CONFIGURATION.get("CONTAINERREGISTRY_ANONREGISTRY_ENDPOINT");
     public static final long SLEEP_TIME_IN_MILLISECONDS = 5000;
     public static final String ANONYMOUS_REGISTRY_NAME = CONFIGURATION.get("CONTAINERREGISTRY_ANONREGISTRY_NAME");
     public static final String REGISTRY_ENDPOINT_PLAYBACK = "https://REDACTED";
+    public static final String REGISTRY_ENDPOINT = CONFIGURATION.get("CONTAINERREGISTRY_ENDPOINT", REGISTRY_ENDPOINT_PLAYBACK);
     public static final String REGISTRY_NAME_PLAYBACK = "REDACTED";
     public static final int HTTP_STATUS_CODE_202 = 202;
     public static final String CONTAINERREGISTRY_CLIENT_SECRET = CONFIGURATION.get("CONTAINERREGISTRY_CLIENT_SECRET");
