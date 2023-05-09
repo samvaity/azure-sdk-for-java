@@ -12,7 +12,6 @@ import com.azure.core.util.logging.ClientLogger;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Map;
