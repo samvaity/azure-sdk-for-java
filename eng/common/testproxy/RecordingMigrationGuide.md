@@ -20,12 +20,12 @@ the `azure-sdk-tools` repository.
 ## Current recording setup
 
 Currently, test recordings live in the `azure-sdk-for-java` repository (or "language repo"), under a given package's
-`src/test/resources/session-records/` directory. The test proxy loads recordings from this local directory -- this can be done entirely
-offline.
+`src/test/resources/session-records/` directory. The test proxy loads recordings from this local directory and can be
+done entirely offline.
 
-However, the main drawback of storing recordings in the language repo is bloat; a huge percentage of all language repo
-files are actually test recordings. Recording file updates are also included in pull requests, which can make them more
-tedious to review and difficult to load.
+Storing recordings in the language repository significantly contributes to the repository's large size, which is its
+main drawback. Recording file updates are also included in pull requests, which can make them more tedious to review 
+and difficult to load.
 
 ## New recording setup
 
@@ -60,11 +60,8 @@ Invoke-WebRequest -OutFile "generate-assets-json.ps1" https://raw.githubusercont
 - The targeted library is already migrated to use the test proxy.
 - Git version > 2.25.0 is to on the machine and in the path. Git is used by the script and test proxy.
 - [PowerShell Core][powershell] >= 7.0 is installed.
-- [Docker][docker] or [Podman][podman] is installed.
 - Global [git config settings][git_setup] are configured for `user.name` and `user.email`.
     - These settings can be overridden with environment variables `GIT_COMMIT_OWNER` and `GIT_COMMIT_EMAIL`, respectively.
-- The environment variable `GIT_TOKEN` is set to a valid [personal access token][git_token] for your user.
-    - This token is necessary for authenticating git requests made in a Docker/Podman container.
 - Membership in the `azure-sdk-write` GitHub group.
 
 ### Execute the migration script
@@ -80,7 +77,7 @@ cd C:\azure-sdk-for-java\sdk\textanalytics\azure-ai-textanalytics
 2. Run the following command:
 
 ```PowerShell
-<path-to-script>/generate-assets-json.ps1 -TestProxyExe "docker" -InitialPush
+<path-to-script>/generate-assets-json.ps1 -InitialPush
 ```
 
 If you run `git status` from within the language repo, you should see:
@@ -108,21 +105,19 @@ sure the recordings that you expect to see are there.
 After moving recordings to the asset repo, live and playback testing will be the same as it was in the past. The test
 proxy automatically pulls down the correct set of recordings based on the `Tag` in your package's `assets.json` file.
 
-The process for updating test recordings is slightly different than it was with in-repo recordings, and differs in two
+The process for updating test recordings is slightly different from it was with in-repo recordings, and differs in two
 primary ways:
 
 1. When tests are run in recording mode, recording changes won't be visible in the language repo and will instead be
-   tracked in a separate directory.
+   tracked in a separate git ignored `.assets` directory.
 2. When updated recordings are pushed to the assets repo, the `Tag` field in your package's `assets.json` file will be
    updated to point to these new recordings. This `assets.json` change is what you'll include in a pull request to update
    recordings in the language repo.
 
 [azure_sdk_assets]: https://github.com/Azure/azure-sdk-assets
 [detailed_docs]: https://github.com/Azure/azure-sdk-tools/blob/main/tools/test-proxy/documentation/asset-sync/README.md
-[docker]: https://docs.docker.com/engine/install/
 [generate_assets_json]: https://github.com/Azure/azure-sdk-for-java/blob/main/eng/common/testproxy/transition-scripts/generate-assets-json.ps1
 [git_setup]: https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup
 [git_token]: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
-[podman]: https://podman.io/getting-started/installation.html
 [powershell]: https://learn.microsoft.com/powershell/scripting/install/installing-powershell?view=powershell-latest
 [transition_script]: https://github.com/Azure/azure-sdk-for-java/tree/main/eng/common/testproxy/transition-scripts
