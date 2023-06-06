@@ -35,6 +35,7 @@ import com.azure.core.util.Context;
 import com.azure.core.util.FluxUtil;
 import com.azure.core.util.polling.DefaultPollingStrategy;
 import com.azure.core.util.polling.PollerFlux;
+import com.azure.core.util.polling.SyncDefaultPollingStrategy;
 import com.azure.core.util.polling.SyncPoller;
 import com.azure.core.util.serializer.TypeReference;
 import java.time.Duration;
@@ -130,6 +131,27 @@ public final class SentSharesImpl {
                 RequestOptions requestOptions,
                 Context context);
 
+        @Put("/sentShares/{sentShareId}")
+        @ExpectedResponses({200, 201})
+        @UnexpectedResponseExceptionType(
+            value = ClientAuthenticationException.class,
+            code = {401})
+        @UnexpectedResponseExceptionType(
+            value = ResourceNotFoundException.class,
+            code = {404})
+        @UnexpectedResponseExceptionType(
+            value = ResourceModifiedException.class,
+            code = {409})
+        @UnexpectedResponseExceptionType(HttpResponseException.class)
+        Response<BinaryData> createOrReplaceSentShareSync(
+            @HostParam("endpoint") String endpoint,
+            @PathParam("sentShareId") String sentShareId,
+            @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") BinaryData sentShare,
+            @HeaderParam("Accept") String accept,
+            RequestOptions requestOptions,
+            Context context);
+
         @Delete("/sentShares/{sentShareId}")
         @ExpectedResponses({202})
         @UnexpectedResponseExceptionType(
@@ -169,6 +191,28 @@ public final class SentSharesImpl {
                 @HeaderParam("Accept") String accept,
                 RequestOptions requestOptions,
                 Context context);
+
+        @Put("/sentShares/{sentShareId}/sentShareInvitations/{sentShareInvitationId}")
+        @ExpectedResponses({201})
+        @UnexpectedResponseExceptionType(
+            value = ClientAuthenticationException.class,
+            code = {401})
+        @UnexpectedResponseExceptionType(
+            value = ResourceNotFoundException.class,
+            code = {404})
+        @UnexpectedResponseExceptionType(
+            value = ResourceModifiedException.class,
+            code = {409})
+        @UnexpectedResponseExceptionType(HttpResponseException.class)
+        Response<BinaryData> createSentShareInvitationSync(
+            @HostParam("endpoint") String endpoint,
+            @PathParam("sentShareId") String sentShareId,
+            @PathParam("sentShareInvitationId") String sentShareInvitationId,
+            @QueryParam("api-version") String apiVersion,
+            @BodyParam("application/json") BinaryData sentShareInvitation,
+            @HeaderParam("Accept") String accept,
+            RequestOptions requestOptions,
+            Context context);
 
         @Get("/sentShares/{sentShareId}/sentShareInvitations/{sentShareInvitationId}")
         @ExpectedResponses({200})
@@ -627,12 +671,59 @@ public final class SentSharesImpl {
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
+     * @return a sent share data transfer object along with {@link Response}.
+     */
+    @ServiceMethod(returns = ReturnType.SINGLE)
+    private Response<BinaryData> createOrReplaceSentShareWithResponse(
+        String sentShareId, BinaryData sentShare, RequestOptions requestOptions) {
+        final String accept = "application/json";
+        return service.createOrReplaceSentShareSync(
+            this.client.getEndpoint(),
+            sentShareId,
+            this.client.getServiceVersion().getVersion(),
+            sentShare,
+            accept,
+            requestOptions,
+            Context.NONE);
+    }
+
+
+    /**
+     * Create or replace a sent share.
+     *
+     * <p>Create or replace a sent share.
+     *
+     * <p><strong>Request Body Schema</strong>
+     *
+     * <pre>{@code
+     * {
+     *     id: String (Optional)
+     *     type: String (Optional)
+     * }
+     * }</pre>
+     *
+     * <p><strong>Response Body Schema</strong>
+     *
+     * <pre>{@code
+     * {
+     *     id: String (Optional)
+     *     type: String (Optional)
+     * }
+     * }</pre>
+     *
+     * @param sentShareId Id of the sent share.
+     * @param sentShare The sent share to create or replace.
+     * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
+     * @throws HttpResponseException thrown if the request is rejected by server.
+     * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
+     * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
+     * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
      * @return the {@link SyncPoller} for polling of a sent share data transfer object.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<BinaryData, BinaryData> beginCreateOrReplaceSentShare(
             String sentShareId, BinaryData sentShare, RequestOptions requestOptions) {
-        return this.beginCreateOrReplaceSentShareAsync(sentShareId, sentShare, requestOptions).getSyncPoller();
+        return beginCreateOrReplaceSentShareAsync(sentShareId, sentShare, requestOptions).getSyncPoller();
     }
 
     /**

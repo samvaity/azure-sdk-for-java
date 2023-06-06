@@ -4,6 +4,7 @@
 
 package com.azure.analytics.purview.sharing;
 
+import com.azure.analytics.purview.sharing.implementation.SentSharesImpl;
 import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
@@ -22,15 +23,16 @@ import com.azure.core.util.polling.SyncPoller;
 @ServiceClient(builder = SentSharesClientBuilder.class)
 public final class SentSharesClient {
     @Generated private final SentSharesAsyncClient client;
-
+    @Generated private final SentSharesImpl serviceClient;
     /**
      * Initializes an instance of SentSharesClient class.
      *
      * @param client the async client.
      */
     @Generated
-    SentSharesClient(SentSharesAsyncClient client) {
+    SentSharesClient(SentSharesAsyncClient client, SentSharesImpl serviceClient) {
         this.client = client;
+        this.serviceClient = serviceClient;
     }
 
     /**
@@ -137,7 +139,7 @@ public final class SentSharesClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<BinaryData, BinaryData> beginCreateOrReplaceSentShare(
             String sentShareId, BinaryData sentShare, RequestOptions requestOptions) {
-        return this.client.beginCreateOrReplaceSentShare(sentShareId, sentShare, requestOptions).getSyncPoller();
+        return this.serviceClient.beginCreateOrReplaceSentShare(sentShareId, sentShare, requestOptions);
     }
 
     /**
