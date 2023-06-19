@@ -20,7 +20,7 @@ autorest --java --use=C:/work/autorest.java
 
 ### Code generation settings
 ``` yaml
-input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/cognitiveservices/data-plane/FormRecognizer/preview/2023-02-28-preview/FormRecognizer.json
+input-file: https://raw.githubusercontent.com/Azure/azure-rest-api-specs-pr/3b381a82cedba8bdb3b00760b4c624ed10ea8d4e/specification/cognitiveservices/data-plane/FormRecognizer/stable/2023-07-31/FormRecognizer.json?token=GHSAT0AAAAAACDOBFKTM75ZS3DRYM5GDOZEZEQ2RKQ
 java: true
 output-folder: ..\
 generate-client-as-impl: true
