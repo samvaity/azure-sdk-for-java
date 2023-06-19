@@ -67,24 +67,6 @@ public final class AnalyzeDocumentOptions {
     }
 
     /**
-     * Get the list of additional fields to extract. Ex. "NumberOfGuests,StoreNumber".
-     * @return List of additional fields to extract from analysis.
-     */
-    public List<String> getQueryFields() {
-        return queryFields;
-    }
-
-    /**
-     * Set the list of additional fields to extract. Ex. "NumberOfGuests,StoreNumber".
-     * @param queryFields List of additional fields to extract from analysis.
-     * @return the updated {@code AnalyzeDocumentOptions} value.
-     */
-    public AnalyzeDocumentOptions setQueryFields(List<String> queryFields) {
-        this.queryFields = queryFields;
-        return this;
-    }
-
-    /**
      * Get the list of optional analysis features.
      * @return List of optional analysis features.
      */

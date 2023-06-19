@@ -200,7 +200,6 @@ public final class DocumentAnalysisAsyncClient {
                                     : finalAnalyzeDocumentOptions.getLocale(),
                                 StringIndexType.UTF16CODE_UNIT,
                                 toInnerDocAnalysisFeatures(finalAnalyzeDocumentOptions.getDocumentAnalysisFeatures()),
-                                finalAnalyzeDocumentOptions.getQueryFields(),
                                 new AnalyzeDocumentRequest().setUrlSource(documentUrl),
                                 context)
                             .map(analyzeDocumentResponse ->
@@ -362,7 +361,6 @@ public final class DocumentAnalysisAsyncClient {
                                 : finalAnalyzeDocumentOptions.getLocale(),
                             StringIndexType.UTF16CODE_UNIT,
                             toInnerDocAnalysisFeatures(finalAnalyzeDocumentOptions.getDocumentAnalysisFeatures()),
-                            finalAnalyzeDocumentOptions.getQueryFields(),
                             document,
                             document.getLength(),
                             context)

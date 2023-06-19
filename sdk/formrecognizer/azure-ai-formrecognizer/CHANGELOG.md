@@ -5,6 +5,8 @@
 ### Features Added
 
 ### Breaking Changes
+- Removed `queryFields` property from `AnalyzeDocumentOptions` as it is no longer supported.
+- Removed `commonName` property from `DocumentKeyValuePair` as it is no longer supported.
 
 ### Bugs Fixed
 

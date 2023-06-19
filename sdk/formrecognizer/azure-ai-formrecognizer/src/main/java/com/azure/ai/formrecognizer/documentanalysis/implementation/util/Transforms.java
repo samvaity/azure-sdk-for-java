@@ -52,7 +52,6 @@ import com.azure.ai.formrecognizer.documentanalysis.models.DocumentKeyValuePair;
 import com.azure.ai.formrecognizer.documentanalysis.models.DocumentLanguage;
 import com.azure.ai.formrecognizer.documentanalysis.models.DocumentLine;
 import com.azure.ai.formrecognizer.documentanalysis.models.DocumentPage;
-import com.azure.ai.formrecognizer.documentanalysis.models.DocumentPageKind;
 import com.azure.ai.formrecognizer.documentanalysis.models.DocumentPageLengthUnit;
 import com.azure.ai.formrecognizer.documentanalysis.models.DocumentParagraph;
 import com.azure.ai.formrecognizer.documentanalysis.models.DocumentSelectionMark;
@@ -161,12 +160,9 @@ public class Transforms {
                         })
                         .collect(Collectors.toList()));
                 DocumentPageHelper.setWords(documentPage, toDocumentWords(innerDocumentPage));
-                DocumentPageHelper.setKind(documentPage,
-                    innerDocumentPage.getKind() == null ? null : DocumentPageKind.fromString(innerDocumentPage.getKind().toString()));
                 DocumentPageHelper.setAnnotations(documentPage, fromInnerAnnotations(innerDocumentPage.getAnnotations()));
                 DocumentPageHelper.setFormulas(documentPage, fromInnerFormulas(innerDocumentPage.getFormulas()));
                 DocumentPageHelper.setBarcodes(documentPage, fromInnerBarcodes(innerDocumentPage.getBarcodes()));
-                DocumentPageHelper.setImages(documentPage, fromInnerImages(innerDocumentPage.getImages()));
                 return documentPage;
             })
             .collect(Collectors.toList()));
