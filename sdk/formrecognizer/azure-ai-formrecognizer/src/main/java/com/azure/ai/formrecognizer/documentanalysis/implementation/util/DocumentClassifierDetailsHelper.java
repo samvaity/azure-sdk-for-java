@@ -3,7 +3,7 @@
 
 package com.azure.ai.formrecognizer.documentanalysis.implementation.util;
 
-import com.azure.ai.formrecognizer.documentanalysis.administration.models.ClassifierDocumentTypeDetails;
+import com.azure.ai.formrecognizer.documentanalysis.administration.models.DocumentSourceTypeDetails;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.DocumentClassifierDetails;
 
 import java.time.OffsetDateTime;
@@ -27,7 +27,7 @@ public final class DocumentClassifierDetailsHelper {
         void setApiVersion(DocumentClassifierDetails documentClassifierDetails, String apiVersion);
         void setCreatedOn(DocumentClassifierDetails documentClassifierDetails, OffsetDateTime createdDateTime);
         void setExpiresOn(DocumentClassifierDetails documentClassifierDetails, OffsetDateTime expirationDateTime);
-        void setDocTypes(DocumentClassifierDetails documentClassifierDetails, Map<String, ClassifierDocumentTypeDetails> docTypes);
+        void setDocTypes(DocumentClassifierDetails documentClassifierDetails, Map<String, DocumentSourceTypeDetails> docTypes);
     }
 
     /**
@@ -59,7 +59,7 @@ public final class DocumentClassifierDetailsHelper {
         accessor.setExpiresOn(documentClassifierDetails, expirationDateTime);
     }
 
-    static void setDocTypes(DocumentClassifierDetails documentClassifierDetails, Map<String, ClassifierDocumentTypeDetails> docTypes) {
+    static void setDocTypes(DocumentClassifierDetails documentClassifierDetails, Map<String, DocumentSourceTypeDetails> docTypes) {
         accessor.setDocTypes(documentClassifierDetails, docTypes);
     }
 }

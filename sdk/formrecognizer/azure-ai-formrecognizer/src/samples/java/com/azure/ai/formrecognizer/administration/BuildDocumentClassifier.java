@@ -6,7 +6,7 @@ package com.azure.ai.formrecognizer.administration;
 import com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClient;
 import com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdministrationClientBuilder;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.AzureBlobContentSource;
-import com.azure.ai.formrecognizer.documentanalysis.administration.models.ClassifierDocumentTypeDetails;
+import com.azure.ai.formrecognizer.documentanalysis.administration.models.DocumentSourceTypeDetails;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.DocumentClassifierDetails;
 import com.azure.ai.formrecognizer.documentanalysis.models.OperationResult;
 import com.azure.core.credential.AzureKeyCredential;
@@ -44,10 +44,10 @@ public class BuildDocumentClassifier {
         // Build custom classifier document model
         String blobContainerUrl1040D = "{SAS_URL_of_your_container_in_blob_storage}";
         String blobContainerUrl1040A = "{SAS_URL_of_your_container_in_blob_storage}";
-        HashMap<String, ClassifierDocumentTypeDetails> docTypes = new HashMap<>();
-        docTypes.put("1040-D", new ClassifierDocumentTypeDetails()
+        HashMap<String, DocumentSourceTypeDetails> docTypes = new HashMap<>();
+        docTypes.put("1040-D", new DocumentSourceTypeDetails()
             .setAzureBlobSource(new AzureBlobContentSource(blobContainerUrl1040D)));
-        docTypes.put("1040-D", new ClassifierDocumentTypeDetails()
+        docTypes.put("1040-D", new DocumentSourceTypeDetails()
             .setAzureBlobSource(new AzureBlobContentSource(blobContainerUrl1040A)));
 
         SyncPoller<OperationResult, DocumentClassifierDetails> buildOperationPoller

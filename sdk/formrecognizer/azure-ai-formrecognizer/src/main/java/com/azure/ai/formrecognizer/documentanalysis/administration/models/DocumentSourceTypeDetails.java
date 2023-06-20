@@ -8,7 +8,7 @@ import com.azure.core.annotation.Fluent;
 
 /** Training data source. */
 @Fluent
-public final class ClassifierDocumentTypeDetails {
+public final class DocumentSourceTypeDetails {
     /*
      * Azure Blob Storage location containing the training data.
      */
@@ -19,8 +19,8 @@ public final class ClassifierDocumentTypeDetails {
      */
     private AzureBlobFileListSource azureBlobFileListSource;
 
-    /** Creates an instance of ClassifierDocumentTypeDetails class. */
-    public ClassifierDocumentTypeDetails() {}
+    /** Creates an instance of DocumentSourceTypeDetails class. */
+    public DocumentSourceTypeDetails() {}
 
     /**
      * Get the azureBlobSource property: Azure Blob Storage location containing the training data.
@@ -35,9 +35,9 @@ public final class ClassifierDocumentTypeDetails {
      * Set the azureBlobSource property: Azure Blob Storage location containing the training data.
      *
      * @param azureBlobSource the azureBlobSource value to set.
-     * @return the ClassifierDocumentTypeDetails object itself.
+     * @return the DocumentSourceTypeDetails object itself.
      */
-    public ClassifierDocumentTypeDetails setAzureBlobSource(AzureBlobContentSource azureBlobSource) {
+    public DocumentSourceTypeDetails setAzureBlobSource(AzureBlobContentSource azureBlobSource) {
         this.azureBlobSource = azureBlobSource;
         return this;
     }
@@ -55,9 +55,9 @@ public final class ClassifierDocumentTypeDetails {
      * Set the azureBlobFileListSource property: Azure Blob Storage file list specifying the training data.
      *
      * @param azureBlobFileListSource the azureBlobFileListSource value to set.
-     * @return the ClassifierDocumentTypeDetails object itself.
+     * @return the DocumentSourceTypeDetails object itself.
      */
-    public ClassifierDocumentTypeDetails setAzureBlobFileListSource(AzureBlobFileListSource azureBlobFileListSource) {
+    public DocumentSourceTypeDetails setAzureBlobFileListSource(AzureBlobFileListSource azureBlobFileListSource) {
         this.azureBlobFileListSource = azureBlobFileListSource;
         return this;
     }

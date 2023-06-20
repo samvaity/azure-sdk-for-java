@@ -22,7 +22,7 @@ public final class ClassifierDocumentTypeDetails {
     @JsonProperty(value = "azureBlobFileListSource")
     private AzureBlobFileListSource azureBlobFileListSource;
 
-    /** Creates an instance of ClassifierDocumentTypeDetails class. */
+    /** Creates an instance of DocumentSourceTypeDetails class. */
     public ClassifierDocumentTypeDetails() {}
 
     /**
@@ -38,7 +38,7 @@ public final class ClassifierDocumentTypeDetails {
      * Set the azureBlobSource property: Azure Blob Storage location containing the training data.
      *
      * @param azureBlobSource the azureBlobSource value to set.
-     * @return the ClassifierDocumentTypeDetails object itself.
+     * @return the DocumentSourceTypeDetails object itself.
      */
     public ClassifierDocumentTypeDetails setAzureBlobSource(AzureBlobContentSource azureBlobSource) {
         this.azureBlobSource = azureBlobSource;
@@ -58,7 +58,7 @@ public final class ClassifierDocumentTypeDetails {
      * Set the azureBlobFileListSource property: Azure Blob Storage file list specifying the training data.
      *
      * @param azureBlobFileListSource the azureBlobFileListSource value to set.
-     * @return the ClassifierDocumentTypeDetails object itself.
+     * @return the DocumentSourceTypeDetails object itself.
      */
     public ClassifierDocumentTypeDetails setAzureBlobFileListSource(AzureBlobFileListSource azureBlobFileListSource) {
         this.azureBlobFileListSource = azureBlobFileListSource;

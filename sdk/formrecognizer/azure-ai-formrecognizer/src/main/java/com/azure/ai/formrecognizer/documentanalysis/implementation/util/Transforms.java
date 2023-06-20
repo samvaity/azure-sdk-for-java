@@ -6,7 +6,7 @@ package com.azure.ai.formrecognizer.documentanalysis.implementation.util;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.AzureBlobContentSource;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.AzureBlobFileListSource;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.BuildDocumentModelOptions;
-import com.azure.ai.formrecognizer.documentanalysis.administration.models.ClassifierDocumentTypeDetails;
+import com.azure.ai.formrecognizer.documentanalysis.administration.models.DocumentSourceTypeDetails;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.ComposeDocumentModelOptions;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.CopyAuthorizationOptions;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.DocumentClassifierDetails;
@@ -327,18 +327,19 @@ public class Transforms {
         return null;
     }
 
-    public static BuildDocumentModelRequest getBuildDocumentModelRequest(String blobContainerUrl,
-                                                                         DocumentModelBuildMode buildMode, String modelId, String prefix, String fileList, BuildDocumentModelOptions buildDocumentModelOptions) {
+    public static BuildDocumentModelRequest getBuildDocumentModelRequest(AzureBlobContentSource azureBlobSource,
+        AzureBlobFileListSource azureBlobFileListSource, DocumentModelBuildMode buildMode, String modelId,
+        BuildDocumentModelOptions buildDocumentModelOptions) {
         BuildDocumentModelRequest buildDocumentModelRequest = new BuildDocumentModelRequest(modelId,
             com.azure.ai.formrecognizer.documentanalysis.implementation.models.DocumentBuildMode
                 .fromString(buildMode.toString()))
             .setDescription(buildDocumentModelOptions.getDescription())
             .setTags(buildDocumentModelOptions.getTags());
-        if (fileList == null) {
-            buildDocumentModelRequest.setAzureBlobSource(new com.azure.ai.formrecognizer.documentanalysis.implementation.models.AzureBlobContentSource(blobContainerUrl)
-                .setPrefix(prefix));
+        if (azureBlobFileListSource == null) {
+            buildDocumentModelRequest.setAzureBlobSource(new com.azure.ai.formrecognizer.documentanalysis.implementation.models.AzureBlobContentSource(azureBlobSource.getContainerUrl())
+                .setPrefix(azureBlobSource.getPrefix()));
         } else {
-            buildDocumentModelRequest.setAzureBlobFileListSource(new com.azure.ai.formrecognizer.documentanalysis.implementation.models.AzureBlobFileListSource(blobContainerUrl, fileList));
+            buildDocumentModelRequest.setAzureBlobFileListSource(new com.azure.ai.formrecognizer.documentanalysis.implementation.models.AzureBlobFileListSource(azureBlobFileListSource.getContainerUrl(), azureBlobFileListSource.getFileList()));
         }
         return buildDocumentModelRequest;
     }
@@ -817,7 +818,7 @@ public class Transforms {
             .collect(Collectors.toList());
     }
 
-    public static Map<String, com.azure.ai.formrecognizer.documentanalysis.implementation.models.ClassifierDocumentTypeDetails> toInnerDocTypes(Map<String, ClassifierDocumentTypeDetails> tags) {
+    public static Map<String, com.azure.ai.formrecognizer.documentanalysis.implementation.models.ClassifierDocumentTypeDetails> toInnerDocTypes(Map<String, DocumentSourceTypeDetails> tags) {
         Map<String, com.azure.ai.formrecognizer.documentanalysis.implementation.models.ClassifierDocumentTypeDetails>
             innerTags = new HashMap<String, com.azure.ai.formrecognizer.documentanalysis.implementation.models.ClassifierDocumentTypeDetails>();
         tags.forEach((key, classifierDocumentTypeDetails) -> {
@@ -861,29 +862,29 @@ public class Transforms {
         return null;
     }
 
-    private static Map<String, ClassifierDocumentTypeDetails> fromInnerDocTypes(
+    private static Map<String, DocumentSourceTypeDetails> fromInnerDocTypes(
         Map<String, com.azure.ai.formrecognizer.documentanalysis.implementation.models.ClassifierDocumentTypeDetails> innerDocTypes) {
-        Map<String, ClassifierDocumentTypeDetails> documentTypeDetailsMap = new HashMap<>();
+        Map<String, DocumentSourceTypeDetails> documentTypeDetailsMap = new HashMap<>();
         innerDocTypes.forEach((s, classifierDocumentTypeDetails) -> documentTypeDetailsMap.put(s, fromInnerClassifierDetails(classifierDocumentTypeDetails)));
 
         return documentTypeDetailsMap;
     }
 
-    private static ClassifierDocumentTypeDetails fromInnerClassifierDetails(
+    private static DocumentSourceTypeDetails fromInnerClassifierDetails(
         com.azure.ai.formrecognizer.documentanalysis.implementation.models.ClassifierDocumentTypeDetails innerClassifier) {
-        ClassifierDocumentTypeDetails classifierDocumentTypeDetails = new ClassifierDocumentTypeDetails();
+        DocumentSourceTypeDetails documentSourceTypeDetails = new DocumentSourceTypeDetails();
         if (innerClassifier.getAzureBlobSource() != null) {
             com.azure.ai.formrecognizer.documentanalysis.implementation.models.AzureBlobContentSource blobContentSource
                 = innerClassifier.getAzureBlobSource();
-            classifierDocumentTypeDetails.setAzureBlobSource(new AzureBlobContentSource(blobContentSource.getContainerUrl())
+            documentSourceTypeDetails.setAzureBlobSource(new AzureBlobContentSource(blobContentSource.getContainerUrl())
                 .setPrefix(blobContentSource.getPrefix()));
         } else if (innerClassifier.getAzureBlobFileListSource() != null) {
             com.azure.ai.formrecognizer.documentanalysis.implementation.models.AzureBlobFileListSource listSource
                 = innerClassifier.getAzureBlobFileListSource();
-            classifierDocumentTypeDetails.setAzureBlobFileListSource(
+            documentSourceTypeDetails.setAzureBlobFileListSource(
                 new AzureBlobFileListSource(listSource.getContainerUrl(), listSource.getFileList()));
         }
-        return classifierDocumentTypeDetails;
+        return documentSourceTypeDetails;
     }
 
     private static QuotaDetails toQuotaDetails(com.azure.ai.formrecognizer.documentanalysis.implementation.models.QuotaDetails innerQuotaDetails) {
