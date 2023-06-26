@@ -13,6 +13,8 @@ import com.azure.core.http.HttpRequest;
 import com.azure.core.http.HttpResponse;
 import com.azure.core.test.TestMode;
 import com.azure.core.util.Configuration;
+import com.azure.core.util.logging.ClientLogger;
+import com.azure.core.util.logging.LogLevel;
 import com.azure.messaging.servicebus.ServiceBusClientBuilder;
 import com.azure.messaging.servicebus.ServiceBusErrorContext;
 import com.azure.messaging.servicebus.ServiceBusException;
@@ -40,6 +42,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class CallAutomationAutomatedLiveTestBase extends CallAutomationLiveTestBase {
+    private static final ClientLogger LOGGER = new ClientLogger(CallAutomationLiveTestBase.class);
     protected ConcurrentHashMap<String, ServiceBusProcessorClient> processorStore;
     // Key: callerId + receiverId, Value: incomingCallContext
     protected ConcurrentHashMap<String, String> incomingCallContextStore;
@@ -116,7 +119,8 @@ public class CallAutomationAutomatedLiveTestBase extends CallAutomationLiveTestB
         HttpRequest request = new HttpRequest(HttpMethod.POST, dispatcherUrl);
         HttpResponse response = httpClient.send(request).block();
         assert response != null;
-        System.out.println(String.format("Subscription to dispatcher of %s: ", uniqueId) + response.getStatusCode());
+        LOGGER.log(LogLevel.INFORMATIONAL, () ->
+            String.format("Subscription to dispatcher of %s: ", uniqueId) + response.getStatusCode());
 
         // create a service bus processor
         ServiceBusProcessorClient serviceBusProcessorClient = createServiceBusClientBuilderWithConnectionString()
@@ -135,12 +139,11 @@ public class CallAutomationAutomatedLiveTestBase extends CallAutomationLiveTestB
         // receive message from dispatcher
         ServiceBusReceivedMessage message = context.getMessage();
         String body = message.getBody().toString();
-        System.out.println(body);
+        LOGGER.log(LogLevel.INFORMATIONAL, () -> body);
 
         // When in recording mode, save incoming events into memory for future use
         if (getTestMode() == TestMode.RECORD) {
-            String redactedBody = redact(body, JSON_PROPERTY_VALUE_REDACTION_PATTERN.matcher(body));
-            eventsToPersist.add(redactedBody);
+            eventsToPersist.add("redactedBody");
         }
 
         messageBodyHandler(body);
