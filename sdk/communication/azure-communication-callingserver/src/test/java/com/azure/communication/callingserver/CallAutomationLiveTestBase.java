@@ -11,6 +11,10 @@ import com.azure.core.http.HttpPipelineNextPolicy;
 import com.azure.core.http.HttpResponse;
 import com.azure.core.test.TestBase;
 import com.azure.core.test.TestMode;
+import com.azure.core.test.TestProxyTestBase;
+import com.azure.core.test.models.TestProxySanitizer;
+import com.azure.core.test.models.TestProxySanitizerType;
+import com.azure.core.test.utils.MockTokenCredential;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.CoreUtils;
 import com.azure.identity.DefaultAzureCredentialBuilder;
@@ -18,13 +22,14 @@ import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.StringJoiner;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CallAutomationLiveTestBase extends TestBase {
+public class CallAutomationLiveTestBase extends TestProxyTestBase {
     protected static final String CONNECTION_STRING = Configuration.getGlobalConfiguration()
         .get("COMMUNICATION_LIVETEST_STATIC_CONNECTION_STRING",
             "endpoint=https://REDACTED.communication.azure.com/;accesskey=QWNjZXNzS2V5");
@@ -50,13 +55,9 @@ public class CallAutomationLiveTestBase extends TestBase {
     protected static final String RECORDING_DELETE_URL_404 = Configuration.getGlobalConfiguration()
         .get("RECORDING_DELETE_URL_404", "https://storage.asm.skype.com/v1/objects/0-eus-d2-3cca2175891f21c6c9a5975a12c0141c");
 
-    private static final StringJoiner JSON_PROPERTIES_TO_REDACT
-        = new StringJoiner("\":\"|\"", "\"", "\":\"")
-        .add("to");
-
-    private static final Pattern JSON_PROPERTY_VALUE_REDACTION_PATTERN
-        = Pattern.compile(String.format("(?:%s)(.*?)(?:\",|\"})", JSON_PROPERTIES_TO_REDACT),
-        Pattern.CASE_INSENSITIVE);
+    private static final List<TestProxySanitizer> sanitizerList
+        = Collections.singletonList(new TestProxySanitizer(String.format("$..%s", "to"), null, "REDACTED",
+        TestProxySanitizerType.BODY_KEY));
 
     protected CallAutomationClientBuilder getCallingServerClientUsingConnectionString(HttpClient httpClient) {
         CallAutomationClientBuilder builder = new CallAutomationClientBuilder()
@@ -64,15 +65,17 @@ public class CallAutomationLiveTestBase extends TestBase {
             .httpClient(httpClient == null ? interceptorManager.getPlaybackClient() : httpClient);
 
         if (getTestMode() == TestMode.RECORD) {
-            List<Function<String, String>> redactors = new ArrayList<>();
-            redactors.add(data -> redact(data, JSON_PROPERTY_VALUE_REDACTION_PATTERN.matcher(data)));
-            builder.addPolicy(interceptorManager.getRecordPolicy(redactors));
+            builder.addPolicy(interceptorManager.getRecordPolicy());
+        }
+        if (!interceptorManager.isLiveMode()) {
+            interceptorManager.addSanitizers(sanitizerList);
         }
         return builder;
     }
 
     protected CallAutomationClientBuilder getCallingServerClientUsingTokenCredential(HttpClient httpClient) {
-        TokenCredential tokenCredential = getTestMode() == TestMode.PLAYBACK ? new FakeCredentials() : new DefaultAzureCredentialBuilder().build();
+        TokenCredential tokenCredential = getTestMode() == TestMode.PLAYBACK ? new MockTokenCredential() :
+            new DefaultAzureCredentialBuilder().build();
 
         CallAutomationClientBuilder builder = new CallAutomationClientBuilder()
             .endpoint(ENDPOINT)
@@ -80,15 +83,17 @@ public class CallAutomationLiveTestBase extends TestBase {
             .httpClient(httpClient == null ? interceptorManager.getPlaybackClient() : httpClient);
 
         if (getTestMode() == TestMode.RECORD) {
-            List<Function<String, String>> redactors = new ArrayList<>();
-            redactors.add(data -> redact(data, JSON_PROPERTY_VALUE_REDACTION_PATTERN.matcher(data)));
-            builder.addPolicy(interceptorManager.getRecordPolicy(redactors));
+            builder.addPolicy(interceptorManager.getRecordPolicy());
+        }
+        if (!interceptorManager.isLiveMode()) {
+            interceptorManager.addSanitizers(sanitizerList);
         }
         return builder;
     }
 
     protected CallAutomationClientBuilder getCallingServerClientUsingInvalidTokenCredential(HttpClient httpClient) {
-        TokenCredential tokenCredential = getTestMode() == TestMode.PLAYBACK ? new FakeCredentials() : new DefaultAzureCredentialBuilder().build();
+        TokenCredential tokenCredential = getTestMode() == TestMode.PLAYBACK ? new MockTokenCredential() :
+            new DefaultAzureCredentialBuilder().build();
 
         CallAutomationClientBuilder builder = new CallAutomationClientBuilder()
             .credential(tokenCredential)
@@ -96,9 +101,10 @@ public class CallAutomationLiveTestBase extends TestBase {
             .httpClient(httpClient == null ? interceptorManager.getPlaybackClient() : httpClient);
 
         if (getTestMode() == TestMode.RECORD) {
-            List<Function<String, String>> redactors = new ArrayList<>();
-            redactors.add(data -> redact(data, JSON_PROPERTY_VALUE_REDACTION_PATTERN.matcher(data)));
-            builder.addPolicy(interceptorManager.getRecordPolicy(redactors));
+            builder.addPolicy(interceptorManager.getRecordPolicy());
+        }
+        if (!interceptorManager.isLiveMode()) {
+            interceptorManager.addSanitizers(sanitizerList);
         }
         return builder;
     }
@@ -114,22 +120,5 @@ public class CallAutomationLiveTestBase extends TestBase {
                     + ": " + bufferedResponse.getHeaderValue("X-Microsoft-Skype-Chain-ID"));
                 return Mono.just(bufferedResponse);
             });
-    }
-
-    static class FakeCredentials implements TokenCredential {
-        @Override
-        public Mono<AccessToken> getToken(TokenRequestContext tokenRequestContext) {
-            return Mono.just(new AccessToken("someFakeToken", OffsetDateTime.MAX));
-        }
-    }
-
-    private String redact(String content, Matcher matcher) {
-        while (matcher.find()) {
-            String captureGroup = matcher.group(1);
-            if (!CoreUtils.isNullOrEmpty(captureGroup)) {
-                content = content.replace(matcher.group(1), "REDACTED");
-            }
-        }
-        return content;
     }
 }
