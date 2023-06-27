@@ -41,7 +41,7 @@ public final class DocumentClassifierDetails {
     /*
      * List of document types to classify against.
      */
-    private Map<String, DocumentSourceTypeDetails> docTypes;
+    private Map<String, ClassifierDocumentTypeDetails> docTypes;
 
     /** Creates an instance of DocumentClassifierDetails class. */
     public DocumentClassifierDetails() {}
@@ -141,7 +141,7 @@ public final class DocumentClassifierDetails {
      *
      * @return the docTypes value.
      */
-    public Map<String, DocumentSourceTypeDetails> getDocTypes() {
+    public Map<String, ClassifierDocumentTypeDetails> getDocTypes() {
         return this.docTypes;
     }
 
@@ -150,7 +150,7 @@ public final class DocumentClassifierDetails {
      *
      * @param docTypes the docTypes value to set.
      */
-    void setDocTypes(Map<String, DocumentSourceTypeDetails> docTypes) {
+    void setDocTypes(Map<String, ClassifierDocumentTypeDetails> docTypes) {
         this.docTypes = docTypes;
     }
 
@@ -181,7 +181,7 @@ public final class DocumentClassifierDetails {
                 documentClassifierDetails.setExpirationDateTime(createdDateTime);
             }
             @Override
-            public void setDocTypes(DocumentClassifierDetails documentClassifierDetails, Map<String, DocumentSourceTypeDetails> docTypes) {
+            public void setDocTypes(DocumentClassifierDetails documentClassifierDetails, Map<String, ClassifierDocumentTypeDetails> docTypes) {
                 documentClassifierDetails.setDocTypes(docTypes);
             }
         });

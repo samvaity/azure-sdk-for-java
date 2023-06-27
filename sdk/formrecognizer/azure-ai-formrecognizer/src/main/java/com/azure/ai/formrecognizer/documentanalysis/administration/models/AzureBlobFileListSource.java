@@ -4,11 +4,12 @@
 
 package com.azure.ai.formrecognizer.documentanalysis.administration.models;
 
+import com.azure.ai.formrecognizer.documentanalysis.models.TrainingDataContentSource;
 import com.azure.core.annotation.Immutable;
 
 /** File list in Azure Blob Storage. */
 @Immutable
-public final class AzureBlobFileListSource {
+public final class AzureBlobFileListSource implements TrainingDataContentSource {
     /*
      * Azure Blob Storage container URL.
      */

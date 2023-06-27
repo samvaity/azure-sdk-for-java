@@ -9,6 +9,7 @@ import com.azure.ai.formrecognizer.documentanalysis.administration.models.AzureB
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.AzureBlobFileListSource;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.BuildDocumentClassifierOptions;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.BuildDocumentModelOptions;
+import com.azure.ai.formrecognizer.documentanalysis.administration.models.ClassifierDocumentTypeDetails;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.ComposeDocumentModelOptions;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.CopyAuthorizationOptions;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.DocumentClassifierDetails;
@@ -16,7 +17,6 @@ import com.azure.ai.formrecognizer.documentanalysis.administration.models.Docume
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.DocumentModelCopyAuthorization;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.DocumentModelDetails;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.DocumentModelSummary;
-import com.azure.ai.formrecognizer.documentanalysis.administration.models.DocumentSourceTypeDetails;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.OperationDetails;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.OperationStatus;
 import com.azure.ai.formrecognizer.documentanalysis.administration.models.OperationSummary;
@@ -39,6 +39,7 @@ import com.azure.ai.formrecognizer.documentanalysis.implementation.util.Transfor
 import com.azure.ai.formrecognizer.documentanalysis.implementation.util.Utility;
 import com.azure.ai.formrecognizer.documentanalysis.models.DocumentAnalysisAudience;
 import com.azure.ai.formrecognizer.documentanalysis.models.OperationResult;
+import com.azure.ai.formrecognizer.documentanalysis.models.TrainingDataContentSource;
 import com.azure.core.annotation.ReturnType;
 import com.azure.core.annotation.ServiceClient;
 import com.azure.core.annotation.ServiceMethod;
@@ -244,9 +245,7 @@ public final class DocumentModelAdministrationClient {
         String prefix, BuildDocumentModelOptions buildDocumentModelOptions,
         Context context) {
         Objects.requireNonNull(blobContainerUrl, "'blobContainerUrl' cannot be null.");
-        DocumentSourceTypeDetails documentSourceTypeDetails = new DocumentSourceTypeDetails();
-        documentSourceTypeDetails.setAzureBlobSource(new AzureBlobContentSource(blobContainerUrl).setPrefix(prefix));
-        return beginBuildDocumentModelSync(documentSourceTypeDetails, buildMode, buildDocumentModelOptions, context);
+        return beginBuildDocumentModelSync(new AzureBlobContentSource(blobContainerUrl).setPrefix(prefix), buildMode, buildDocumentModelOptions, context);
     }
 
     /**
@@ -259,15 +258,14 @@ public final class DocumentModelAdministrationClient {
      * error message indicating absence of cancellation support.</p>
      *
      * <p><strong>Code sample</strong></p>
-     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdminClient.beginBuildDocumentModel#DocumentSourceTypeDetails-BuildMode -->
+     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdminClient.beginBuildDocumentModel#TrainingDataContentSource-BuildMode -->
      * <pre>
      * String blobContainerUrl = &quot;&#123;SAS-URL-of-your-container-in-blob-storage&#125;&quot;;
      * String fileList = &quot;&quot;;
      *
      * DocumentModelDetails documentModelDetails
      *     = documentModelAdministrationClient.beginBuildDocumentModel&#40;
-     *         new DocumentSourceTypeDetails&#40;&#41;.setAzureBlobFileListSource&#40;
-     *             new AzureBlobFileListSource&#40;blobContainerUrl, fileList&#41;&#41;,
+     *         new AzureBlobFileListSource&#40;blobContainerUrl, fileList&#41;,
      *         DocumentModelBuildMode.TEMPLATE&#41;
      *     .getFinalResult&#40;&#41;;
      *
@@ -281,9 +279,9 @@ public final class DocumentModelAdministrationClient {
      *     &#125;&#41;;
      * &#125;&#41;;
      * </pre>
-     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdminClient.beginBuildDocumentModel#DocumentSourceTypeDetails-BuildMode -->
+     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdminClient.beginBuildDocumentModel#TrainingDataContentSource-BuildMode -->
      *
-     * @param documentSourceTypeDetails training data source to be used for building the model. It can be an Azure
+     * @param trainingDataContentSource training data source to be used for building the model. It can be an Azure
      * Storage blob container's provided along with its respective prefix or Path to a JSONL file within the
      * container specifying the set of documents for training. For more information on
      * setting up a training data set, see: <a href="https://aka.ms/azsdk/formrecognizer/buildcustommodel">here</a>.
@@ -298,8 +296,8 @@ public final class DocumentModelAdministrationClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<OperationResult, DocumentModelDetails> beginBuildDocumentModel(
-        DocumentSourceTypeDetails documentSourceTypeDetails, DocumentModelBuildMode buildMode) {
-        return beginBuildDocumentModel(documentSourceTypeDetails, buildMode, null, Context.NONE);
+        TrainingDataContentSource trainingDataContentSource, DocumentModelBuildMode buildMode) {
+        return beginBuildDocumentModel(trainingDataContentSource, buildMode, null, Context.NONE);
     }
 
     /**
@@ -312,7 +310,7 @@ public final class DocumentModelAdministrationClient {
      * error message indicating absence of cancellation support.</p>
      *
      * <p><strong>Code sample</strong></p>
-     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdminClient.beginBuildDocumentModel#DocumentSourceTypeDetails-BuildMode-Options-Context -->
+     * <!-- src_embed com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdminClient.beginBuildDocumentModel#TrainingDataContentSource-BuildMode-Options-Context -->
      * <pre>
      * String blobContainerUrl = &quot;&#123;SAS-URL-of-your-container-in-blob-storage&#125;&quot;;
      * String fileList = &quot;&quot;;
@@ -322,8 +320,7 @@ public final class DocumentModelAdministrationClient {
      *
      * DocumentModelDetails documentModelDetails
      *     = documentModelAdministrationClient.beginBuildDocumentModel&#40;
-     *         new DocumentSourceTypeDetails&#40;&#41;.setAzureBlobFileListSource&#40;
-     *             new AzureBlobFileListSource&#40;blobContainerUrl, fileList&#41;&#41;,
+     *         new AzureBlobFileListSource&#40;blobContainerUrl, fileList&#41;,
      *         DocumentModelBuildMode.TEMPLATE,
      *         new BuildDocumentModelOptions&#40;&#41;
      *             .setModelId&#40;modelId&#41;
@@ -344,9 +341,9 @@ public final class DocumentModelAdministrationClient {
      *     &#125;&#41;;
      * &#125;&#41;;
      * </pre>
-     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdminClient.beginBuildDocumentModel#DocumentSourceTypeDetails-BuildMode-Options-Context -->
+     * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdminClient.beginBuildDocumentModel#TrainingDataContentSource-BuildMode-Options-Context -->
      *
-     * @param documentSourceTypeDetails training data source to be used for building the model. It can be an Azure
+     * @param trainingDataContentSource training data source to be used for building the model. It can be an Azure
      * Storage blob container's provided along with its respective prefix or Path to a JSONL file within the
      * container specifying the set of documents for training. For more information on
      * setting up a training data set, see: <a href="https://aka.ms/azsdk/formrecognizer/buildcustommodel">here</a>.
@@ -363,12 +360,13 @@ public final class DocumentModelAdministrationClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<OperationResult, DocumentModelDetails> beginBuildDocumentModel(
-        DocumentSourceTypeDetails documentSourceTypeDetails, DocumentModelBuildMode buildMode, BuildDocumentModelOptions buildDocumentModelOptions, Context context) {
-        return beginBuildDocumentModelSync(documentSourceTypeDetails, buildMode, buildDocumentModelOptions, context);
+        TrainingDataContentSource trainingDataContentSource, DocumentModelBuildMode buildMode,
+        BuildDocumentModelOptions buildDocumentModelOptions,
+        Context context) {
+        return beginBuildDocumentModelSync(trainingDataContentSource, buildMode, buildDocumentModelOptions, context);
     }
 
-    private SyncPoller<OperationResult, DocumentModelDetails> beginBuildDocumentModelSync(
-        DocumentSourceTypeDetails documentSourceTypeDetails, DocumentModelBuildMode buildMode,
+    private SyncPoller<OperationResult, DocumentModelDetails> beginBuildDocumentModelSync(TrainingDataContentSource trainingDataContentSource, DocumentModelBuildMode buildMode,
         BuildDocumentModelOptions buildDocumentModelOptions, Context context) {
 
         BuildDocumentModelOptions finalBuildDocumentModelOptions
@@ -380,17 +378,21 @@ public final class DocumentModelAdministrationClient {
         String finalModelId = modelId;
         context = enableSyncRestProxy(getTracingContext(context));
         Context finalContext = context;
-        if (documentSourceTypeDetails.getAzureBlobFileListSource() != null) {
-            Objects.requireNonNull(documentSourceTypeDetails.getAzureBlobFileListSource().getContainerUrl(),
+        if (trainingDataContentSource instanceof AzureBlobFileListSource) {
+            AzureBlobFileListSource azureBlobFileListSource = (AzureBlobFileListSource) trainingDataContentSource;
+            Objects.requireNonNull(azureBlobFileListSource.getContainerUrl(),
                 "'blobContainerUrl' is required.");
-            Objects.requireNonNull(documentSourceTypeDetails.getAzureBlobFileListSource().getFileList(),
+            Objects.requireNonNull(azureBlobFileListSource.getFileList(),
                 "'fileList' is required.");
+        }
+        if (trainingDataContentSource instanceof AzureBlobContentSource) {
+            AzureBlobContentSource azureBlobContentSource = (AzureBlobContentSource) trainingDataContentSource;
+            Objects.requireNonNull(azureBlobContentSource.getContainerUrl(),
+                "'blobContainerUrl' is required.");
         }
         return SyncPoller.createPoller(
             DEFAULT_POLL_INTERVAL,
-            cxt -> new PollResponse<>(LongRunningOperationStatus.NOT_STARTED, buildModelActivationOperation(
-                documentSourceTypeDetails.getAzureBlobSource(),
-                documentSourceTypeDetails.getAzureBlobFileListSource(),
+            cxt -> new PollResponse<>(LongRunningOperationStatus.NOT_STARTED, buildModelActivationOperation(trainingDataContentSource,
                 buildMode,
                 finalModelId,
                 finalBuildDocumentModelOptions,
@@ -1187,11 +1189,11 @@ public final class DocumentModelAdministrationClient {
      * <pre>
      * String blobContainerUrl1040D = &quot;&#123;SAS_URL_of_your_container_in_blob_storage&#125;&quot;;
      * String blobContainerUrl1040A = &quot;&#123;SAS_URL_of_your_container_in_blob_storage&#125;&quot;;
-     * HashMap&lt;String, DocumentSourceTypeDetails&gt; docTypes = new HashMap&lt;&gt;&#40;&#41;;
-     * docTypes.put&#40;&quot;1040-D&quot;, new DocumentSourceTypeDetails&#40;&#41;
-     *     .setAzureBlobSource&#40;new AzureBlobContentSource&#40;blobContainerUrl1040D&#41;&#41;&#41;;
-     * docTypes.put&#40;&quot;1040-D&quot;, new DocumentSourceTypeDetails&#40;&#41;
-     *     .setAzureBlobSource&#40;new AzureBlobContentSource&#40;blobContainerUrl1040A&#41;&#41;&#41;;
+     * HashMap&lt;String, ClassifierDocumentTypeDetails&gt; docTypes = new HashMap&lt;&gt;&#40;&#41;;
+     * docTypes.put&#40;&quot;1040-D&quot;, new ClassifierDocumentTypeDetails&#40;&#41;
+     *     .setTrainingDataContentSource&#40;new AzureBlobContentSource&#40;blobContainerUrl1040D&#41;&#41;&#41;;
+     * docTypes.put&#40;&quot;1040-D&quot;, new ClassifierDocumentTypeDetails&#40;&#41;
+     *     .setTrainingDataContentSource&#40;new AzureBlobContentSource&#40;blobContainerUrl1040A&#41;&#41;&#41;;
      *
      * DocumentClassifierDetails classifierDetails
      *     = documentModelAdministrationClient.beginBuildDocumentClassifier&#40;docTypes&#41;
@@ -1202,8 +1204,10 @@ public final class DocumentModelAdministrationClient {
      * System.out.printf&#40;&quot;Classifier created on: %s%n&quot;, classifierDetails.getCreatedOn&#40;&#41;&#41;;
      * System.out.printf&#40;&quot;Classifier expires on: %s%n&quot;, classifierDetails.getExpiresOn&#40;&#41;&#41;;
      * classifierDetails.getDocTypes&#40;&#41;.forEach&#40;&#40;key, documentTypeDetails&#41; -&gt; &#123;
-     *     System.out.printf&#40;&quot;Blob Source container Url: %s&quot;, documentTypeDetails
-     *         .getAzureBlobSource&#40;&#41;.getContainerUrl&#40;&#41;&#41;;
+     *     if &#40;documentTypeDetails.getTrainingDataContentSource&#40;&#41; instanceof AzureBlobContentSource&#41; &#123;
+     *         System.out.printf&#40;&quot;Blob Source container Url: %s&quot;, &#40;&#40;AzureBlobContentSource&#41; documentTypeDetails
+     *             .getTrainingDataContentSource&#40;&#41;&#41;.getContainerUrl&#40;&#41;&#41;;
+     *     &#125;
      * &#125;&#41;;
      * </pre>
      * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdminClient.beginBuildDocumentClassifier#Map -->
@@ -1216,7 +1220,7 @@ public final class DocumentModelAdministrationClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<OperationResult, DocumentClassifierDetails> beginBuildDocumentClassifier(
-        Map<String, DocumentSourceTypeDetails> docTypes) {
+        Map<String, ClassifierDocumentTypeDetails> docTypes) {
         return beginBuildDocumentClassifier(docTypes, null, Context.NONE);
     }
 
@@ -1233,11 +1237,11 @@ public final class DocumentModelAdministrationClient {
      * <pre>
      * String blobContainerUrl1040D = &quot;&#123;SAS_URL_of_your_container_in_blob_storage&#125;&quot;;
      * String blobContainerUrl1040A = &quot;&#123;SAS_URL_of_your_container_in_blob_storage&#125;&quot;;
-     * HashMap&lt;String, DocumentSourceTypeDetails&gt; docTypes = new HashMap&lt;&gt;&#40;&#41;;
-     * docTypes.put&#40;&quot;1040-D&quot;, new DocumentSourceTypeDetails&#40;&#41;
-     *     .setAzureBlobSource&#40;new AzureBlobContentSource&#40;blobContainerUrl1040D&#41;&#41;&#41;;
-     * docTypes.put&#40;&quot;1040-D&quot;, new DocumentSourceTypeDetails&#40;&#41;
-     *     .setAzureBlobSource&#40;new AzureBlobContentSource&#40;blobContainerUrl1040A&#41;&#41;&#41;;
+     * HashMap&lt;String, ClassifierDocumentTypeDetails&gt; docTypes = new HashMap&lt;&gt;&#40;&#41;;
+     * docTypes.put&#40;&quot;1040-D&quot;, new ClassifierDocumentTypeDetails&#40;&#41;
+     *     .setTrainingDataContentSource&#40;new AzureBlobContentSource&#40;blobContainerUrl1040D&#41;&#41;&#41;;
+     * docTypes.put&#40;&quot;1040-D&quot;, new ClassifierDocumentTypeDetails&#40;&#41;
+     *     .setTrainingDataContentSource&#40;new AzureBlobContentSource&#40;blobContainerUrl1040A&#41;&#41;&#41;;
      *
      * DocumentClassifierDetails classifierDetails
      *     = documentModelAdministrationClient.beginBuildDocumentClassifier&#40;docTypes,
@@ -1252,8 +1256,10 @@ public final class DocumentModelAdministrationClient {
      * System.out.printf&#40;&quot;Classifier created on: %s%n&quot;, classifierDetails.getCreatedOn&#40;&#41;&#41;;
      * System.out.printf&#40;&quot;Classifier expires on: %s%n&quot;, classifierDetails.getExpiresOn&#40;&#41;&#41;;
      * classifierDetails.getDocTypes&#40;&#41;.forEach&#40;&#40;key, documentTypeDetails&#41; -&gt; &#123;
-     *     System.out.printf&#40;&quot;Blob Source container Url: %s&quot;, documentTypeDetails
-     *         .getAzureBlobSource&#40;&#41;.getContainerUrl&#40;&#41;&#41;;
+     *     if &#40;documentTypeDetails.getTrainingDataContentSource&#40;&#41; instanceof AzureBlobContentSource&#41; &#123;
+     *         System.out.printf&#40;&quot;Blob Source container Url: %s&quot;, &#40;&#40;AzureBlobContentSource&#41; documentTypeDetails
+     *             .getTrainingDataContentSource&#40;&#41;&#41;.getContainerUrl&#40;&#41;&#41;;
+     *     &#125;
      * &#125;&#41;;
      * </pre>
      * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdminClient.beginBuildDocumentClassifier#Map-Options-Context -->
@@ -1269,12 +1275,12 @@ public final class DocumentModelAdministrationClient {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<OperationResult, DocumentClassifierDetails> beginBuildDocumentClassifier(
-        Map<String, DocumentSourceTypeDetails> docTypes, BuildDocumentClassifierOptions buildDocumentClassifierOptions, Context context) {
+        Map<String, ClassifierDocumentTypeDetails> docTypes, BuildDocumentClassifierOptions buildDocumentClassifierOptions, Context context) {
         return beginBuildDocumentClassifierSync(docTypes, buildDocumentClassifierOptions, context);
     }
 
     SyncPoller<OperationResult, DocumentClassifierDetails> beginBuildDocumentClassifierSync(
-        Map<String, DocumentSourceTypeDetails> docTypes, BuildDocumentClassifierOptions options, Context context) {
+        Map<String, ClassifierDocumentTypeDetails> docTypes, BuildDocumentClassifierOptions options, Context context) {
 
         BuildDocumentClassifierOptions
             finalBuildDocumentClassifierOptions = options == null ? new BuildDocumentClassifierOptions() : options;
@@ -1402,10 +1408,15 @@ public final class DocumentModelAdministrationClient {
      * System.out.printf&#40;&quot;Classifier Description: %s%n&quot;, documentClassifierDetails.getDescription&#40;&#41;&#41;;
      * System.out.printf&#40;&quot;Classifier Created on: %s%n&quot;, documentClassifierDetails.getCreatedOn&#40;&#41;&#41;;
      * documentClassifierDetails.getDocTypes&#40;&#41;.forEach&#40;&#40;key, documentTypeDetails&#41; -&gt; &#123;
-     *     System.out.printf&#40;&quot;Blob Source container Url: %s&quot;, documentTypeDetails
-     *         .getAzureBlobSource&#40;&#41;.getContainerUrl&#40;&#41;&#41;;
-     *     System.out.printf&#40;&quot;Blob File list Source container Url: %s&quot;, documentTypeDetails
-     *         .getAzureBlobFileListSource&#40;&#41;.getContainerUrl&#40;&#41;&#41;;
+     *     if &#40;documentTypeDetails.getTrainingDataContentSource&#40;&#41; instanceof AzureBlobContentSource&#41; &#123;
+     *         System.out.printf&#40;&quot;Blob Source container Url: %s&quot;, &#40;&#40;AzureBlobContentSource&#41; documentTypeDetails
+     *             .getTrainingDataContentSource&#40;&#41;&#41;.getContainerUrl&#40;&#41;&#41;;
+     *     &#125;
+     *     if &#40;documentTypeDetails.getTrainingDataContentSource&#40;&#41; instanceof AzureBlobFileListSource&#41; &#123;
+     *         System.out.printf&#40;&quot;Blob File List Source container Url: %s&quot;,
+     *             &#40;&#40;AzureBlobFileListSource&#41; documentTypeDetails
+     *                 .getTrainingDataContentSource&#40;&#41;&#41;.getContainerUrl&#40;&#41;&#41;;
+     *     &#125;
      * &#125;&#41;;
      * </pre>
      * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdminClient.getDocumentClassifier#string -->
@@ -1435,10 +1446,15 @@ public final class DocumentModelAdministrationClient {
      * System.out.printf&#40;&quot;Classifier Description: %s%n&quot;, documentClassifierDetails.getDescription&#40;&#41;&#41;;
      * System.out.printf&#40;&quot;Classifier Created on: %s%n&quot;, documentClassifierDetails.getCreatedOn&#40;&#41;&#41;;
      * documentClassifierDetails.getDocTypes&#40;&#41;.forEach&#40;&#40;key, documentTypeDetails&#41; -&gt; &#123;
-     *     System.out.printf&#40;&quot;Blob Source container Url: %s&quot;, documentTypeDetails
-     *         .getAzureBlobSource&#40;&#41;.getContainerUrl&#40;&#41;&#41;;
-     *     System.out.printf&#40;&quot;Blob File list Source container Url: %s&quot;, documentTypeDetails
-     *         .getAzureBlobFileListSource&#40;&#41;.getContainerUrl&#40;&#41;&#41;;
+     *     if &#40;documentTypeDetails.getTrainingDataContentSource&#40;&#41; instanceof AzureBlobContentSource&#41; &#123;
+     *         System.out.printf&#40;&quot;Blob Source container Url: %s&quot;, &#40;&#40;AzureBlobContentSource&#41; documentTypeDetails
+     *             .getTrainingDataContentSource&#40;&#41;&#41;.getContainerUrl&#40;&#41;&#41;;
+     *     &#125;
+     *     if &#40;documentTypeDetails.getTrainingDataContentSource&#40;&#41; instanceof AzureBlobFileListSource&#41; &#123;
+     *         System.out.printf&#40;&quot;Blob File List Source container Url: %s&quot;,
+     *             &#40;&#40;AzureBlobFileListSource&#41; documentTypeDetails
+     *                 .getTrainingDataContentSource&#40;&#41;&#41;.getContainerUrl&#40;&#41;&#41;;
+     *     &#125;
      * &#125;&#41;;
      * </pre>
      * <!-- end com.azure.ai.formrecognizer.documentanalysis.administration.DocumentModelAdminClient.getDocumentClassifierWithResponse#string-Context -->
@@ -1520,12 +1536,13 @@ public final class DocumentModelAdministrationClient {
         }
     }
 
-    private Function<PollingContext<OperationResult>, OperationResult> buildModelActivationOperation(AzureBlobContentSource azureBlobSource,
-        AzureBlobFileListSource azureBlobFileListSource, DocumentModelBuildMode buildMode, String modelId, BuildDocumentModelOptions buildDocumentModelOptions, Context context) {
+    private Function<PollingContext<OperationResult>, OperationResult> buildModelActivationOperation(
+        TrainingDataContentSource trainingDataContentSource, DocumentModelBuildMode buildMode, String modelId,
+        BuildDocumentModelOptions buildDocumentModelOptions, Context context) {
         return (pollingContext) -> {
             try {
                 BuildDocumentModelRequest buildDocumentModelRequest =
-                    getBuildDocumentModelRequest(azureBlobSource, azureBlobFileListSource, buildMode, modelId,
+                    getBuildDocumentModelRequest(trainingDataContentSource, buildMode, modelId,
                         buildDocumentModelOptions);
 
                 ResponseBase<DocumentModelsBuildModelHeaders, Void>
@@ -1635,7 +1652,7 @@ public final class DocumentModelAdministrationClient {
     }
 
     private Function<PollingContext<OperationResult>, OperationResult> buildClassifierActivationOperation(
-        String classifierId, Map<String, DocumentSourceTypeDetails> docTypes,
+        String classifierId, Map<String, ClassifierDocumentTypeDetails> docTypes,
         BuildDocumentClassifierOptions buildDocumentClassifierOptions, Context context) {
         return (pollingContext) -> {
             try {
