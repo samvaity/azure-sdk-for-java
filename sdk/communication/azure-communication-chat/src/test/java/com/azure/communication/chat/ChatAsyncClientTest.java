@@ -3,52 +3,49 @@
 
 package com.azure.communication.chat;
 
+import com.azure.communication.chat.implementation.ChatOptionsProvider;
+import com.azure.communication.chat.models.ChatParticipant;
+import com.azure.communication.chat.models.ChatThreadItem;
+import com.azure.communication.chat.models.ChatThreadProperties;
+import com.azure.communication.chat.models.CreateChatThreadOptions;
+import com.azure.communication.chat.models.CreateChatThreadResult;
+import com.azure.communication.chat.models.ListChatThreadsOptions;
+import com.azure.communication.common.CommunicationUserIdentifier;
+import com.azure.communication.identity.CommunicationIdentityClient;
+import com.azure.communication.identity.models.CommunicationTokenScope;
+import com.azure.core.credential.AccessToken;
+import com.azure.core.http.HttpClient;
 import com.azure.core.http.HttpRequest;
 import com.azure.core.http.HttpResponse;
+import com.azure.core.http.rest.PagedIterable;
 import com.azure.core.http.rest.Response;
 import com.azure.core.test.http.NoOpHttpClient;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import com.azure.communication.identity.CommunicationIdentityClient;
-import com.azure.communication.identity.models.CommunicationTokenScope;
-import com.azure.communication.common.CommunicationUserIdentifier;
-import com.azure.communication.chat.implementation.ChatOptionsProvider;
-import com.azure.communication.chat.models.*;
-import com.azure.core.credential.AccessToken;
-import com.azure.core.http.HttpClient;
-import com.azure.core.http.rest.PagedIterable;
-import com.azure.core.util.logging.ClientLogger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Set the AZURE_TEST_MODE environment variable to either PLAYBACK or RECORD to determine if tests are playback or
  * live. By default, tests are run in playback mode.
  */
 public class ChatAsyncClientTest extends ChatClientTestBase {
-
-    private ClientLogger logger = new ClientLogger(ChatClientTest.class);
-
     private CommunicationIdentityClient communicationClient;
     private ChatAsyncClient client;
 
     private CommunicationUserIdentifier firstThreadMember;
     private CommunicationUserIdentifier secondThreadMember;
-
-    @Override
-    protected void afterTest() {
-        super.afterTest();
-    }
 
     private void setupTest(HttpClient httpClient, String testName) {
         communicationClient = getCommunicationIdentityClientBuilder(httpClient).buildClient();
