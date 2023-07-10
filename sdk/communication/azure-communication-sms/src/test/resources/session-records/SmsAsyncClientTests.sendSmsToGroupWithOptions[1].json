@@ -1,27 +1,58 @@
 {
-  "networkCallRecords" : [ {
-    "Method" : "POST",
-    "Uri" : "https://REDACTED.communication.azure.com/sms?api-version=2021-03-07",
-    "Headers" : {
-      "content-type" : "application/json",
-      "x-ms-client-request-id" : "aa1e130c-5f20-48a1-a4fd-6539acec7d05",
-      "user-agent" : "azsdk-java-azure-communication-sms/1.2.0-beta.1 (11.0.19; Windows 11; 10.0)"
-    },
-    "Response" : {
-      "X-Cache" : "CONFIG_NOCACHE",
-      "Strict-Transport-Security" : "max-age=2592000",
-      "api-supported-versions" : "2020-07-20-preview1, 2020-08-20-preview, 2021-03-07",
-      "X-Processing-Time" : "220ms",
-      "MS-CV" : "f5uUVOD6REKq3HaIU0ChLQ.0",
-      "retry-after" : "0",
-      "X-Azure-Ref" : "0J/+KZAAAAAB6V8RP1rBDT4LSpF6theR3SEVMMDFFREdFMjAxNgA5ZmM3YjUxOS1hOGNjLTRmODktOTM1ZS1jOTE0OGFlMDllODE=",
-      "Content-Length" : "357",
-      "StatusCode" : "202",
-      "Body" : "{\"value\":[{\"to\":\"REDACTED\",\"messageId\":\"Outgoing_202306151208077b0bacac-38f1-45cf-8403-ea773ac75341_noam\",\"httpStatusCode\":202,\"repeatabilityResult\":\"accepted\",\"successful\":true},{\"to\":\"REDACTED\",\"messageId\":\"Outgoing_2023061512080750657ca4-978a-40b0-b0cd-958f34de76cb_noam\",\"httpStatusCode\":202,\"repeatabilityResult\":\"accepted\",\"successful\":true}]}",
-      "Date" : "Thu, 15 Jun 2023 12:08:07 GMT",
-      "Content-Type" : "application/json; charset=utf-8"
-    },
-    "Exception" : null
-  } ],
-  "variables" : [ ]
+  "Entries": [
+    {
+      "RequestUri": "https://REDACTED/sms?api-version=2021-03-07",
+      "RequestMethod": "POST",
+      "RequestHeaders": {
+        "Accept": "*/*",
+        "Authorization": "Sanitized",
+        "Content-Length": "408",
+        "Content-Type": "application/json",
+        "User-Agent": "azsdk-java-azure-communication-sms/1.2.0-beta.1 (17.0.1; Windows 11; 10.0)",
+        "x-ms-client-request-id": "74628ca6-81e3-4158-8afc-4b7801624fce",
+        "x-ms-content-sha256": "0Y7TDM/dQbOYk36RyQYBkj\u002BSktiihf26BM3ehejcYq0=",
+        "x-ms-date": "Mon, 10 Jul 2023 23:04:55 GMT",
+        "x-ms-hmac-string-to-sign-base64": "UE9TVAovc21zP2FwaS12ZXJzaW9uPTIwMjEtMDMtMDcKTW9uLCAxMCBKdWwgMjAyMyAyMzowNDo1NSBHTVQ7c3JuYWdhci1hY3MuY29tbXVuaWNhdGlvbi5henVyZS5jb207MFk3VERNL2RRYk9ZazM2UnlRWUJraitTa3RpaWhmMjZCTTNlaGVqY1lxMD0="
+      },
+      "RequestBody": {
+        "from": "\u002B18123619449",
+        "smsRecipients": [
+          {
+            "to": "\u002B18123619449",
+            "repeatabilityRequestId": "c3c97004-82db-431a-bba7-a5c2c63559d7",
+            "repeatabilityFirstSent": "Mon, 10 Jul 2023 23:04:54 GMT"
+          },
+          {
+            "to": "\u002B18123619449",
+            "repeatabilityRequestId": "d826ba5e-87f6-42b7-9f34-bbfb5b6680ce",
+            "repeatabilityFirstSent": "Mon, 10 Jul 2023 23:04:54 GMT"
+          }
+        ],
+        "message": "Hello",
+        "smsSendOptions": {
+          "enableDeliveryReport": true,
+          "tag": "New Tag"
+        }
+      },
+      "StatusCode": 401,
+      "ResponseHeaders": {
+        "api-supported-versions": "2020-07-20-preview1, 2020-08-20-preview, 2021-03-07, 2023-06-30-privatepreview",
+        "Content-Type": "application/json",
+        "Date": "Mon, 10 Jul 2023 23:04:54 GMT",
+        "MS-CV": "hsWVaRxO0EaxQy3ZZ0toIw.0",
+        "Strict-Transport-Security": "max-age=2592000",
+        "Transfer-Encoding": "chunked",
+        "X-Azure-Ref": "0lo6sZAAAAACHxx5gy96gSJNVArN1eqk2V1NURURHRTA4MTUAOWZjN2I1MTktYThjYy00Zjg5LTkzNWUtYzkxNDhhZTA5ZTgx",
+        "X-Cache": "CONFIG_NOCACHE",
+        "X-Processing-Time": "33ms"
+      },
+      "ResponseBody": {
+        "error": {
+          "code": "Unauthorized",
+          "message": ""
+        }
+      }
+    }
+  ],
+  "Variables": {}
 }

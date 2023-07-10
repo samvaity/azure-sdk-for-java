@@ -5,8 +5,8 @@ package com.azure.communication.email;
 
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.policy.HttpPipelinePolicy;
-import com.azure.core.test.TestBase;
 import com.azure.core.test.TestMode;
+import com.azure.core.test.TestProxyTestBase;
 import com.azure.core.util.Configuration;
 import org.junit.jupiter.params.provider.Arguments;
 
@@ -16,9 +16,7 @@ import java.util.Locale;
 import java.util.stream.Stream;
 
 
-public class EmailTestBase extends TestBase {
-    protected static final TestMode TEST_MODE = initializeTestMode();
-
+public class EmailTestBase extends TestProxyTestBase {
 
     protected static final String CONNECTION_STRING = Configuration.getGlobalConfiguration()
         .get("COMMUNICATION_CONNECTION_STRING_EMAIL", "endpoint=https://REDACTED.communication.azure.com/;accesskey=QWNjZXNzS2V5");
@@ -51,20 +49,6 @@ public class EmailTestBase extends TestBase {
         }
 
         return emailClientBuilder;
-    }
-
-    private static TestMode initializeTestMode() {
-        String azureTestMode = Configuration.getGlobalConfiguration().get("AZURE_TEST_MODE");
-        if (azureTestMode != null) {
-            System.out.println("azureTestMode: " + azureTestMode);
-            try {
-                return TestMode.valueOf(azureTestMode.toUpperCase(Locale.US));
-            } catch (IllegalArgumentException var3) {
-                return TestMode.PLAYBACK;
-            }
-        } else {
-            return TestMode.PLAYBACK;
-        }
     }
 
     static Stream<Arguments> getTestParameters() {
