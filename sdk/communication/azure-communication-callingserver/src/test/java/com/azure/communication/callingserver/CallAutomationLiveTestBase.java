@@ -11,6 +11,7 @@ import com.azure.core.http.HttpPipelineNextPolicy;
 import com.azure.core.http.HttpResponse;
 import com.azure.core.test.TestBase;
 import com.azure.core.test.TestMode;
+import com.azure.core.test.TestProxyTestBase;
 import com.azure.core.util.Configuration;
 import com.azure.core.util.CoreUtils;
 import com.azure.identity.DefaultAzureCredentialBuilder;
@@ -24,7 +25,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CallAutomationLiveTestBase extends TestBase {
+public class CallAutomationLiveTestBase extends TestProxyTestBase {
     protected static final String CONNECTION_STRING = Configuration.getGlobalConfiguration()
         .get("COMMUNICATION_LIVETEST_STATIC_CONNECTION_STRING",
             "endpoint=https://REDACTED.communication.azure.com/;accesskey=QWNjZXNzS2V5");
@@ -61,12 +62,12 @@ public class CallAutomationLiveTestBase extends TestBase {
     protected CallAutomationClientBuilder getCallingServerClientUsingConnectionString(HttpClient httpClient) {
         CallAutomationClientBuilder builder = new CallAutomationClientBuilder()
             .connectionString(CONNECTION_STRING)
-            .httpClient(httpClient == null ? interceptorManager.getPlaybackClient() : httpClient);
+            .httpClient(interceptorManager.isPlaybackMode() ? interceptorManager.getPlaybackClient() : httpClient);
 
         if (getTestMode() == TestMode.RECORD) {
             List<Function<String, String>> redactors = new ArrayList<>();
             redactors.add(data -> redact(data, JSON_PROPERTY_VALUE_REDACTION_PATTERN.matcher(data)));
-            builder.addPolicy(interceptorManager.getRecordPolicy(redactors));
+            builder.addPolicy(interceptorManager.getRecordPolicy());
         }
         return builder;
     }
@@ -77,12 +78,12 @@ public class CallAutomationLiveTestBase extends TestBase {
         CallAutomationClientBuilder builder = new CallAutomationClientBuilder()
             .endpoint(ENDPOINT)
             .credential(tokenCredential)
-            .httpClient(httpClient == null ? interceptorManager.getPlaybackClient() : httpClient);
+            .httpClient(interceptorManager.isPlaybackMode() ? interceptorManager.getPlaybackClient() : httpClient);
 
         if (getTestMode() == TestMode.RECORD) {
             List<Function<String, String>> redactors = new ArrayList<>();
             redactors.add(data -> redact(data, JSON_PROPERTY_VALUE_REDACTION_PATTERN.matcher(data)));
-            builder.addPolicy(interceptorManager.getRecordPolicy(redactors));
+            builder.addPolicy(interceptorManager.getRecordPolicy());
         }
         return builder;
     }
@@ -93,12 +94,12 @@ public class CallAutomationLiveTestBase extends TestBase {
         CallAutomationClientBuilder builder = new CallAutomationClientBuilder()
             .credential(tokenCredential)
             .endpoint(ENDPOINT_401)
-            .httpClient(httpClient == null ? interceptorManager.getPlaybackClient() : httpClient);
+            .httpClient(interceptorManager.isPlaybackMode() ? interceptorManager.getPlaybackClient() : httpClient);
 
         if (getTestMode() == TestMode.RECORD) {
             List<Function<String, String>> redactors = new ArrayList<>();
             redactors.add(data -> redact(data, JSON_PROPERTY_VALUE_REDACTION_PATTERN.matcher(data)));
-            builder.addPolicy(interceptorManager.getRecordPolicy(redactors));
+            builder.addPolicy(interceptorManager.getRecordPolicy());
         }
         return builder;
     }
