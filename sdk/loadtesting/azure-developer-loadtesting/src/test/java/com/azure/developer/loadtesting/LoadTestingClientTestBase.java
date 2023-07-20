@@ -8,8 +8,9 @@ import com.azure.core.credential.TokenCredential;
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
-import com.azure.core.test.TestBase;
+import com.azure.core.test.TestProxyTestBase;
 import com.azure.core.test.TestMode;
+import com.azure.core.test.utils.MockTokenCredential;
 import com.azure.core.util.Configuration;
 import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +21,7 @@ import java.util.Map;
 
 import reactor.core.publisher.Mono;
 
-class LoadTestingClientTestBase extends TestBase {
+class LoadTestingClientTestBase extends TestProxyTestBase {
     protected LoadTestAdministrationClientBuilder adminBuilder;
     protected LoadTestRunClientBuilder testRunBuilder;
 
@@ -31,7 +32,6 @@ class LoadTestingClientTestBase extends TestBase {
     protected final String existingTestId = Configuration.getGlobalConfiguration().get("EXISTING_TEST_ID", "11111111-1234-1234-1234-123456789012");
     protected final String newTestId = Configuration.getGlobalConfiguration().get("NEW_TEST_ID", "22222222-1234-1234-1234-123456789012");
     protected final String newTestRunId = Configuration.getGlobalConfiguration().get("NEW_TEST_RUN_ID", "33333333-1234-1234-1234-123456789012");
-    protected final String newTestRunId2 = Configuration.getGlobalConfiguration().get("NEW_TEST_RUN_ID_2", "44444444-1234-1234-1234-123456789012");
     protected final String uploadJmxFileName = Configuration.getGlobalConfiguration().get("UPLOAD_JMX_FILE_NAME", "sample-JMX-file.jmx");
     protected final String uploadCsvFileName = Configuration.getGlobalConfiguration().get("UPLOAD_CSV_FILE_NAME", "additional-data.csv");
     protected final String defaultAppComponentResourceId = Configuration.getGlobalConfiguration().get("APP_COMPONENT_RESOURCE_ID", "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/samplerg/providers/microsoft.insights/components/appcomponentresource");
@@ -61,10 +61,10 @@ class LoadTestingClientTestBase extends TestBase {
         if (getTestMode() == TestMode.PLAYBACK) {
             loadTestAdministrationClientBuilder
                     .httpClient(interceptorManager.getPlaybackClient())
-                    .credential(request -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)));
+                    .credential(new MockTokenCredential());
             loadTestRunClientBuilder
                     .httpClient(interceptorManager.getPlaybackClient())
-                    .credential(request -> Mono.just(new AccessToken("this_is_a_token", OffsetDateTime.MAX)));
+                .credential(new MockTokenCredential());
         } else if (getTestMode() == TestMode.RECORD) {
             loadTestAdministrationClientBuilder
                     .addPolicy(interceptorManager.getRecordPolicy())
