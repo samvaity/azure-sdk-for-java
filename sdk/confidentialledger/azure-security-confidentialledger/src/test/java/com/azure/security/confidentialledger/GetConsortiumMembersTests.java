@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 public final class GetConsortiumMembersTests extends ConfidentialLedgerClientTestBase {
     @Test
-    public void testGetConsortiumMembersTests() throws Exception {
+    public void testGetConsortiumMembersTests() {
         RequestOptions requestOptions = new RequestOptions();
         PagedIterable<BinaryData> pagedIterableResponse = confidentialLedgerClient.listConsortiumMembers(requestOptions);
 

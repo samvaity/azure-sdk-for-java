@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 
 public final class UserTests extends ConfidentialLedgerClientTestBase {
     @Test
-    public void testGetUserTests() throws Exception {
+    public void testGetUserTests() {
         String userAad = Configuration.getGlobalConfiguration().get("USER_AAD", "d958292f-5b70-4b66-9502-562217cc7eaa");
         RequestOptions requestOptions = new RequestOptions();
 

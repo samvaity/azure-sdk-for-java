@@ -54,7 +54,7 @@ public final class LedgerEntriesTest extends ConfidentialLedgerClientTestBase {
         JsonNode currentResponseBodyJson = null;
 
         try {
-            
+
             currentResponseBodyJson = objectMapper.readTree(currentResponse.getValue().toBytes());
         } catch (IOException e) {
             e.printStackTrace();
@@ -70,7 +70,7 @@ public final class LedgerEntriesTest extends ConfidentialLedgerClientTestBase {
     }
 
     @Test
-    public void testGetCollectionIdsTests() throws Exception {
+    public void testGetCollectionIdsTests() {
         RequestOptions requestOptions = new RequestOptions();
         PagedIterable<BinaryData> pagedIterableResponse = confidentialLedgerClient.listCollections(requestOptions);
 

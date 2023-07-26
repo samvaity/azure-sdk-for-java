@@ -10,8 +10,8 @@ import com.azure.core.http.netty.NettyAsyncHttpClientBuilder;
 import com.azure.core.http.policy.HttpLogDetailLevel;
 import com.azure.core.http.policy.HttpLogOptions;
 import com.azure.core.http.rest.Response;
-import com.azure.core.test.TestBase;
 import com.azure.core.test.TestMode;
+import com.azure.core.test.TestProxyTestBase;
 import com.azure.core.util.BinaryData;
 import com.azure.core.util.Configuration;
 import com.azure.identity.DefaultAzureCredentialBuilder;
@@ -19,21 +19,18 @@ import com.azure.security.confidentialledger.certificate.ConfidentialLedgerCerti
 import com.azure.security.confidentialledger.certificate.ConfidentialLedgerCertificateClientBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
+import org.junit.jupiter.api.Assertions;
 import reactor.core.publisher.Mono;
 
+import javax.net.ssl.SSLException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 
-import javax.net.ssl.SSLException;
-
-import org.junit.jupiter.api.Assertions;
-
-class ConfidentialLedgerClientTestBase extends TestBase {
+class ConfidentialLedgerClientTestBase extends TestProxyTestBase {
     protected ConfidentialLedgerClient confidentialLedgerClient;
     protected ConfidentialLedgerClientBuilder confidentialLedgerClientBuilder;
     protected ConfidentialLedgerCertificateClient confidentialLedgerCertificateClient;
