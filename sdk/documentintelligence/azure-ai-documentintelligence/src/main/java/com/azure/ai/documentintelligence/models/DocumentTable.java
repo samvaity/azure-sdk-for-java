@@ -48,6 +48,20 @@ public final class DocumentTable {
     @JsonProperty(value = "spans")
     private List<DocumentSpan> spans;
 
+    /*
+     * Caption associated with the table.
+     */
+    @Generated
+    @JsonProperty(value = "caption")
+    private DocumentCaption caption;
+
+    /*
+     * List of footnotes associated with the table.
+     */
+    @Generated
+    @JsonProperty(value = "footnotes")
+    private List<DocumentFootnote> footnotes;
+
     /**
      * Creates an instance of DocumentTable class.
      *
@@ -117,5 +131,25 @@ public final class DocumentTable {
     @Generated
     public List<DocumentSpan> getSpans() {
         return this.spans;
+    }
+
+    /**
+     * Get the caption property: Caption associated with the table.
+     *
+     * @return the caption value.
+     */
+    @Generated
+    public DocumentCaption getCaption() {
+        return this.caption;
+    }
+
+    /**
+     * Get the footnotes property: List of footnotes associated with the table.
+     *
+     * @return the footnotes value.
+     */
+    @Generated
+    public List<DocumentFootnote> getFootnotes() {
+        return this.footnotes;
     }
 }

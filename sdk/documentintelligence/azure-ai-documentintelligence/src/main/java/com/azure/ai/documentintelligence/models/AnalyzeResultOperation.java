@@ -18,7 +18,7 @@ public final class AnalyzeResultOperation {
      */
     @Generated
     @JsonProperty(value = "status")
-    private AnalyzeResultOperationStatus status;
+    private OperationStatus status;
 
     /*
      * Date and time (UTC) when the analyze operation was submitted.
@@ -58,7 +58,7 @@ public final class AnalyzeResultOperation {
     @Generated
     @JsonCreator
     private AnalyzeResultOperation(
-            @JsonProperty(value = "status") AnalyzeResultOperationStatus status,
+            @JsonProperty(value = "status") OperationStatus status,
             @JsonProperty(value = "createdDateTime") OffsetDateTime createdDateTime,
             @JsonProperty(value = "lastUpdatedDateTime") OffsetDateTime lastUpdatedDateTime) {
         this.status = status;
@@ -72,7 +72,7 @@ public final class AnalyzeResultOperation {
      * @return the status value.
      */
     @Generated
-    public AnalyzeResultOperationStatus getStatus() {
+    public OperationStatus getStatus() {
         return this.status;
     }
 

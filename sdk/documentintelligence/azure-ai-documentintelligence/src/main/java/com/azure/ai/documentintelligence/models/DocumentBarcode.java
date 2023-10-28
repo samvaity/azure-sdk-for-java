@@ -21,7 +21,7 @@ public final class DocumentBarcode {
     private DocumentBarcodeKind kind;
 
     /*
-     * Barcode value
+     * Barcode value.
      */
     @Generated
     @JsonProperty(value = "value")

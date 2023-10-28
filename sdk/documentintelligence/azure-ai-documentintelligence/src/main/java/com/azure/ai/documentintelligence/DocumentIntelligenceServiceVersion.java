@@ -8,9 +8,6 @@ import com.azure.core.util.ServiceVersion;
 
 /** Service version of DocumentIntelligenceClient. */
 public enum DocumentIntelligenceServiceVersion implements ServiceVersion {
-    /** Enum value 2022-08-31. */
-    V2022_08_31("2022-08-31"),
-
     /** Enum value 2023-07-31. */
     V2023_07_31("2023-07-31"),
 

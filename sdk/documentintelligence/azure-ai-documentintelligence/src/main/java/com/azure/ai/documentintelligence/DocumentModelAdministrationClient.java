@@ -12,9 +12,7 @@ import com.azure.ai.documentintelligence.models.ComposeDocumentModelRequest;
 import com.azure.ai.documentintelligence.models.CopyAuthorization;
 import com.azure.ai.documentintelligence.models.DocumentClassifierDetails;
 import com.azure.ai.documentintelligence.models.DocumentModelDetails;
-import com.azure.ai.documentintelligence.models.DocumentModelSummary;
 import com.azure.ai.documentintelligence.models.OperationDetails;
-import com.azure.ai.documentintelligence.models.OperationSummary;
 import com.azure.ai.documentintelligence.models.ResourceDetails;
 import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.ReturnType;
@@ -80,9 +78,9 @@ public final class DocumentModelAdministrationClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<BinaryData, BinaryData> beginBuildDocument(
+    public SyncPoller<BinaryData, BinaryData> beginBuildDocumentModel(
             BinaryData buildRequest, RequestOptions requestOptions) {
-        return this.serviceClient.beginBuildDocument(buildRequest, requestOptions);
+        return this.serviceClient.beginBuildDocumentModel(buildRequest, requestOptions);
     }
 
     /**
@@ -212,7 +210,7 @@ public final class DocumentModelAdministrationClient {
      *     tags (Optional): {
      *         String: String (Optional)
      *     }
-     *     buildMode: String(template/neural) (Required)
+     *     buildMode: String(template/neural) (Optional)
      *     azureBlobSource (Optional): {
      *         containerUrl: String (Required)
      *         prefix: String (Optional)
@@ -273,6 +271,35 @@ public final class DocumentModelAdministrationClient {
      *     tags (Optional): {
      *         String: String (Optional)
      *     }
+     *     buildMode: String(template/neural) (Optional)
+     *     azureBlobSource (Optional): {
+     *         containerUrl: String (Required)
+     *         prefix: String (Optional)
+     *     }
+     *     azureBlobFileListSource (Optional): {
+     *         containerUrl: String (Required)
+     *         fileList: String (Required)
+     *     }
+     *     docTypes (Optional): {
+     *         String (Optional): {
+     *             description: String (Optional)
+     *             buildMode: String(template/neural) (Optional)
+     *             fieldSchema (Required): {
+     *                 String (Required): {
+     *                     type: String(string/date/time/phoneNumber/number/integer/selectionMark/countryRegion/signature/array/object/currency/address/boolean) (Required)
+     *                     description: String (Optional)
+     *                     example: String (Optional)
+     *                     items (Optional): (recursive schema, see items above)
+     *                     properties (Optional): {
+     *                         String (Optional): (recursive schema, see String above)
+     *                     }
+     *                 }
+     *             }
+     *             fieldConfidence (Optional): {
+     *                 String: double (Optional)
+     *             }
+     *         }
+     *     }
      * }
      * }</pre>
      *
@@ -281,7 +308,7 @@ public final class DocumentModelAdministrationClient {
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
-     * @return paged collection of DocumentModelSummary items as paginated response with {@link PagedIterable}.
+     * @return paged collection of DocumentModelDetails items as paginated response with {@link PagedIterable}.
      */
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
@@ -363,7 +390,7 @@ public final class DocumentModelAdministrationClient {
      *             (recursive schema, see above)
      *         ]
      *         innererror (Optional): {
-     *             code: String (Required)
+     *             code: String (Optional)
      *             message: String (Optional)
      *             innererror (Optional): (recursive schema, see innererror above)
      *         }
@@ -397,11 +424,23 @@ public final class DocumentModelAdministrationClient {
      *     percentCompleted: Integer (Optional)
      *     createdDateTime: OffsetDateTime (Required)
      *     lastUpdatedDateTime: OffsetDateTime (Required)
-     *     kind: String(documentModelBuild/documentModelCompose/documentModelCopyTo/documentClassifierBuild) (Required)
      *     resourceLocation: String (Required)
      *     apiVersion: String (Optional)
      *     tags (Optional): {
      *         String: String (Optional)
+     *     }
+     *     error (Optional): {
+     *         code: String (Required)
+     *         message: String (Required)
+     *         target: String (Optional)
+     *         details (Optional): [
+     *             (recursive schema, see above)
+     *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             message: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
@@ -411,7 +450,7 @@ public final class DocumentModelAdministrationClient {
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
-     * @return paged collection of OperationSummary items as paginated response with {@link PagedIterable}.
+     * @return paged collection of OperationDetails items as paginated response with {@link PagedIterable}.
      */
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
@@ -573,10 +612,11 @@ public final class DocumentModelAdministrationClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult, DocumentModelDetails> beginBuildDocument(BuildDocumentModelRequest buildRequest) {
-        // Generated convenience method for beginBuildDocumentWithModel
+    public SyncPoller<PollResult, DocumentModelDetails> beginBuildDocumentModel(
+            BuildDocumentModelRequest buildRequest) {
+        // Generated convenience method for beginBuildDocumentModelWithModel
         RequestOptions requestOptions = new RequestOptions();
-        return serviceClient.beginBuildDocumentWithModel(BinaryData.fromObject(buildRequest), requestOptions);
+        return serviceClient.beginBuildDocumentModelWithModel(BinaryData.fromObject(buildRequest), requestOptions);
     }
 
     /**
@@ -672,16 +712,16 @@ public final class DocumentModelAdministrationClient {
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return paged collection of DocumentModelSummary items as paginated response with {@link PagedIterable}.
+     * @return paged collection of DocumentModelDetails items as paginated response with {@link PagedIterable}.
      */
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<DocumentModelSummary> listModels() {
+    public PagedIterable<DocumentModelDetails> listModels() {
         // Generated convenience method for listModels
         RequestOptions requestOptions = new RequestOptions();
         return serviceClient
                 .listModels(requestOptions)
-                .mapPage(bodyItemValue -> bodyItemValue.toObject(DocumentModelSummary.class));
+                .mapPage(bodyItemValue -> bodyItemValue.toObject(DocumentModelDetails.class));
     }
 
     /**
@@ -749,16 +789,16 @@ public final class DocumentModelAdministrationClient {
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
      * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent.
-     * @return paged collection of OperationSummary items as paginated response with {@link PagedIterable}.
+     * @return paged collection of OperationDetails items as paginated response with {@link PagedIterable}.
      */
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<OperationSummary> listOperations() {
+    public PagedIterable<OperationDetails> listOperations() {
         // Generated convenience method for listOperations
         RequestOptions requestOptions = new RequestOptions();
         return serviceClient
                 .listOperations(requestOptions)
-                .mapPage(bodyItemValue -> bodyItemValue.toObject(OperationSummary.class));
+                .mapPage(bodyItemValue -> bodyItemValue.toObject(OperationDetails.class));
     }
 
     /**

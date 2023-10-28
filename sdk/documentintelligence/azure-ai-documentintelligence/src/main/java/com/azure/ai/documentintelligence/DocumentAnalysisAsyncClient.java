@@ -46,7 +46,7 @@ public final class DocumentAnalysisAsyncClient {
     }
 
     /**
-     * Long running RPC operation template.
+     * Analyzes document with document model.
      *
      * <p><strong>Query Parameters</strong>
      *
@@ -57,9 +57,9 @@ public final class DocumentAnalysisAsyncClient {
      *     <tr><td>locale</td><td>String</td><td>No</td><td>Locale hint for text recognition and document analysis.  Value may contain only
      * the language code (ex. "en", "fr") or BCP 47 language tag (ex. "en-US").</td></tr>
      *     <tr><td>stringIndexType</td><td>String</td><td>No</td><td>Method used to compute string offset and length. Allowed values: "textElements", "unicodeCodePoint", "utf16CodeUnit".</td></tr>
-     *     <tr><td>contentFormat</td><td>String</td><td>No</td><td>Format of the analyze result top-level content. Allowed values: "text", "markdown".</td></tr>
      *     <tr><td>features</td><td>List&lt;String&gt;</td><td>No</td><td>List of optional analysis features. In the form of "," separated string.</td></tr>
      *     <tr><td>queryFields</td><td>List&lt;String&gt;</td><td>No</td><td>List of additional fields to extract.  Ex. "NumberOfGuests,StoreNumber". In the form of "," separated string.</td></tr>
+     *     <tr><td>outputContentFormat</td><td>String</td><td>No</td><td>Format of the analyze result top-level content. Allowed values: "text", "markdown".</td></tr>
      * </table>
      *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
@@ -96,6 +96,7 @@ public final class DocumentAnalysisAsyncClient {
      *     <caption>Query Parameters</caption>
      *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
      *     <tr><td>stringIndexType</td><td>String</td><td>No</td><td>Method used to compute string offset and length. Allowed values: "textElements", "unicodeCodePoint", "utf16CodeUnit".</td></tr>
+     *     <tr><td>split</td><td>String</td><td>No</td><td>Document splitting mode. Allowed values: "auto", "none", "perPage".</td></tr>
      * </table>
      *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
@@ -110,7 +111,6 @@ public final class DocumentAnalysisAsyncClient {
      * }</pre>
      *
      * @param classifierId Unique document classifier name.
-     * @param split Document splitting mode. Allowed values: "auto", "none", "perPage".
      * @param classifyRequest Classify request parameters.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -122,21 +122,21 @@ public final class DocumentAnalysisAsyncClient {
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<BinaryData, BinaryData> beginClassifyDocument(
-            String classifierId, String split, BinaryData classifyRequest, RequestOptions requestOptions) {
-        return this.serviceClient.beginClassifyDocumentAsync(classifierId, split, classifyRequest, requestOptions);
+            String classifierId, BinaryData classifyRequest, RequestOptions requestOptions) {
+        return this.serviceClient.beginClassifyDocumentAsync(classifierId, classifyRequest, requestOptions);
     }
 
     /**
-     * Long running RPC operation template.
+     * Analyzes document with document model.
      *
      * @param modelId Unique document model name.
      * @param pages List of 1-based page numbers to analyze. Ex. "1-3,5,7-9".
      * @param locale Locale hint for text recognition and document analysis. Value may contain only the language code
      *     (ex. "en", "fr") or BCP 47 language tag (ex. "en-US").
      * @param stringIndexType Method used to compute string offset and length.
-     * @param contentFormat Format of the analyze result top-level content.
      * @param features List of optional analysis features.
      * @param queryFields List of additional fields to extract. Ex. "NumberOfGuests,StoreNumber".
+     * @param outputContentFormat Format of the analyze result top-level content.
      * @param analyzeRequest Analyze request parameters.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -153,9 +153,9 @@ public final class DocumentAnalysisAsyncClient {
             String pages,
             String locale,
             StringIndexType stringIndexType,
-            ContentFormat contentFormat,
             List<DocumentAnalysisFeature> features,
             List<String> queryFields,
+            ContentFormat outputContentFormat,
             AnalyzeDocumentRequest analyzeRequest) {
         // Generated convenience method for beginAnalyzeDocumentWithModel
         RequestOptions requestOptions = new RequestOptions();
@@ -167,9 +167,6 @@ public final class DocumentAnalysisAsyncClient {
         }
         if (stringIndexType != null) {
             requestOptions.addQueryParam("stringIndexType", stringIndexType.toString(), false);
-        }
-        if (contentFormat != null) {
-            requestOptions.addQueryParam("contentFormat", contentFormat.toString(), false);
         }
         if (features != null) {
             requestOptions.addQueryParam(
@@ -185,6 +182,9 @@ public final class DocumentAnalysisAsyncClient {
                             .collect(Collectors.joining(",")),
                     false);
         }
+        if (outputContentFormat != null) {
+            requestOptions.addQueryParam("outputContentFormat", outputContentFormat.toString(), false);
+        }
         if (analyzeRequest != null) {
             requestOptions.setBody(BinaryData.fromObject(analyzeRequest));
         }
@@ -192,7 +192,7 @@ public final class DocumentAnalysisAsyncClient {
     }
 
     /**
-     * Long running RPC operation template.
+     * Analyzes document with document model.
      *
      * @param modelId Unique document model name.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
@@ -215,9 +215,9 @@ public final class DocumentAnalysisAsyncClient {
      * Classifies document with document classifier.
      *
      * @param classifierId Unique document classifier name.
-     * @param split Document splitting mode.
      * @param classifyRequest Classify request parameters.
      * @param stringIndexType Method used to compute string offset and length.
+     * @param split Document splitting mode.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -230,23 +230,25 @@ public final class DocumentAnalysisAsyncClient {
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<AnalyzeResultOperation, AnalyzeResult> beginClassifyDocument(
             String classifierId,
-            SplitMode split,
             ClassifyDocumentRequest classifyRequest,
-            StringIndexType stringIndexType) {
+            StringIndexType stringIndexType,
+            SplitMode split) {
         // Generated convenience method for beginClassifyDocumentWithModel
         RequestOptions requestOptions = new RequestOptions();
         if (stringIndexType != null) {
             requestOptions.addQueryParam("stringIndexType", stringIndexType.toString(), false);
         }
+        if (split != null) {
+            requestOptions.addQueryParam("split", split.toString(), false);
+        }
         return serviceClient.beginClassifyDocumentWithModelAsync(
-                classifierId, split.toString(), BinaryData.fromObject(classifyRequest), requestOptions);
+                classifierId, BinaryData.fromObject(classifyRequest), requestOptions);
     }
 
     /**
      * Classifies document with document classifier.
      *
      * @param classifierId Unique document classifier name.
-     * @param split Document splitting mode.
      * @param classifyRequest Classify request parameters.
      * @throws IllegalArgumentException thrown if parameters fail the validation.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -259,10 +261,10 @@ public final class DocumentAnalysisAsyncClient {
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<AnalyzeResultOperation, AnalyzeResult> beginClassifyDocument(
-            String classifierId, SplitMode split, ClassifyDocumentRequest classifyRequest) {
+            String classifierId, ClassifyDocumentRequest classifyRequest) {
         // Generated convenience method for beginClassifyDocumentWithModel
         RequestOptions requestOptions = new RequestOptions();
         return serviceClient.beginClassifyDocumentWithModelAsync(
-                classifierId, split.toString(), BinaryData.fromObject(classifyRequest), requestOptions);
+                classifierId, BinaryData.fromObject(classifyRequest), requestOptions);
     }
 }

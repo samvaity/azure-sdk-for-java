@@ -8,16 +8,27 @@ import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.Immutable;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.time.OffsetDateTime;
 import java.util.Map;
 
-/** Get Operation response object. */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "kind")
+/** Operation info. */
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "kind",
+        defaultImpl = OperationDetails.class)
 @JsonTypeName("OperationDetails")
+@JsonSubTypes({
+    @JsonSubTypes.Type(name = "documentModelBuild", value = DocumentModelBuildOperationDetails.class),
+    @JsonSubTypes.Type(name = "documentModelCompose", value = DocumentModelComposeOperationDetails.class),
+    @JsonSubTypes.Type(name = "documentModelCopyTo", value = DocumentModelCopyToOperationDetails.class),
+    @JsonSubTypes.Type(name = "documentClassifierBuild", value = DocumentClassifierBuildOperationDetails.class)
+})
 @Immutable
-public final class OperationDetails {
+public class OperationDetails {
     /*
      * Operation ID
      */
@@ -91,7 +102,7 @@ public final class OperationDetails {
      */
     @Generated
     @JsonCreator
-    private OperationDetails(
+    protected OperationDetails(
             @JsonProperty(value = "status") OperationStatus status,
             @JsonProperty(value = "createdDateTime") OffsetDateTime createdDateTime,
             @JsonProperty(value = "lastUpdatedDateTime") OffsetDateTime lastUpdatedDateTime,

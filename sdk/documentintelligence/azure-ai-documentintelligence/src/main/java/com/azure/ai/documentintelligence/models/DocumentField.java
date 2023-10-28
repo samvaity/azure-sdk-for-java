@@ -69,7 +69,7 @@ public final class DocumentField {
      */
     @Generated
     @JsonProperty(value = "valueSelectionMark")
-    private SelectionMarkState valueSelectionMark;
+    private DocumentSelectionMarkState valueSelectionMark;
 
     /*
      * Presence of signature.
@@ -235,7 +235,7 @@ public final class DocumentField {
      * @return the valueSelectionMark value.
      */
     @Generated
-    public SelectionMarkState getValueSelectionMark() {
+    public DocumentSelectionMarkState getValueSelectionMark() {
         return this.valueSelectionMark;
     }
 

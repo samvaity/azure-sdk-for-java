@@ -172,7 +172,7 @@ public final class DocumentModelAdministrationClientImpl {
                 value = ResourceModifiedException.class,
                 code = {409})
         @UnexpectedResponseExceptionType(HttpResponseException.class)
-        Mono<Response<Void>> buildDocument(
+        Mono<Response<Void>> buildDocumentModel(
                 @HostParam("endpoint") String endpoint,
                 @QueryParam("api-version") String apiVersion,
                 @HeaderParam("accept") String accept,
@@ -192,7 +192,7 @@ public final class DocumentModelAdministrationClientImpl {
                 value = ResourceModifiedException.class,
                 code = {409})
         @UnexpectedResponseExceptionType(HttpResponseException.class)
-        Response<Void> buildDocumentSync(
+        Response<Void> buildDocumentModelSync(
                 @HostParam("endpoint") String endpoint,
                 @QueryParam("api-version") String apiVersion,
                 @HeaderParam("accept") String accept,
@@ -862,12 +862,12 @@ public final class DocumentModelAdministrationClientImpl {
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> buildDocumentWithResponseAsync(
+    private Mono<Response<Void>> buildDocumentModelWithResponseAsync(
             BinaryData buildRequest, RequestOptions requestOptions) {
         final String accept = "application/json";
         return FluxUtil.withContext(
                 context ->
-                        service.buildDocument(
+                        service.buildDocumentModel(
                                 this.getEndpoint(),
                                 this.getServiceVersion().getVersion(),
                                 accept,
@@ -909,9 +909,9 @@ public final class DocumentModelAdministrationClientImpl {
      * @return the {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Response<Void> buildDocumentWithResponse(BinaryData buildRequest, RequestOptions requestOptions) {
+    private Response<Void> buildDocumentModelWithResponse(BinaryData buildRequest, RequestOptions requestOptions) {
         final String accept = "application/json";
-        return service.buildDocumentSync(
+        return service.buildDocumentModelSync(
                 this.getEndpoint(),
                 this.getServiceVersion().getVersion(),
                 accept,
@@ -953,11 +953,11 @@ public final class DocumentModelAdministrationClientImpl {
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<BinaryData, BinaryData> beginBuildDocumentAsync(
+    public PollerFlux<BinaryData, BinaryData> beginBuildDocumentModelAsync(
             BinaryData buildRequest, RequestOptions requestOptions) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
-                () -> this.buildDocumentWithResponseAsync(buildRequest, requestOptions),
+                () -> this.buildDocumentModelWithResponseAsync(buildRequest, requestOptions),
                 new com.azure.core.experimental.util.polling.OperationLocationPollingStrategy<>(
                         new PollingStrategyOptions(this.getHttpPipeline())
                                 .setEndpoint(
@@ -1003,11 +1003,11 @@ public final class DocumentModelAdministrationClientImpl {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<BinaryData, BinaryData> beginBuildDocument(
+    public SyncPoller<BinaryData, BinaryData> beginBuildDocumentModel(
             BinaryData buildRequest, RequestOptions requestOptions) {
         return SyncPoller.createPoller(
                 Duration.ofSeconds(1),
-                () -> this.buildDocumentWithResponse(buildRequest, requestOptions),
+                () -> this.buildDocumentModelWithResponse(buildRequest, requestOptions),
                 new com.azure.core.experimental.util.polling.SyncOperationLocationPollingStrategy<>(
                         new PollingStrategyOptions(this.getHttpPipeline())
                                 .setEndpoint(
@@ -1053,11 +1053,11 @@ public final class DocumentModelAdministrationClientImpl {
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<PollResult, DocumentModelDetails> beginBuildDocumentWithModelAsync(
+    public PollerFlux<PollResult, DocumentModelDetails> beginBuildDocumentModelWithModelAsync(
             BinaryData buildRequest, RequestOptions requestOptions) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
-                () -> this.buildDocumentWithResponseAsync(buildRequest, requestOptions),
+                () -> this.buildDocumentModelWithResponseAsync(buildRequest, requestOptions),
                 new com.azure.core.experimental.util.polling.OperationLocationPollingStrategy<>(
                         new PollingStrategyOptions(this.getHttpPipeline())
                                 .setEndpoint(
@@ -1103,11 +1103,11 @@ public final class DocumentModelAdministrationClientImpl {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<PollResult, DocumentModelDetails> beginBuildDocumentWithModel(
+    public SyncPoller<PollResult, DocumentModelDetails> beginBuildDocumentModelWithModel(
             BinaryData buildRequest, RequestOptions requestOptions) {
         return SyncPoller.createPoller(
                 Duration.ofSeconds(1),
-                () -> this.buildDocumentWithResponse(buildRequest, requestOptions),
+                () -> this.buildDocumentModelWithResponse(buildRequest, requestOptions),
                 new com.azure.core.experimental.util.polling.SyncOperationLocationPollingStrategy<>(
                         new PollingStrategyOptions(this.getHttpPipeline())
                                 .setEndpoint(
@@ -1758,7 +1758,7 @@ public final class DocumentModelAdministrationClientImpl {
      *     tags (Optional): {
      *         String: String (Optional)
      *     }
-     *     buildMode: String(template/neural) (Required)
+     *     buildMode: String(template/neural) (Optional)
      *     azureBlobSource (Optional): {
      *         containerUrl: String (Required)
      *         prefix: String (Optional)
@@ -1827,7 +1827,7 @@ public final class DocumentModelAdministrationClientImpl {
      *     tags (Optional): {
      *         String: String (Optional)
      *     }
-     *     buildMode: String(template/neural) (Required)
+     *     buildMode: String(template/neural) (Optional)
      *     azureBlobSource (Optional): {
      *         containerUrl: String (Required)
      *         prefix: String (Optional)
@@ -1894,6 +1894,35 @@ public final class DocumentModelAdministrationClientImpl {
      *     tags (Optional): {
      *         String: String (Optional)
      *     }
+     *     buildMode: String(template/neural) (Optional)
+     *     azureBlobSource (Optional): {
+     *         containerUrl: String (Required)
+     *         prefix: String (Optional)
+     *     }
+     *     azureBlobFileListSource (Optional): {
+     *         containerUrl: String (Required)
+     *         fileList: String (Required)
+     *     }
+     *     docTypes (Optional): {
+     *         String (Optional): {
+     *             description: String (Optional)
+     *             buildMode: String(template/neural) (Optional)
+     *             fieldSchema (Required): {
+     *                 String (Required): {
+     *                     type: String(string/date/time/phoneNumber/number/integer/selectionMark/countryRegion/signature/array/object/currency/address/boolean) (Required)
+     *                     description: String (Optional)
+     *                     example: String (Optional)
+     *                     items (Optional): (recursive schema, see items above)
+     *                     properties (Optional): {
+     *                         String (Optional): (recursive schema, see String above)
+     *                     }
+     *                 }
+     *             }
+     *             fieldConfidence (Optional): {
+     *                 String: double (Optional)
+     *             }
+     *         }
+     *     }
      * }
      * }</pre>
      *
@@ -1902,7 +1931,7 @@ public final class DocumentModelAdministrationClientImpl {
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
-     * @return paged collection of DocumentModelSummary items along with {@link PagedResponse} on successful completion
+     * @return paged collection of DocumentModelDetails items along with {@link PagedResponse} on successful completion
      *     of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
@@ -1942,6 +1971,35 @@ public final class DocumentModelAdministrationClientImpl {
      *     tags (Optional): {
      *         String: String (Optional)
      *     }
+     *     buildMode: String(template/neural) (Optional)
+     *     azureBlobSource (Optional): {
+     *         containerUrl: String (Required)
+     *         prefix: String (Optional)
+     *     }
+     *     azureBlobFileListSource (Optional): {
+     *         containerUrl: String (Required)
+     *         fileList: String (Required)
+     *     }
+     *     docTypes (Optional): {
+     *         String (Optional): {
+     *             description: String (Optional)
+     *             buildMode: String(template/neural) (Optional)
+     *             fieldSchema (Required): {
+     *                 String (Required): {
+     *                     type: String(string/date/time/phoneNumber/number/integer/selectionMark/countryRegion/signature/array/object/currency/address/boolean) (Required)
+     *                     description: String (Optional)
+     *                     example: String (Optional)
+     *                     items (Optional): (recursive schema, see items above)
+     *                     properties (Optional): {
+     *                         String (Optional): (recursive schema, see String above)
+     *                     }
+     *                 }
+     *             }
+     *             fieldConfidence (Optional): {
+     *                 String: double (Optional)
+     *             }
+     *         }
+     *     }
      * }
      * }</pre>
      *
@@ -1950,7 +2008,7 @@ public final class DocumentModelAdministrationClientImpl {
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
-     * @return paged collection of DocumentModelSummary items as paginated response with {@link PagedFlux}.
+     * @return paged collection of DocumentModelDetails items as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedFlux<BinaryData> listModelsAsync(RequestOptions requestOptions) {
@@ -1979,6 +2037,35 @@ public final class DocumentModelAdministrationClientImpl {
      *     tags (Optional): {
      *         String: String (Optional)
      *     }
+     *     buildMode: String(template/neural) (Optional)
+     *     azureBlobSource (Optional): {
+     *         containerUrl: String (Required)
+     *         prefix: String (Optional)
+     *     }
+     *     azureBlobFileListSource (Optional): {
+     *         containerUrl: String (Required)
+     *         fileList: String (Required)
+     *     }
+     *     docTypes (Optional): {
+     *         String (Optional): {
+     *             description: String (Optional)
+     *             buildMode: String(template/neural) (Optional)
+     *             fieldSchema (Required): {
+     *                 String (Required): {
+     *                     type: String(string/date/time/phoneNumber/number/integer/selectionMark/countryRegion/signature/array/object/currency/address/boolean) (Required)
+     *                     description: String (Optional)
+     *                     example: String (Optional)
+     *                     items (Optional): (recursive schema, see items above)
+     *                     properties (Optional): {
+     *                         String (Optional): (recursive schema, see String above)
+     *                     }
+     *                 }
+     *             }
+     *             fieldConfidence (Optional): {
+     *                 String: double (Optional)
+     *             }
+     *         }
+     *     }
      * }
      * }</pre>
      *
@@ -1987,7 +2074,7 @@ public final class DocumentModelAdministrationClientImpl {
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
-     * @return paged collection of DocumentModelSummary items along with {@link PagedResponse}.
+     * @return paged collection of DocumentModelDetails items along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private PagedResponse<BinaryData> listModelsSinglePage(RequestOptions requestOptions) {
@@ -2023,6 +2110,35 @@ public final class DocumentModelAdministrationClientImpl {
      *     tags (Optional): {
      *         String: String (Optional)
      *     }
+     *     buildMode: String(template/neural) (Optional)
+     *     azureBlobSource (Optional): {
+     *         containerUrl: String (Required)
+     *         prefix: String (Optional)
+     *     }
+     *     azureBlobFileListSource (Optional): {
+     *         containerUrl: String (Required)
+     *         fileList: String (Required)
+     *     }
+     *     docTypes (Optional): {
+     *         String (Optional): {
+     *             description: String (Optional)
+     *             buildMode: String(template/neural) (Optional)
+     *             fieldSchema (Required): {
+     *                 String (Required): {
+     *                     type: String(string/date/time/phoneNumber/number/integer/selectionMark/countryRegion/signature/array/object/currency/address/boolean) (Required)
+     *                     description: String (Optional)
+     *                     example: String (Optional)
+     *                     items (Optional): (recursive schema, see items above)
+     *                     properties (Optional): {
+     *                         String (Optional): (recursive schema, see String above)
+     *                     }
+     *                 }
+     *             }
+     *             fieldConfidence (Optional): {
+     *                 String: double (Optional)
+     *             }
+     *         }
+     *     }
      * }
      * }</pre>
      *
@@ -2031,7 +2147,7 @@ public final class DocumentModelAdministrationClientImpl {
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
-     * @return paged collection of DocumentModelSummary items as paginated response with {@link PagedIterable}.
+     * @return paged collection of DocumentModelDetails items as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<BinaryData> listModels(RequestOptions requestOptions) {
@@ -2191,7 +2307,7 @@ public final class DocumentModelAdministrationClientImpl {
      *             (recursive schema, see above)
      *         ]
      *         innererror (Optional): {
-     *             code: String (Required)
+     *             code: String (Optional)
      *             message: String (Optional)
      *             innererror (Optional): (recursive schema, see innererror above)
      *         }
@@ -2246,7 +2362,7 @@ public final class DocumentModelAdministrationClientImpl {
      *             (recursive schema, see above)
      *         ]
      *         innererror (Optional): {
-     *             code: String (Required)
+     *             code: String (Optional)
      *             message: String (Optional)
      *             innererror (Optional): (recursive schema, see innererror above)
      *         }
@@ -2286,11 +2402,23 @@ public final class DocumentModelAdministrationClientImpl {
      *     percentCompleted: Integer (Optional)
      *     createdDateTime: OffsetDateTime (Required)
      *     lastUpdatedDateTime: OffsetDateTime (Required)
-     *     kind: String(documentModelBuild/documentModelCompose/documentModelCopyTo/documentClassifierBuild) (Required)
      *     resourceLocation: String (Required)
      *     apiVersion: String (Optional)
      *     tags (Optional): {
      *         String: String (Optional)
+     *     }
+     *     error (Optional): {
+     *         code: String (Required)
+     *         message: String (Required)
+     *         target: String (Optional)
+     *         details (Optional): [
+     *             (recursive schema, see above)
+     *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             message: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
@@ -2300,7 +2428,7 @@ public final class DocumentModelAdministrationClientImpl {
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
-     * @return paged collection of OperationSummary items along with {@link PagedResponse} on successful completion of
+     * @return paged collection of OperationDetails items along with {@link PagedResponse} on successful completion of
      *     {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
@@ -2337,11 +2465,23 @@ public final class DocumentModelAdministrationClientImpl {
      *     percentCompleted: Integer (Optional)
      *     createdDateTime: OffsetDateTime (Required)
      *     lastUpdatedDateTime: OffsetDateTime (Required)
-     *     kind: String(documentModelBuild/documentModelCompose/documentModelCopyTo/documentClassifierBuild) (Required)
      *     resourceLocation: String (Required)
      *     apiVersion: String (Optional)
      *     tags (Optional): {
      *         String: String (Optional)
+     *     }
+     *     error (Optional): {
+     *         code: String (Required)
+     *         message: String (Required)
+     *         target: String (Optional)
+     *         details (Optional): [
+     *             (recursive schema, see above)
+     *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             message: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
@@ -2351,7 +2491,7 @@ public final class DocumentModelAdministrationClientImpl {
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
-     * @return paged collection of OperationSummary items as paginated response with {@link PagedFlux}.
+     * @return paged collection of OperationDetails items as paginated response with {@link PagedFlux}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedFlux<BinaryData> listOperationsAsync(RequestOptions requestOptions) {
@@ -2377,11 +2517,23 @@ public final class DocumentModelAdministrationClientImpl {
      *     percentCompleted: Integer (Optional)
      *     createdDateTime: OffsetDateTime (Required)
      *     lastUpdatedDateTime: OffsetDateTime (Required)
-     *     kind: String(documentModelBuild/documentModelCompose/documentModelCopyTo/documentClassifierBuild) (Required)
      *     resourceLocation: String (Required)
      *     apiVersion: String (Optional)
      *     tags (Optional): {
      *         String: String (Optional)
+     *     }
+     *     error (Optional): {
+     *         code: String (Required)
+     *         message: String (Required)
+     *         target: String (Optional)
+     *         details (Optional): [
+     *             (recursive schema, see above)
+     *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             message: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
@@ -2391,7 +2543,7 @@ public final class DocumentModelAdministrationClientImpl {
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
-     * @return paged collection of OperationSummary items along with {@link PagedResponse}.
+     * @return paged collection of OperationDetails items along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private PagedResponse<BinaryData> listOperationsSinglePage(RequestOptions requestOptions) {
@@ -2424,11 +2576,23 @@ public final class DocumentModelAdministrationClientImpl {
      *     percentCompleted: Integer (Optional)
      *     createdDateTime: OffsetDateTime (Required)
      *     lastUpdatedDateTime: OffsetDateTime (Required)
-     *     kind: String(documentModelBuild/documentModelCompose/documentModelCopyTo/documentClassifierBuild) (Required)
      *     resourceLocation: String (Required)
      *     apiVersion: String (Optional)
      *     tags (Optional): {
      *         String: String (Optional)
+     *     }
+     *     error (Optional): {
+     *         code: String (Required)
+     *         message: String (Required)
+     *         target: String (Optional)
+     *         details (Optional): [
+     *             (recursive schema, see above)
+     *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             message: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
@@ -2438,7 +2602,7 @@ public final class DocumentModelAdministrationClientImpl {
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
-     * @return paged collection of OperationSummary items as paginated response with {@link PagedIterable}.
+     * @return paged collection of OperationDetails items as paginated response with {@link PagedIterable}.
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<BinaryData> listOperations(RequestOptions requestOptions) {
@@ -3118,6 +3282,35 @@ public final class DocumentModelAdministrationClientImpl {
      *     tags (Optional): {
      *         String: String (Optional)
      *     }
+     *     buildMode: String(template/neural) (Optional)
+     *     azureBlobSource (Optional): {
+     *         containerUrl: String (Required)
+     *         prefix: String (Optional)
+     *     }
+     *     azureBlobFileListSource (Optional): {
+     *         containerUrl: String (Required)
+     *         fileList: String (Required)
+     *     }
+     *     docTypes (Optional): {
+     *         String (Optional): {
+     *             description: String (Optional)
+     *             buildMode: String(template/neural) (Optional)
+     *             fieldSchema (Required): {
+     *                 String (Required): {
+     *                     type: String(string/date/time/phoneNumber/number/integer/selectionMark/countryRegion/signature/array/object/currency/address/boolean) (Required)
+     *                     description: String (Optional)
+     *                     example: String (Optional)
+     *                     items (Optional): (recursive schema, see items above)
+     *                     properties (Optional): {
+     *                         String (Optional): (recursive schema, see String above)
+     *                     }
+     *                 }
+     *             }
+     *             fieldConfidence (Optional): {
+     *                 String: double (Optional)
+     *             }
+     *         }
+     *     }
      * }
      * }</pre>
      *
@@ -3128,7 +3321,7 @@ public final class DocumentModelAdministrationClientImpl {
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
-     * @return paged collection of DocumentModelSummary items along with {@link PagedResponse} on successful completion
+     * @return paged collection of DocumentModelDetails items along with {@link PagedResponse} on successful completion
      *     of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
@@ -3164,6 +3357,35 @@ public final class DocumentModelAdministrationClientImpl {
      *     tags (Optional): {
      *         String: String (Optional)
      *     }
+     *     buildMode: String(template/neural) (Optional)
+     *     azureBlobSource (Optional): {
+     *         containerUrl: String (Required)
+     *         prefix: String (Optional)
+     *     }
+     *     azureBlobFileListSource (Optional): {
+     *         containerUrl: String (Required)
+     *         fileList: String (Required)
+     *     }
+     *     docTypes (Optional): {
+     *         String (Optional): {
+     *             description: String (Optional)
+     *             buildMode: String(template/neural) (Optional)
+     *             fieldSchema (Required): {
+     *                 String (Required): {
+     *                     type: String(string/date/time/phoneNumber/number/integer/selectionMark/countryRegion/signature/array/object/currency/address/boolean) (Required)
+     *                     description: String (Optional)
+     *                     example: String (Optional)
+     *                     items (Optional): (recursive schema, see items above)
+     *                     properties (Optional): {
+     *                         String (Optional): (recursive schema, see String above)
+     *                     }
+     *                 }
+     *             }
+     *             fieldConfidence (Optional): {
+     *                 String: double (Optional)
+     *             }
+     *         }
+     *     }
      * }
      * }</pre>
      *
@@ -3174,7 +3396,7 @@ public final class DocumentModelAdministrationClientImpl {
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
-     * @return paged collection of DocumentModelSummary items along with {@link PagedResponse}.
+     * @return paged collection of DocumentModelDetails items along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private PagedResponse<BinaryData> listModelsNextSinglePage(String nextLink, RequestOptions requestOptions) {
@@ -3202,11 +3424,23 @@ public final class DocumentModelAdministrationClientImpl {
      *     percentCompleted: Integer (Optional)
      *     createdDateTime: OffsetDateTime (Required)
      *     lastUpdatedDateTime: OffsetDateTime (Required)
-     *     kind: String(documentModelBuild/documentModelCompose/documentModelCopyTo/documentClassifierBuild) (Required)
      *     resourceLocation: String (Required)
      *     apiVersion: String (Optional)
      *     tags (Optional): {
      *         String: String (Optional)
+     *     }
+     *     error (Optional): {
+     *         code: String (Required)
+     *         message: String (Required)
+     *         target: String (Optional)
+     *         details (Optional): [
+     *             (recursive schema, see above)
+     *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             message: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
@@ -3218,7 +3452,7 @@ public final class DocumentModelAdministrationClientImpl {
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
-     * @return paged collection of OperationSummary items along with {@link PagedResponse} on successful completion of
+     * @return paged collection of OperationDetails items along with {@link PagedResponse} on successful completion of
      *     {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
@@ -3252,11 +3486,23 @@ public final class DocumentModelAdministrationClientImpl {
      *     percentCompleted: Integer (Optional)
      *     createdDateTime: OffsetDateTime (Required)
      *     lastUpdatedDateTime: OffsetDateTime (Required)
-     *     kind: String(documentModelBuild/documentModelCompose/documentModelCopyTo/documentClassifierBuild) (Required)
      *     resourceLocation: String (Required)
      *     apiVersion: String (Optional)
      *     tags (Optional): {
      *         String: String (Optional)
+     *     }
+     *     error (Optional): {
+     *         code: String (Required)
+     *         message: String (Required)
+     *         target: String (Optional)
+     *         details (Optional): [
+     *             (recursive schema, see above)
+     *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             message: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
@@ -3268,7 +3514,7 @@ public final class DocumentModelAdministrationClientImpl {
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
      * @throws ResourceNotFoundException thrown if the request is rejected by server on status code 404.
      * @throws ResourceModifiedException thrown if the request is rejected by server on status code 409.
-     * @return paged collection of OperationSummary items along with {@link PagedResponse}.
+     * @return paged collection of OperationDetails items along with {@link PagedResponse}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private PagedResponse<BinaryData> listOperationsNextSinglePage(String nextLink, RequestOptions requestOptions) {

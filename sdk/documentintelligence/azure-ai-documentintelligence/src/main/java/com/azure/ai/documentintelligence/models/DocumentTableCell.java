@@ -69,6 +69,13 @@ public final class DocumentTableCell {
     @JsonProperty(value = "spans")
     private List<DocumentSpan> spans;
 
+    /*
+     * Child elements of the table cell.
+     */
+    @Generated
+    @JsonProperty(value = "elements")
+    private List<String> elements;
+
     /**
      * Creates an instance of DocumentTableCell class.
      *
@@ -168,5 +175,15 @@ public final class DocumentTableCell {
     @Generated
     public List<DocumentSpan> getSpans() {
         return this.spans;
+    }
+
+    /**
+     * Get the elements property: Child elements of the table cell.
+     *
+     * @return the elements value.
+     */
+    @Generated
+    public List<String> getElements() {
+        return this.elements;
     }
 }

@@ -71,6 +71,27 @@ public final class AnalyzeResult {
     private List<DocumentTable> tables;
 
     /*
+     * Extracted figures.
+     */
+    @Generated
+    @JsonProperty(value = "figures")
+    private List<DocumentFigure> figures;
+
+    /*
+     * Extracted lists.
+     */
+    @Generated
+    @JsonProperty(value = "lists")
+    private List<DocumentList> lists;
+
+    /*
+     * Extracted sections.
+     */
+    @Generated
+    @JsonProperty(value = "sections")
+    private List<DocumentSection> sections;
+
+    /*
      * Extracted key-value pairs.
      */
     @Generated
@@ -104,7 +125,6 @@ public final class AnalyzeResult {
      * @param apiVersion the apiVersion value to set.
      * @param modelId the modelId value to set.
      * @param stringIndexType the stringIndexType value to set.
-     * @param contentFormat the contentFormat value to set.
      * @param content the content value to set.
      * @param pages the pages value to set.
      */
@@ -114,13 +134,11 @@ public final class AnalyzeResult {
             @JsonProperty(value = "apiVersion") String apiVersion,
             @JsonProperty(value = "modelId") String modelId,
             @JsonProperty(value = "stringIndexType") StringIndexType stringIndexType,
-            @JsonProperty(value = "contentFormat") ContentFormat contentFormat,
             @JsonProperty(value = "content") String content,
             @JsonProperty(value = "pages") List<DocumentPage> pages) {
         this.apiVersion = apiVersion;
         this.modelId = modelId;
         this.stringIndexType = stringIndexType;
-        this.contentFormat = contentFormat;
         this.content = content;
         this.pages = pages;
     }
@@ -203,6 +221,36 @@ public final class AnalyzeResult {
     @Generated
     public List<DocumentTable> getTables() {
         return this.tables;
+    }
+
+    /**
+     * Get the figures property: Extracted figures.
+     *
+     * @return the figures value.
+     */
+    @Generated
+    public List<DocumentFigure> getFigures() {
+        return this.figures;
+    }
+
+    /**
+     * Get the lists property: Extracted lists.
+     *
+     * @return the lists value.
+     */
+    @Generated
+    public List<DocumentList> getLists() {
+        return this.lists;
+    }
+
+    /**
+     * Get the sections property: Extracted sections.
+     *
+     * @return the sections value.
+     */
+    @Generated
+    public List<DocumentSection> getSections() {
+        return this.sections;
     }
 
     /**

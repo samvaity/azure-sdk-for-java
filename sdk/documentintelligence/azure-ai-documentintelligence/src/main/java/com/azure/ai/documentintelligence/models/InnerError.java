@@ -6,46 +6,38 @@ package com.azure.ai.documentintelligence.models;
 
 import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.Immutable;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/** Detailed error. */
+/** An object containing more specific information about the error. */
 @Immutable
 public final class InnerError {
     /*
-     * Error code.
+     * One of a server-defined set of error codes.
      */
     @Generated
     @JsonProperty(value = "code")
     private String code;
 
     /*
-     * Error message.
+     * A human-readable representation of the error.
      */
     @Generated
     @JsonProperty(value = "message")
     private String message;
 
     /*
-     * Detailed error.
+     * Inner error.
      */
     @Generated
     @JsonProperty(value = "innererror")
     private InnerError innererror;
 
-    /**
-     * Creates an instance of InnerError class.
-     *
-     * @param code the code value to set.
-     */
+    /** Creates an instance of InnerError class. */
     @Generated
-    @JsonCreator
-    private InnerError(@JsonProperty(value = "code") String code) {
-        this.code = code;
-    }
+    private InnerError() {}
 
     /**
-     * Get the code property: Error code.
+     * Get the code property: One of a server-defined set of error codes.
      *
      * @return the code value.
      */
@@ -55,7 +47,7 @@ public final class InnerError {
     }
 
     /**
-     * Get the message property: Error message.
+     * Get the message property: A human-readable representation of the error.
      *
      * @return the message value.
      */
@@ -65,7 +57,7 @@ public final class InnerError {
     }
 
     /**
-     * Get the innererror property: Detailed error.
+     * Get the innererror property: Inner error.
      *
      * @return the innererror value.
      */

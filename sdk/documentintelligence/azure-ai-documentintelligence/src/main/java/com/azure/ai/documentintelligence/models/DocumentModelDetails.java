@@ -6,7 +6,6 @@ package com.azure.ai.documentintelligence.models;
 
 import com.azure.core.annotation.Generated;
 import com.azure.core.annotation.Immutable;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.Map;
@@ -86,16 +85,9 @@ public final class DocumentModelDetails {
     @JsonProperty(value = "docTypes")
     private Map<String, DocumentTypeDetails> docTypes;
 
-    /**
-     * Creates an instance of DocumentModelDetails class.
-     *
-     * @param buildMode the buildMode value to set.
-     */
+    /** Creates an instance of DocumentModelDetails class. */
     @Generated
-    @JsonCreator
-    private DocumentModelDetails(@JsonProperty(value = "buildMode") DocumentBuildMode buildMode) {
-        this.buildMode = buildMode;
-    }
+    private DocumentModelDetails() {}
 
     /**
      * Get the modelId property: Unique document model name.

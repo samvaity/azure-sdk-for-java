@@ -18,7 +18,7 @@ public final class DocumentSelectionMark {
      */
     @Generated
     @JsonProperty(value = "state")
-    private SelectionMarkState state;
+    private DocumentSelectionMarkState state;
 
     /*
      * Bounding polygon of the selection mark, with coordinates specified relative
@@ -54,7 +54,7 @@ public final class DocumentSelectionMark {
     @Generated
     @JsonCreator
     private DocumentSelectionMark(
-            @JsonProperty(value = "state") SelectionMarkState state,
+            @JsonProperty(value = "state") DocumentSelectionMarkState state,
             @JsonProperty(value = "span") DocumentSpan span,
             @JsonProperty(value = "confidence") double confidence) {
         this.state = state;
@@ -68,7 +68,7 @@ public final class DocumentSelectionMark {
      * @return the state value.
      */
     @Generated
-    public SelectionMarkState getState() {
+    public DocumentSelectionMarkState getState() {
         return this.state;
     }
 

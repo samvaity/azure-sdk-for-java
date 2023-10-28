@@ -10,39 +10,39 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-/** Error info. */
+/** The error object. */
 @Immutable
 public final class Error {
     /*
-     * Error code.
+     * One of a server-defined set of error codes.
      */
     @Generated
     @JsonProperty(value = "code")
     private String code;
 
     /*
-     * Error message.
+     * A human-readable representation of the error.
      */
     @Generated
     @JsonProperty(value = "message")
     private String message;
 
     /*
-     * Target of the error.
+     * The target of the error.
      */
     @Generated
     @JsonProperty(value = "target")
     private String target;
 
     /*
-     * List of detailed errors.
+     * An array of details about specific errors that led to this reported error.
      */
     @Generated
     @JsonProperty(value = "details")
     private List<Error> details;
 
     /*
-     * Detailed error.
+     * An object containing more specific information than the current object about the error.
      */
     @Generated
     @JsonProperty(value = "innererror")
@@ -62,7 +62,7 @@ public final class Error {
     }
 
     /**
-     * Get the code property: Error code.
+     * Get the code property: One of a server-defined set of error codes.
      *
      * @return the code value.
      */
@@ -72,7 +72,7 @@ public final class Error {
     }
 
     /**
-     * Get the message property: Error message.
+     * Get the message property: A human-readable representation of the error.
      *
      * @return the message value.
      */
@@ -82,7 +82,7 @@ public final class Error {
     }
 
     /**
-     * Get the target property: Target of the error.
+     * Get the target property: The target of the error.
      *
      * @return the target value.
      */
@@ -92,7 +92,7 @@ public final class Error {
     }
 
     /**
-     * Get the details property: List of detailed errors.
+     * Get the details property: An array of details about specific errors that led to this reported error.
      *
      * @return the details value.
      */
@@ -102,7 +102,8 @@ public final class Error {
     }
 
     /**
-     * Get the innererror property: Detailed error.
+     * Get the innererror property: An object containing more specific information than the current object about the
+     * error.
      *
      * @return the innererror value.
      */

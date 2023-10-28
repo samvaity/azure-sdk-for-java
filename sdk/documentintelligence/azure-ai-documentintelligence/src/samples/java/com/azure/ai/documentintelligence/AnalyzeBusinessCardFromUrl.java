@@ -30,8 +30,8 @@ public class AnalyzeBusinessCardFromUrl {
     public static void main(final String[] args) {
         // Instantiate a client that will be used to call the service.
         DocumentAnalysisClient client = new DocumentAnalysisClientBuilder()
-            .credential(new AzureKeyCredential("eb35e548451f4c4ca2ee2c8d52c3e109"))
-            .endpoint("https://shafangfr.cognitiveservices.azure.com")
+            .credential(new AzureKeyCredential("{apikey}"))
+            .endpoint("https://{endpoint}.cognitiveservices.azure.com/")
             .buildClient();
 
         String businessCardUrl =

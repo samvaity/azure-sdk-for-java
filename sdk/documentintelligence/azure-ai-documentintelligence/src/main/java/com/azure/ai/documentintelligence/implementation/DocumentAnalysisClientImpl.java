@@ -210,7 +210,6 @@ public final class DocumentAnalysisClientImpl {
                 @HostParam("endpoint") String endpoint,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("classifierId") String classifierId,
-                @QueryParam("split") String split,
                 @HeaderParam("content-type") String contentType,
                 @HeaderParam("accept") String accept,
                 @BodyParam("application/json") BinaryData classifyRequest,
@@ -233,7 +232,6 @@ public final class DocumentAnalysisClientImpl {
                 @HostParam("endpoint") String endpoint,
                 @QueryParam("api-version") String apiVersion,
                 @PathParam("classifierId") String classifierId,
-                @QueryParam("split") String split,
                 @HeaderParam("content-type") String contentType,
                 @HeaderParam("accept") String accept,
                 @BodyParam("application/json") BinaryData classifyRequest,
@@ -242,7 +240,7 @@ public final class DocumentAnalysisClientImpl {
     }
 
     /**
-     * Long running RPC operation template.
+     * Analyzes document with document model.
      *
      * <p><strong>Query Parameters</strong>
      *
@@ -253,9 +251,9 @@ public final class DocumentAnalysisClientImpl {
      *     <tr><td>locale</td><td>String</td><td>No</td><td>Locale hint for text recognition and document analysis.  Value may contain only
      * the language code (ex. "en", "fr") or BCP 47 language tag (ex. "en-US").</td></tr>
      *     <tr><td>stringIndexType</td><td>String</td><td>No</td><td>Method used to compute string offset and length. Allowed values: "textElements", "unicodeCodePoint", "utf16CodeUnit".</td></tr>
-     *     <tr><td>contentFormat</td><td>String</td><td>No</td><td>Format of the analyze result top-level content. Allowed values: "text", "markdown".</td></tr>
      *     <tr><td>features</td><td>List&lt;String&gt;</td><td>No</td><td>List of optional analysis features. In the form of "," separated string.</td></tr>
      *     <tr><td>queryFields</td><td>List&lt;String&gt;</td><td>No</td><td>List of additional fields to extract.  Ex. "NumberOfGuests,StoreNumber". In the form of "," separated string.</td></tr>
+     *     <tr><td>outputContentFormat</td><td>String</td><td>No</td><td>Format of the analyze result top-level content. Allowed values: "text", "markdown".</td></tr>
      * </table>
      *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
@@ -302,7 +300,7 @@ public final class DocumentAnalysisClientImpl {
     }
 
     /**
-     * Long running RPC operation template.
+     * Analyzes document with document model.
      *
      * <p><strong>Query Parameters</strong>
      *
@@ -313,9 +311,9 @@ public final class DocumentAnalysisClientImpl {
      *     <tr><td>locale</td><td>String</td><td>No</td><td>Locale hint for text recognition and document analysis.  Value may contain only
      * the language code (ex. "en", "fr") or BCP 47 language tag (ex. "en-US").</td></tr>
      *     <tr><td>stringIndexType</td><td>String</td><td>No</td><td>Method used to compute string offset and length. Allowed values: "textElements", "unicodeCodePoint", "utf16CodeUnit".</td></tr>
-     *     <tr><td>contentFormat</td><td>String</td><td>No</td><td>Format of the analyze result top-level content. Allowed values: "text", "markdown".</td></tr>
      *     <tr><td>features</td><td>List&lt;String&gt;</td><td>No</td><td>List of optional analysis features. In the form of "," separated string.</td></tr>
      *     <tr><td>queryFields</td><td>List&lt;String&gt;</td><td>No</td><td>List of additional fields to extract.  Ex. "NumberOfGuests,StoreNumber". In the form of "," separated string.</td></tr>
+     *     <tr><td>outputContentFormat</td><td>String</td><td>No</td><td>Format of the analyze result top-level content. Allowed values: "text", "markdown".</td></tr>
      * </table>
      *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
@@ -360,7 +358,7 @@ public final class DocumentAnalysisClientImpl {
     }
 
     /**
-     * Long running RPC operation template.
+     * Analyzes document with document model.
      *
      * <p><strong>Query Parameters</strong>
      *
@@ -371,9 +369,9 @@ public final class DocumentAnalysisClientImpl {
      *     <tr><td>locale</td><td>String</td><td>No</td><td>Locale hint for text recognition and document analysis.  Value may contain only
      * the language code (ex. "en", "fr") or BCP 47 language tag (ex. "en-US").</td></tr>
      *     <tr><td>stringIndexType</td><td>String</td><td>No</td><td>Method used to compute string offset and length. Allowed values: "textElements", "unicodeCodePoint", "utf16CodeUnit".</td></tr>
-     *     <tr><td>contentFormat</td><td>String</td><td>No</td><td>Format of the analyze result top-level content. Allowed values: "text", "markdown".</td></tr>
      *     <tr><td>features</td><td>List&lt;String&gt;</td><td>No</td><td>List of optional analysis features. In the form of "," separated string.</td></tr>
      *     <tr><td>queryFields</td><td>List&lt;String&gt;</td><td>No</td><td>List of additional fields to extract.  Ex. "NumberOfGuests,StoreNumber". In the form of "," separated string.</td></tr>
+     *     <tr><td>outputContentFormat</td><td>String</td><td>No</td><td>Format of the analyze result top-level content. Allowed values: "text", "markdown".</td></tr>
      * </table>
      *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
@@ -413,7 +411,7 @@ public final class DocumentAnalysisClientImpl {
     }
 
     /**
-     * Long running RPC operation template.
+     * Analyzes document with document model.
      *
      * <p><strong>Query Parameters</strong>
      *
@@ -424,9 +422,9 @@ public final class DocumentAnalysisClientImpl {
      *     <tr><td>locale</td><td>String</td><td>No</td><td>Locale hint for text recognition and document analysis.  Value may contain only
      * the language code (ex. "en", "fr") or BCP 47 language tag (ex. "en-US").</td></tr>
      *     <tr><td>stringIndexType</td><td>String</td><td>No</td><td>Method used to compute string offset and length. Allowed values: "textElements", "unicodeCodePoint", "utf16CodeUnit".</td></tr>
-     *     <tr><td>contentFormat</td><td>String</td><td>No</td><td>Format of the analyze result top-level content. Allowed values: "text", "markdown".</td></tr>
      *     <tr><td>features</td><td>List&lt;String&gt;</td><td>No</td><td>List of optional analysis features. In the form of "," separated string.</td></tr>
      *     <tr><td>queryFields</td><td>List&lt;String&gt;</td><td>No</td><td>List of additional fields to extract.  Ex. "NumberOfGuests,StoreNumber". In the form of "," separated string.</td></tr>
+     *     <tr><td>outputContentFormat</td><td>String</td><td>No</td><td>Format of the analyze result top-level content. Allowed values: "text", "markdown".</td></tr>
      * </table>
      *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
@@ -466,7 +464,7 @@ public final class DocumentAnalysisClientImpl {
     }
 
     /**
-     * Long running RPC operation template.
+     * Analyzes document with document model.
      *
      * <p><strong>Query Parameters</strong>
      *
@@ -477,9 +475,9 @@ public final class DocumentAnalysisClientImpl {
      *     <tr><td>locale</td><td>String</td><td>No</td><td>Locale hint for text recognition and document analysis.  Value may contain only
      * the language code (ex. "en", "fr") or BCP 47 language tag (ex. "en-US").</td></tr>
      *     <tr><td>stringIndexType</td><td>String</td><td>No</td><td>Method used to compute string offset and length. Allowed values: "textElements", "unicodeCodePoint", "utf16CodeUnit".</td></tr>
-     *     <tr><td>contentFormat</td><td>String</td><td>No</td><td>Format of the analyze result top-level content. Allowed values: "text", "markdown".</td></tr>
      *     <tr><td>features</td><td>List&lt;String&gt;</td><td>No</td><td>List of optional analysis features. In the form of "," separated string.</td></tr>
      *     <tr><td>queryFields</td><td>List&lt;String&gt;</td><td>No</td><td>List of additional fields to extract.  Ex. "NumberOfGuests,StoreNumber". In the form of "," separated string.</td></tr>
+     *     <tr><td>outputContentFormat</td><td>String</td><td>No</td><td>Format of the analyze result top-level content. Allowed values: "text", "markdown".</td></tr>
      * </table>
      *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
@@ -520,7 +518,7 @@ public final class DocumentAnalysisClientImpl {
     }
 
     /**
-     * Long running RPC operation template.
+     * Analyzes document with document model.
      *
      * <p><strong>Query Parameters</strong>
      *
@@ -531,9 +529,9 @@ public final class DocumentAnalysisClientImpl {
      *     <tr><td>locale</td><td>String</td><td>No</td><td>Locale hint for text recognition and document analysis.  Value may contain only
      * the language code (ex. "en", "fr") or BCP 47 language tag (ex. "en-US").</td></tr>
      *     <tr><td>stringIndexType</td><td>String</td><td>No</td><td>Method used to compute string offset and length. Allowed values: "textElements", "unicodeCodePoint", "utf16CodeUnit".</td></tr>
-     *     <tr><td>contentFormat</td><td>String</td><td>No</td><td>Format of the analyze result top-level content. Allowed values: "text", "markdown".</td></tr>
      *     <tr><td>features</td><td>List&lt;String&gt;</td><td>No</td><td>List of optional analysis features. In the form of "," separated string.</td></tr>
      *     <tr><td>queryFields</td><td>List&lt;String&gt;</td><td>No</td><td>List of additional fields to extract.  Ex. "NumberOfGuests,StoreNumber". In the form of "," separated string.</td></tr>
+     *     <tr><td>outputContentFormat</td><td>String</td><td>No</td><td>Format of the analyze result top-level content. Allowed values: "text", "markdown".</td></tr>
      * </table>
      *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
@@ -582,6 +580,7 @@ public final class DocumentAnalysisClientImpl {
      *     <caption>Query Parameters</caption>
      *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
      *     <tr><td>stringIndexType</td><td>String</td><td>No</td><td>Method used to compute string offset and length. Allowed values: "textElements", "unicodeCodePoint", "utf16CodeUnit".</td></tr>
+     *     <tr><td>split</td><td>String</td><td>No</td><td>Document splitting mode. Allowed values: "auto", "none", "perPage".</td></tr>
      * </table>
      *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
@@ -596,7 +595,6 @@ public final class DocumentAnalysisClientImpl {
      * }</pre>
      *
      * @param classifierId Unique document classifier name.
-     * @param split Document splitting mode. Allowed values: "auto", "none", "perPage".
      * @param classifyRequest Classify request parameters.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -607,7 +605,7 @@ public final class DocumentAnalysisClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Mono<Response<Void>> classifyDocumentWithResponseAsync(
-            String classifierId, String split, BinaryData classifyRequest, RequestOptions requestOptions) {
+            String classifierId, BinaryData classifyRequest, RequestOptions requestOptions) {
         final String contentType = "application/json";
         final String accept = "application/json";
         return FluxUtil.withContext(
@@ -616,7 +614,6 @@ public final class DocumentAnalysisClientImpl {
                                 this.getEndpoint(),
                                 this.getServiceVersion().getVersion(),
                                 classifierId,
-                                split,
                                 contentType,
                                 accept,
                                 classifyRequest,
@@ -633,6 +630,7 @@ public final class DocumentAnalysisClientImpl {
      *     <caption>Query Parameters</caption>
      *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
      *     <tr><td>stringIndexType</td><td>String</td><td>No</td><td>Method used to compute string offset and length. Allowed values: "textElements", "unicodeCodePoint", "utf16CodeUnit".</td></tr>
+     *     <tr><td>split</td><td>String</td><td>No</td><td>Document splitting mode. Allowed values: "auto", "none", "perPage".</td></tr>
      * </table>
      *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
@@ -647,7 +645,6 @@ public final class DocumentAnalysisClientImpl {
      * }</pre>
      *
      * @param classifierId Unique document classifier name.
-     * @param split Document splitting mode. Allowed values: "auto", "none", "perPage".
      * @param classifyRequest Classify request parameters.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -658,14 +655,13 @@ public final class DocumentAnalysisClientImpl {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     private Response<Void> classifyDocumentWithResponse(
-            String classifierId, String split, BinaryData classifyRequest, RequestOptions requestOptions) {
+            String classifierId, BinaryData classifyRequest, RequestOptions requestOptions) {
         final String contentType = "application/json";
         final String accept = "application/json";
         return service.classifyDocumentSync(
                 this.getEndpoint(),
                 this.getServiceVersion().getVersion(),
                 classifierId,
-                split,
                 contentType,
                 accept,
                 classifyRequest,
@@ -682,6 +678,7 @@ public final class DocumentAnalysisClientImpl {
      *     <caption>Query Parameters</caption>
      *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
      *     <tr><td>stringIndexType</td><td>String</td><td>No</td><td>Method used to compute string offset and length. Allowed values: "textElements", "unicodeCodePoint", "utf16CodeUnit".</td></tr>
+     *     <tr><td>split</td><td>String</td><td>No</td><td>Document splitting mode. Allowed values: "auto", "none", "perPage".</td></tr>
      * </table>
      *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
@@ -696,7 +693,6 @@ public final class DocumentAnalysisClientImpl {
      * }</pre>
      *
      * @param classifierId Unique document classifier name.
-     * @param split Document splitting mode. Allowed values: "auto", "none", "perPage".
      * @param classifyRequest Classify request parameters.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -707,10 +703,10 @@ public final class DocumentAnalysisClientImpl {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<BinaryData, BinaryData> beginClassifyDocumentAsync(
-            String classifierId, String split, BinaryData classifyRequest, RequestOptions requestOptions) {
+            String classifierId, BinaryData classifyRequest, RequestOptions requestOptions) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
-                () -> this.classifyDocumentWithResponseAsync(classifierId, split, classifyRequest, requestOptions),
+                () -> this.classifyDocumentWithResponseAsync(classifierId, classifyRequest, requestOptions),
                 new DefaultPollingStrategy<>(
                         new PollingStrategyOptions(this.getHttpPipeline())
                                 .setEndpoint(
@@ -732,6 +728,7 @@ public final class DocumentAnalysisClientImpl {
      *     <caption>Query Parameters</caption>
      *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
      *     <tr><td>stringIndexType</td><td>String</td><td>No</td><td>Method used to compute string offset and length. Allowed values: "textElements", "unicodeCodePoint", "utf16CodeUnit".</td></tr>
+     *     <tr><td>split</td><td>String</td><td>No</td><td>Document splitting mode. Allowed values: "auto", "none", "perPage".</td></tr>
      * </table>
      *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
@@ -746,7 +743,6 @@ public final class DocumentAnalysisClientImpl {
      * }</pre>
      *
      * @param classifierId Unique document classifier name.
-     * @param split Document splitting mode. Allowed values: "auto", "none", "perPage".
      * @param classifyRequest Classify request parameters.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -757,10 +753,10 @@ public final class DocumentAnalysisClientImpl {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<BinaryData, BinaryData> beginClassifyDocument(
-            String classifierId, String split, BinaryData classifyRequest, RequestOptions requestOptions) {
+            String classifierId, BinaryData classifyRequest, RequestOptions requestOptions) {
         return SyncPoller.createPoller(
                 Duration.ofSeconds(1),
-                () -> this.classifyDocumentWithResponse(classifierId, split, classifyRequest, requestOptions),
+                () -> this.classifyDocumentWithResponse(classifierId, classifyRequest, requestOptions),
                 new SyncDefaultPollingStrategy<>(
                         new PollingStrategyOptions(this.getHttpPipeline())
                                 .setEndpoint(
@@ -782,6 +778,7 @@ public final class DocumentAnalysisClientImpl {
      *     <caption>Query Parameters</caption>
      *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
      *     <tr><td>stringIndexType</td><td>String</td><td>No</td><td>Method used to compute string offset and length. Allowed values: "textElements", "unicodeCodePoint", "utf16CodeUnit".</td></tr>
+     *     <tr><td>split</td><td>String</td><td>No</td><td>Document splitting mode. Allowed values: "auto", "none", "perPage".</td></tr>
      * </table>
      *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
@@ -796,7 +793,6 @@ public final class DocumentAnalysisClientImpl {
      * }</pre>
      *
      * @param classifierId Unique document classifier name.
-     * @param split Document splitting mode. Allowed values: "auto", "none", "perPage".
      * @param classifyRequest Classify request parameters.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -807,10 +803,10 @@ public final class DocumentAnalysisClientImpl {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<AnalyzeResultOperation, AnalyzeResult> beginClassifyDocumentWithModelAsync(
-            String classifierId, String split, BinaryData classifyRequest, RequestOptions requestOptions) {
+            String classifierId, BinaryData classifyRequest, RequestOptions requestOptions) {
         return PollerFlux.create(
                 Duration.ofSeconds(1),
-                () -> this.classifyDocumentWithResponseAsync(classifierId, split, classifyRequest, requestOptions),
+                () -> this.classifyDocumentWithResponseAsync(classifierId, classifyRequest, requestOptions),
                 new DefaultPollingStrategy<>(
                         new PollingStrategyOptions(this.getHttpPipeline())
                                 .setEndpoint(
@@ -832,6 +828,7 @@ public final class DocumentAnalysisClientImpl {
      *     <caption>Query Parameters</caption>
      *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
      *     <tr><td>stringIndexType</td><td>String</td><td>No</td><td>Method used to compute string offset and length. Allowed values: "textElements", "unicodeCodePoint", "utf16CodeUnit".</td></tr>
+     *     <tr><td>split</td><td>String</td><td>No</td><td>Document splitting mode. Allowed values: "auto", "none", "perPage".</td></tr>
      * </table>
      *
      * You can add these to a request with {@link RequestOptions#addQueryParam}
@@ -846,7 +843,6 @@ public final class DocumentAnalysisClientImpl {
      * }</pre>
      *
      * @param classifierId Unique document classifier name.
-     * @param split Document splitting mode. Allowed values: "auto", "none", "perPage".
      * @param classifyRequest Classify request parameters.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -857,10 +853,10 @@ public final class DocumentAnalysisClientImpl {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<AnalyzeResultOperation, AnalyzeResult> beginClassifyDocumentWithModel(
-            String classifierId, String split, BinaryData classifyRequest, RequestOptions requestOptions) {
+            String classifierId, BinaryData classifyRequest, RequestOptions requestOptions) {
         return SyncPoller.createPoller(
                 Duration.ofSeconds(1),
-                () -> this.classifyDocumentWithResponse(classifierId, split, classifyRequest, requestOptions),
+                () -> this.classifyDocumentWithResponse(classifierId, classifyRequest, requestOptions),
                 new SyncDefaultPollingStrategy<>(
                         new PollingStrategyOptions(this.getHttpPipeline())
                                 .setEndpoint(
