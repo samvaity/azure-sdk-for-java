@@ -8,6 +8,7 @@ import com.generic.core.models.Headers;
 import com.generic.core.models.BinaryData;
 import com.generic.core.util.logging.ClientLogger;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -99,6 +100,11 @@ public class HttpRequest {
      * @return this HttpRequest
      */
     public HttpRequest setUrl(String url) {
+        try {
+            this.url = new URL(url);
+        } catch (MalformedURLException ex) {
+            throw LOGGER.logThrowableAsWarning(new IllegalArgumentException("'url' must be a valid URL.", ex));
+        }
         return this;
     }
 

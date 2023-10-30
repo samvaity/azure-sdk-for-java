@@ -611,5 +611,22 @@ public final class BinaryData {
     public static BinaryData fromObject(Object data) {
         return fromObject(data, null);
     }
-
+    /**
+     * Returns a byte array representation of this {@link BinaryData}.
+     * <p>
+     * This method returns a reference to the underlying byte array. Modifying the contents of the returned byte array
+     * may change the content of this BinaryData instance. If the content source of this BinaryData instance is a file,
+     * an {@link InputStream}, or a {@code Flux<ByteBuffer>} the source is not modified. To safely update the byte
+     * array, it is recommended to make a copy of the contents first.
+     * <p>
+     * If the {@link BinaryData} is larger than the maximum size allowed for a {@code byte[]} this will throw an
+     * {@link IllegalStateException}.
+     *
+     * @return A byte array representing this {@link BinaryData}.
+     * @throws IllegalStateException If the {@link BinaryData} is larger than the maximum size allowed for a
+     * {@code byte[]}.
+     */
+    public byte[] toBytes() {
+        return content.toBytes();
+    }
 }
