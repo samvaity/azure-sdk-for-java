@@ -41,11 +41,16 @@ public class HttpUrlConnectionClient implements HttpClient {
     private static final ClientLogger LOGGER = new ClientLogger(HttpUrlConnectionClient.class);
     private final long connectionTimeout;
     private final long readTimeout;
+    private final Duration writeTimeout;
+    private final Duration responseTimeout;
     private final ProxyOptions proxyOptions;
 
-    HttpUrlConnectionClient(Duration connectionTimeout, Duration readTimeout, ProxyOptions proxyOptions) {
+    HttpUrlConnectionClient(Duration connectionTimeout, Duration readTimeout, Duration writeTimeout,
+                            Duration responseTimeout, ProxyOptions proxyOptions) {
         this.connectionTimeout = connectionTimeout == null ? -1 : connectionTimeout.toMillis();
         this.readTimeout = readTimeout == null ? -1 : readTimeout.toMillis();
+        this.writeTimeout = writeTimeout;
+        this.responseTimeout = responseTimeout;
 
         this.proxyOptions = proxyOptions;
     }
@@ -60,13 +65,13 @@ public class HttpUrlConnectionClient implements HttpClient {
     @Override
     public HttpResponse send(HttpRequest httpRequest, Context context) {
         if (httpRequest.getHttpMethod() == HttpMethod.PATCH) {
-            return sendPatchViaSocket(httpRequest);
+            return sendPatchViaSocketSync(httpRequest);
         }
 //        ProgressReporter progressReporter = Contexts.with(context).getHttpRequestProgressReporter();
 
         HttpURLConnection connection = connect(httpRequest);
 
-        sendBody(httpRequest, null, connection);
+        sendBodySync(httpRequest, null, connection);
         return receiveResponse(httpRequest, connection);
     }
 
@@ -76,7 +81,7 @@ public class HttpUrlConnectionClient implements HttpClient {
      * @param httpRequest The HTTP request being sent
      * @return The HttpResponse object
      */
-    private HttpResponse sendPatchViaSocket(HttpRequest httpRequest) {
+    private HttpResponse sendPatchViaSocketSync(HttpRequest httpRequest) {
         try {
             return SocketClient.sendPatchRequest(httpRequest);
         } catch (IOException e) {
@@ -144,7 +149,7 @@ public class HttpUrlConnectionClient implements HttpClient {
      * @param connection The HttpURLConnection that is being sent to
      * @return This method does not return any value
      */
-    private void sendBody(HttpRequest httpRequest, Object progressReporter, HttpURLConnection connection) {
+    private void sendBodySync(HttpRequest httpRequest, Object progressReporter, HttpURLConnection connection) {
         BinaryData binaryDataBody = httpRequest.getBody();
 
         if (binaryDataBody != null) {
@@ -189,15 +194,16 @@ public class HttpUrlConnectionClient implements HttpClient {
             int responseCode = connection.getResponseCode();
 
             Headers responseHeaders = new Headers();
-            for (Map.Entry<String, List<String>> entry : connection.getHeaderFields().entrySet()) {
-                if (entry.getKey() != null) {
-                    List<String> values = new ArrayList<>();
-                    entry.getValue().forEach(v -> values.add(0, v));
-                    for (String headerValue : values) {
-                        responseHeaders.add(HttpHeaderName.fromString(entry.getKey()), headerValue);
-                    }
-                }
-            }
+            // TODO headers coming out as exception from ctor=null in Reflective access
+//            for (Map.Entry<String, List<String>> entry : connection.getHeaderFields().entrySet()) {
+//                if (entry.getKey() != null) {
+//                    List<String> values = new ArrayList<>();
+//                    entry.getValue().forEach(v -> values.add(0, v));
+//                    for (String headerValue : values) {
+//                        responseHeaders.add(HttpHeaderName.fromString(entry.getKey()), headerValue);
+//                    }
+//                }
+//            }
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             try (InputStream errorStream = connection.getErrorStream();
                  InputStream inputStream = (errorStream == null) ? connection.getInputStream() : errorStream) {

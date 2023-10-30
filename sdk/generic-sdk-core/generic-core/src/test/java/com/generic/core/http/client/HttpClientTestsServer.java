@@ -4,7 +4,7 @@
 package com.generic.core.http.client;
 
 import com.generic.core.http.client.httpurlconnection.LocalTestServer;
-import com.generic.core.implementation.http.ContentType;
+import com.generic.core.http.models.ContentType;
 import org.eclipse.jetty.server.Response;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -146,7 +146,6 @@ public class HttpClientTestsServer {
 
     private static void sendSimpleHttpBinResponse(HttpServletRequest req, HttpServletResponse resp,
         String requestString) throws IOException {
-        // TODO: update after Serialization is implemented
 //        HttpBinJSON responseBody = new HttpBinJSON();
 //        responseBody.url(cleanseUrl(req));
 //
@@ -165,8 +164,8 @@ public class HttpClientTestsServer {
 //            setBaseHttpHeaders(resp);
 //            responseBody.headers(headers);
 //        }
-//
-//        handleRequest(resp, "application/json", null);
+
+        handleRequest(resp, "application/json", null);
     }
 
 
