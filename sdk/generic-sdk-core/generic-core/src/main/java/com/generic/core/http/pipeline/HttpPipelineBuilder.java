@@ -3,6 +3,7 @@
 
 package com.generic.core.http.pipeline;
 
+import com.generic.core.credential.KeyCredential;
 import com.generic.core.http.client.HttpClient;
 import com.generic.core.http.models.HttpClientOptions;
 
@@ -48,7 +49,7 @@ public class HttpPipelineBuilder {
      *
      * @return A new {@link HttpPipeline} instance.
      */
-    public HttpPipeline createDefaultPipeline() {
+    public HttpPipeline createDefaultPipeline(KeyCredential keyCredential) {
         return null;
     }
 
