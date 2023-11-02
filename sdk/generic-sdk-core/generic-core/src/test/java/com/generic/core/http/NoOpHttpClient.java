@@ -13,4 +13,5 @@ public class NoOpHttpClient implements HttpClient {
     public HttpResponse send(HttpRequest request, Context context) {
         return null; // No-op
     }
+
 }
