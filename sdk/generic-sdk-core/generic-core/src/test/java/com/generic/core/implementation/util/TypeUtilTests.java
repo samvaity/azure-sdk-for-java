@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-package com.generic.core.implementation;
+package com.generic.core.implementation.util;
 
+import com.generic.core.implementation.TypeUtil;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Type;
