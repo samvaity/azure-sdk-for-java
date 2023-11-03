@@ -3,20 +3,22 @@
 
 package com.generic.core.http.policy.credential;
 
-import com.azure.core.credential.KeyCredential;
-import com.azure.core.http.HttpHeaderName;
-import com.azure.core.http.HttpHeaders;
+import com.generic.core.credential.KeyCredential;
+import com.generic.core.http.models.HttpHeaderName;
+import com.generic.core.models.Headers;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class KeyCredentialPolicyTests {
     @ParameterizedTest
     @MethodSource("setCredentialSupplier")
     public void setCredential(KeyCredentialPolicy policy, String expectedHeader) {
-        HttpHeaders headers = new HttpHeaders();
+        Headers headers = new Headers();
         policy.setCredential(headers);
         assertEquals(expectedHeader, headers.getValue(HttpHeaderName.AUTHORIZATION));
     }

@@ -37,22 +37,6 @@ public class HttpPipelinePolicyTests {
             .policies(policy1, policy2)
             .build();
 
-        pipeline.send(new HttpRequest(HttpMethod.GET, url), null);
-        assertEquals(0, policy1.syncCalls.get());
-        assertEquals(0, policy2.syncCalls.get());
-    }
-
-    @Test
-    public void verifysend() throws Exception {
-        SyncPolicy policy1 = new SyncPolicy();
-        SyncPolicy policy2 = new SyncPolicy();
-        URL url = createUrl("http://localhost/");
-
-        HttpPipeline pipeline = new HttpPipelineBuilder()
-            .httpClient(new NoOpHttpClient())
-            .policies(policy1, policy2)
-            .build();
-
 
         pipeline.send(new HttpRequest(HttpMethod.GET, url, null), Context.NONE);
         assertEquals(1, policy1.syncCalls.get());
@@ -69,9 +53,9 @@ public class HttpPipelinePolicyTests {
             .policies(policyWithDefaultSyncImplementation)
             .build();
 
-        pipeline.send(new HttpRequest(HttpMethod.GET, url), null);
-        assertEquals(0, policyWithDefaultSyncImplementation.syncCalls.get());
-        assertEquals(0, policyWithDefaultSyncImplementation.syncCalls.get());
+        pipeline.send(new HttpRequest(HttpMethod.GET, url), Context.NONE);
+        assertEquals(1, policyWithDefaultSyncImplementation.syncCalls.get());
+        assertEquals(1, policyWithDefaultSyncImplementation.syncCalls.get());
     }
 
     /**

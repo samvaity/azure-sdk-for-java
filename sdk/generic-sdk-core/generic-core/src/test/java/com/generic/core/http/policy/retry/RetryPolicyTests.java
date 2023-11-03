@@ -1,27 +1,29 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-package com.generic.core.http;
+package com.generic.core.http.policy.retry;
 
-import com.azure.core.SyncAsyncExtension;
-import com.azure.core.SyncAsyncTest;
-import com.azure.core.http.HttpHeaderName;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpMethod;
-import com.azure.core.http.HttpPipeline;
-import com.azure.core.http.HttpPipelineBuilder;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.util.Context;
-import com.azure.core.util.DateTimeRfc1123;
+import com.generic.core.http.MockHttpResponse;
+import com.generic.core.http.NoOpHttpClient;
+import com.generic.core.http.models.HttpHeaderName;
+import com.generic.core.http.models.HttpMethod;
+import com.generic.core.http.models.HttpRequest;
+import com.generic.core.http.models.HttpResponse;
+import com.generic.core.http.pipeline.HttpPipeline;
+import com.generic.core.http.pipeline.HttpPipelineBuilder;
+import com.generic.core.implementation.http.policy.retry.ExponentialBackoff;
+import com.generic.core.implementation.http.policy.retry.FixedDelay;
+import com.generic.core.implementation.http.policy.retry.RetryPolicy;
+import com.generic.core.implementation.http.policy.retry.RetryStrategy;
+import com.generic.core.implementation.util.DateTimeRfc1123;
+import com.generic.core.models.Context;
+import com.generic.core.models.Headers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -52,38 +54,10 @@ public class RetryPolicyTests {
         AtomicInteger attemptCount = new AtomicInteger();
         HttpPipeline pipeline = new HttpPipelineBuilder()
             .policies(new RetryPolicy())
-            .httpClient(request -> {
-                int count = attemptCount.getAndIncrement();
-                if (count == 0) {
-                    return Mono.just(new MockHttpResponse(request, returnCode));
-                } else if (count == 1) {
-                    return Mono.just(new MockHttpResponse(request, 200));
-                } else {
-                    // Too many requests have been made.
-                    return Mono.just(new MockHttpResponse(request, 400));
-                }
-            })
-            .build();
-
-        StepVerifier.create(pipeline.send(new HttpRequest(HttpMethod.GET, "http://localhost/")))
-            .assertNext(response -> assertEquals(200, response.getStatusCode()))
-            .verifyComplete();
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {408, 429, 500, 502, 503})
-    public void defaultRetryPolicySyncRetriesExpectedErrorCodes(int returnCode) {
-        AtomicInteger attemptCount = new AtomicInteger();
-        HttpPipeline pipeline = new HttpPipelineBuilder()
-            .policies(new RetryPolicy())
             .httpClient(new NoOpHttpClient() {
-                @Override
-                public Mono<HttpResponse> send(HttpRequest request) {
-                    throw new IllegalStateException("Expected to call 'sendSync' API");
-                }
 
                 @Override
-                public HttpResponse sendSync(HttpRequest request, Context context) {
+                public HttpResponse send(HttpRequest request, Context context) {
                     int count = attemptCount.getAndIncrement();
                     if (count == 0) {
                         return new MockHttpResponse(request, returnCode);
@@ -97,7 +71,7 @@ public class RetryPolicyTests {
             })
             .build();
 
-        try (HttpResponse response = sendRequestSync(pipeline)) {
+        try (HttpResponse response = sendRequest(pipeline)) {
             assertEquals(200, response.getStatusCode());
         }
     }
@@ -108,36 +82,10 @@ public class RetryPolicyTests {
         AtomicInteger attemptCount = new AtomicInteger();
         HttpPipeline pipeline = new HttpPipelineBuilder()
             .policies(new RetryPolicy())
-            .httpClient(request -> {
-                int count = attemptCount.getAndIncrement();
-                if (count == 0) {
-                    return Mono.just(new MockHttpResponse(request, returnCode));
-                } else {
-                    return Mono.just(new MockHttpResponse(request, 200));
-                }
-            })
-            .build();
-
-        StepVerifier.create(pipeline.send(new HttpRequest(HttpMethod.GET, "http://localhost/")))
-            .assertNext(response -> assertEquals(returnCode, response.getStatusCode()))
-            .verifyComplete();
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {400, 401, 402, 403, 404, 409, 412, 501, 505})
-    public void defaultRetryPolicySyncDoesntRetryOnErrorCodes(int returnCode) {
-        AtomicInteger attemptCount = new AtomicInteger();
-        HttpPipeline pipeline = new HttpPipelineBuilder()
-            .policies(new RetryPolicy())
             .httpClient(new NoOpHttpClient() {
 
                 @Override
-                public Mono<HttpResponse> send(HttpRequest request) {
-                    throw new IllegalStateException("Expected to call 'sendSync' API");
-                }
-
-                @Override
-                public HttpResponse sendSync(HttpRequest request, Context context) {
+                public HttpResponse send(HttpRequest request, Context context) {
                     int count = attemptCount.getAndIncrement();
                     if (count == 0) {
                         return new MockHttpResponse(request, returnCode);
@@ -148,44 +96,19 @@ public class RetryPolicyTests {
             })
             .build();
 
-        try (HttpResponse response = sendRequestSync(pipeline)) {
+        try (HttpResponse response = sendRequest(pipeline)) {
             assertEquals(returnCode, response.getStatusCode());
         }
     }
 
-    @ParameterizedTest
-    @MethodSource("defaultRetryPolicyRetriesAllExceptionsSupplier")
-    public void defaultRetryPolicyRetriesAllExceptions(Throwable throwable) {
-        AtomicInteger attemptCount = new AtomicInteger();
-        HttpPipeline pipeline = new HttpPipelineBuilder()
-            .policies(new RetryPolicy())
-            .httpClient(request -> {
-                int count = attemptCount.getAndIncrement();
-                if (count == 0) {
-                    return Mono.error(throwable);
-                } else {
-                    return Mono.just(new MockHttpResponse(request, 200));
-                }
-            })
-            .build();
-
-        StepVerifier.create(pipeline.send(new HttpRequest(HttpMethod.GET, "http://localhost/")))
-            .assertNext(response -> assertEquals(200, response.getStatusCode()))
-            .verifyComplete();
-    }
     @Test
-    public void defaultRetryPolicySyncRetriesIOException() {
+    public void defaultRetryPolicyRetriesIOException() {
         AtomicInteger attemptCount = new AtomicInteger();
         HttpPipeline pipeline = new HttpPipelineBuilder()
             .policies(new RetryPolicy())
             .httpClient(new NoOpHttpClient() {
-
                 @Override
-                public Mono<HttpResponse> send(HttpRequest request) {
-                    throw new IllegalStateException("Expected to call 'sendSync' API");
-                }
-                @Override
-                public HttpResponse sendSync(HttpRequest request, Context context) {
+                public HttpResponse send(HttpRequest request, Context context) {
                     int count = attemptCount.getAndIncrement();
                     if (count == 0) {
                         try {
@@ -200,29 +123,9 @@ public class RetryPolicyTests {
             })
             .build();
 
-        try (HttpResponse response = sendRequestSync(pipeline)) {
+        try (HttpResponse response = sendRequest(pipeline)) {
             assertEquals(200, response.getStatusCode());
         }
-    }
-
-    @ParameterizedTest
-    @MethodSource("defaultRetryPolicyDoesNotRetryErrorsSupplier")
-    public void defaultRetryPolicyDoesNotRetryErrors(Throwable throwable) {
-        AtomicInteger attemptCount = new AtomicInteger();
-        HttpPipeline pipeline = new HttpPipelineBuilder()
-            .policies(new RetryPolicy())
-            .httpClient(request -> {
-                int count = attemptCount.getAndIncrement();
-                if (count == 0) {
-                    return Mono.error(throwable);
-                } else {
-                    return Mono.just(new MockHttpResponse(request, 200));
-                }
-            })
-            .build();
-
-        StepVerifier.create(pipeline.send(new HttpRequest(HttpMethod.GET, "http://localhost/")))
-            .verifyError(throwable.getClass());
     }
 
     @ParameterizedTest
@@ -232,53 +135,21 @@ public class RetryPolicyTests {
         AtomicInteger attempt = new AtomicInteger();
         HttpPipeline pipeline = new HttpPipelineBuilder()
             .policies(new RetryPolicy(retryStrategy))
-            .httpClient(request -> Mono.just(new MockHttpResponse(request, statusCodes[attempt.getAndIncrement()])))
-            .build();
-
-        StepVerifier.create(pipeline.send(new HttpRequest(HttpMethod.GET, "http://localhost/")))
-            .assertNext(response -> assertEquals(expectedStatusCode, response.getStatusCode()))
-            .verifyComplete();
-    }
-
-    @ParameterizedTest
-    @MethodSource("customRetryPolicyCanDetermineRetryStatusCodesSupplier")
-    public void customRetryPolicySyncCanDetermineRetryStatusCodes(RetryStrategy retryStrategy, int[] statusCodes,
-        int expectedStatusCode) {
-        AtomicInteger attempt = new AtomicInteger();
-        HttpPipeline pipeline = new HttpPipelineBuilder()
-            .policies(new RetryPolicy(retryStrategy))
             .httpClient(new NoOpHttpClient() {
-                @Override
-                public Mono<HttpResponse> send(HttpRequest request) {
-                    throw new IllegalStateException("Expected to call 'sendSync' API");
-                }
 
                 @Override
-                public HttpResponse sendSync(HttpRequest request, Context context) {
+                public HttpResponse send(HttpRequest request, Context context) {
                     return new MockHttpResponse(request, statusCodes[attempt.getAndIncrement()]);
                 }
             })
             .build();
 
-        try (HttpResponse response = sendRequestSync(pipeline)) {
+        try (HttpResponse response = sendRequest(pipeline)) {
             assertEquals(expectedStatusCode, response.getStatusCode());
         }
     }
 
-    @ParameterizedTest
-    @MethodSource("customRetryPolicyCanDetermineRetryExceptionsSupplier")
-    public void customRetryPolicyCanDetermineRetryExceptions(RetryStrategy retryStrategy, Throwable[] exceptions,
-        Class<? extends Throwable> expectedException) {
-        AtomicInteger attempt = new AtomicInteger();
-        HttpPipeline pipeline = new HttpPipelineBuilder()
-            .policies(new RetryPolicy(retryStrategy))
-            .httpClient(request -> Mono.error(exceptions[attempt.getAndIncrement()]))
-            .build();
-
-        StepVerifier.create(pipeline.send(new HttpRequest(HttpMethod.GET, "http://localhost/")))
-            .verifyError(expectedException);
-    }
-    @SyncAsyncTest
+    @Test
     public void retryMax() throws Exception {
         final int maxRetries = 5;
         final HttpPipeline pipeline = new HttpPipelineBuilder()
@@ -286,29 +157,20 @@ public class RetryPolicyTests {
                 int count = -1;
 
                 @Override
-                public HttpResponse sendSync(HttpRequest request, Context context) {
+                public HttpResponse send(HttpRequest request, Context context) {
                     Assertions.assertTrue(count++ < maxRetries);
                     return new MockHttpResponse(request, 500);
-                }
-
-                @Override
-                public Mono<HttpResponse> send(HttpRequest request) {
-                    Assertions.assertTrue(count++ < maxRetries);
-                    return Mono.just(new MockHttpResponse(request, 500));
                 }
             })
             .policies(new RetryPolicy(new FixedDelay(maxRetries, Duration.ofMillis(1))))
             .build();
 
-        try (HttpResponse response = SyncAsyncExtension.execute(
-            () -> sendRequestSync(pipeline),
-            () -> sendRequest(pipeline)
-        )) {
+        try (HttpResponse response = sendRequest(pipeline)) {
             assertEquals(500, response.getStatusCode());
         }
     }
 
-    @SyncAsyncTest
+    @Test
     public void fixedDelayRetry() throws Exception {
         final int maxRetries = 5;
         final long delayMillis = 500;
@@ -326,35 +188,27 @@ public class RetryPolicyTests {
                 }
 
                 @Override
-                public HttpResponse sendSync(HttpRequest request, Context context) {
+                public HttpResponse send(HttpRequest request, Context context) {
                     beforeSendingRequest();
                     return new MockHttpResponse(request, 500);
-                }
-
-                @Override
-                public Mono<HttpResponse> send(HttpRequest request) {
-                    beforeSendingRequest();
-                    return Mono.just(new MockHttpResponse(request, 500));
                 }
             })
             .policies(new RetryPolicy(new FixedDelay(maxRetries, Duration.ofMillis(delayMillis))))
             .build();
 
-        try (HttpResponse response = SyncAsyncExtension.execute(
-            () -> sendRequestSync(pipeline),
-            () -> sendRequest(pipeline)
-        )) {
+        try (HttpResponse response = sendRequest(pipeline)) {
             assertEquals(500, response.getStatusCode());
         }
     }
 
-    @SyncAsyncTest
+    @Test
     public void exponentialDelayRetry() throws Exception {
         final int maxRetries = 5;
         final long baseDelayMillis = 100;
         final long maxDelayMillis = 1000;
-        ExponentialBackoff exponentialBackoff = new ExponentialBackoff(maxRetries, Duration.ofMillis(baseDelayMillis),
-            Duration.ofMillis(maxDelayMillis));
+        ExponentialBackoff exponentialBackoff = new ExponentialBackoff(new ExponentialBackoffOptions()
+            .setMaxRetries(maxRetries).setBaseDelay(Duration.ofMillis(baseDelayMillis))
+            .setMaxDelay(Duration.ofMillis(maxDelayMillis)));
         final HttpPipeline pipeline = new HttpPipelineBuilder()
             .httpClient(new NoOpHttpClient() {
                 int count = -1;
@@ -372,32 +226,23 @@ public class RetryPolicyTests {
                 }
 
                 @Override
-                public HttpResponse sendSync(HttpRequest request, Context context) {
+                public HttpResponse send(HttpRequest request, Context context) {
                     beforeSendingRequest();
                     return new MockHttpResponse(request, 503);
-                }
-
-                @Override
-                public Mono<HttpResponse> send(HttpRequest request) {
-                    beforeSendingRequest();
-                    return Mono.just(new MockHttpResponse(request, 503));
                 }
             })
             .policies(new RetryPolicy(exponentialBackoff))
             .build();
 
-        try (HttpResponse response = SyncAsyncExtension.execute(
-            () -> sendRequestSync(pipeline),
-            () -> sendRequest(pipeline)
-        )) {
+        try (HttpResponse response = sendRequest(pipeline)) {
             assertEquals(503, response.getStatusCode());
         }
     }
 
-    @SyncAsyncTest
+    @Test
     public void retryConsumesBody() throws Exception {
         AtomicInteger closeCalls = new AtomicInteger();
-        HttpResponse closeTrackingHttpResponse = new MockHttpResponse(null, 503, new HttpHeaders()) {
+        HttpResponse closeTrackingHttpResponse = new MockHttpResponse(null, 503, new Headers()) {
             @Override
             public void close() {
                 closeCalls.incrementAndGet();
@@ -410,26 +255,17 @@ public class RetryPolicyTests {
             .httpClient(new NoOpHttpClient() {
 
                 @Override
-                public HttpResponse sendSync(HttpRequest request, Context context) {
+                public HttpResponse send(HttpRequest request, Context context) {
                     return closeTrackingHttpResponse;
-                }
-
-                @Override
-                public Mono<HttpResponse> send(HttpRequest request) {
-                    return Mono.just(closeTrackingHttpResponse);
                 }
             })
             .build();
 
-        SyncAsyncExtension.execute(
-            () -> sendRequestSync(pipeline),
-            () -> sendRequest(pipeline)
-        );
-
+        sendRequest(pipeline);
         assertEquals(2, closeCalls.get());
     }
 
-    @SyncAsyncTest
+    @Test
     public void propagatingExceptionHasOtherErrorsAsSuppressedExceptions() {
         AtomicInteger count = new AtomicInteger();
         final HttpPipeline pipeline = new HttpPipelineBuilder()
@@ -437,21 +273,13 @@ public class RetryPolicyTests {
             .httpClient(new NoOpHttpClient() {
 
                 @Override
-                public HttpResponse sendSync(HttpRequest request, Context context) {
+                public HttpResponse send(HttpRequest request, Context context) {
                     throw new UncheckedIOException(new IOException("Attempt " + count.incrementAndGet()));
-                }
-
-                @Override
-                public Mono<HttpResponse> send(HttpRequest request) {
-                    return Mono.error(new UncheckedIOException(new IOException("Attempt " + count.incrementAndGet())));
                 }
             })
             .build();
         try {
-            SyncAsyncExtension.execute(
-                () -> sendRequestSync(pipeline),
-                () -> sendRequest(pipeline)
-            );
+            sendRequest(pipeline);
             fail("Should throw");
         } catch (Exception e) {
             boolean hasAttempt1 = false;
@@ -471,7 +299,7 @@ public class RetryPolicyTests {
 
     @ParameterizedTest
     @MethodSource("getWellKnownRetryDelaySupplier")
-    public void getWellKnownRetryDelay(HttpHeaders responseHeaders, RetryStrategy retryStrategy, Duration expected) {
+    public void getWellKnownRetryDelay(Headers responseHeaders, RetryStrategy retryStrategy, Duration expected) {
         assertEquals(expected, RetryPolicy.getWellKnownRetryDelay(responseHeaders, 1, retryStrategy,
             OffsetDateTime::now));
     }
@@ -479,7 +307,7 @@ public class RetryPolicyTests {
     @Test
     public void retryAfterDateTime() {
         OffsetDateTime now = OffsetDateTime.now().withNano(0);
-        HttpHeaders headers = new HttpHeaders().set(HttpHeaderName.RETRY_AFTER,
+        Headers headers = new Headers().set(HttpHeaderName.RETRY_AFTER,
             new DateTimeRfc1123(now.plusSeconds(30)).toString());
         Duration actual = RetryPolicy.getWellKnownRetryDelay(headers, 1, null, () -> now);
 
@@ -517,20 +345,11 @@ public class RetryPolicyTests {
                 return Duration.ofMillis(1);
             }
 
-            @Override
-            public boolean shouldRetryException(Throwable throwable) {
-                return retriableExceptions.stream()
-                    .anyMatch(retriableException -> retriableException.isAssignableFrom(throwable.getClass()));
-            }
         };
     }
 
     static HttpResponse sendRequest(HttpPipeline pipeline) {
-        return pipeline.send(new HttpRequest(HttpMethod.GET, "http://localhost/")).block();
-    }
-
-    static HttpResponse sendRequestSync(HttpPipeline pipeline) {
-        return pipeline.sendSync(new HttpRequest(HttpMethod.GET, "http://localhost/"), Context.NONE);
+        return pipeline.send(new HttpRequest(HttpMethod.GET, "http://localhost/"), Context.NONE);
     }
 
     static RetryStrategy createStatusCodeRetryStrategy(int... retriableErrorCodes) {
@@ -571,34 +390,34 @@ public class RetryPolicyTests {
 
         return Stream.of(
             // No well-known headers, fallback to the default.
-            Arguments.of(new HttpHeaders(), retryStrategy, Duration.ofSeconds(1)),
+            Arguments.of(new Headers(), retryStrategy, Duration.ofSeconds(1)),
 
             // x-ms-retry-after-ms should be respected as milliseconds.
-            Arguments.of(new HttpHeaders().set(X_MS_RETRY_AFTER_MS, "10"), retryStrategy, Duration.ofMillis(10)),
+            Arguments.of(new Headers().set(X_MS_RETRY_AFTER_MS, "10"), retryStrategy, Duration.ofMillis(10)),
 
             // x-ms-retry-after-ms wasn't a valid number, fallback to the default.
-            Arguments.of(new HttpHeaders().set(X_MS_RETRY_AFTER_MS, "-10"), retryStrategy, Duration.ofSeconds(1)),
-            Arguments.of(new HttpHeaders().set(X_MS_RETRY_AFTER_MS, "ten"), retryStrategy, Duration.ofSeconds(1)),
+            Arguments.of(new Headers().set(X_MS_RETRY_AFTER_MS, "-10"), retryStrategy, Duration.ofSeconds(1)),
+            Arguments.of(new Headers().set(X_MS_RETRY_AFTER_MS, "ten"), retryStrategy, Duration.ofSeconds(1)),
 
             // retry-after-ms should be respected as milliseconds.
-            Arguments.of(new HttpHeaders().set(RETRY_AFTER_MS, "64"), retryStrategy, Duration.ofMillis(64)),
+            Arguments.of(new Headers().set(RETRY_AFTER_MS, "64"), retryStrategy, Duration.ofMillis(64)),
 
             // retry-after-ms wasn't a valid number, fallback to the default.
-            Arguments.of(new HttpHeaders().set(RETRY_AFTER_MS, "-10"), retryStrategy, Duration.ofSeconds(1)),
-            Arguments.of(new HttpHeaders().set(RETRY_AFTER_MS, "ten"), retryStrategy, Duration.ofSeconds(1)),
+            Arguments.of(new Headers().set(RETRY_AFTER_MS, "-10"), retryStrategy, Duration.ofSeconds(1)),
+            Arguments.of(new Headers().set(RETRY_AFTER_MS, "ten"), retryStrategy, Duration.ofSeconds(1)),
 
             // Retry-After should be respected as seconds.
-            Arguments.of(new HttpHeaders().set(HttpHeaderName.RETRY_AFTER, "10"), retryStrategy,
+            Arguments.of(new Headers().set(HttpHeaderName.RETRY_AFTER, "10"), retryStrategy,
                 Duration.ofSeconds(10)),
 
             // Retry-After wasn't a valid number, fallback to the default.
-            Arguments.of(new HttpHeaders().set(HttpHeaderName.RETRY_AFTER, "-10"), retryStrategy,
+            Arguments.of(new Headers().set(HttpHeaderName.RETRY_AFTER, "-10"), retryStrategy,
                 Duration.ofSeconds(1)),
-            Arguments.of(new HttpHeaders().set(HttpHeaderName.RETRY_AFTER, "ten"), retryStrategy,
+            Arguments.of(new Headers().set(HttpHeaderName.RETRY_AFTER, "ten"), retryStrategy,
                 Duration.ofSeconds(1)),
 
             // Retry-After was before the current time, fallback to the default.
-            Arguments.of(new HttpHeaders().set(HttpHeaderName.RETRY_AFTER, OffsetDateTime.now().minusMinutes(1)
+            Arguments.of(new Headers().set(HttpHeaderName.RETRY_AFTER, OffsetDateTime.now().minusMinutes(1)
                 .atZoneSameInstant(ZoneOffset.UTC)
                 .format(DateTimeFormatter.RFC_1123_DATE_TIME)), retryStrategy, Duration.ofSeconds(1))
         );
