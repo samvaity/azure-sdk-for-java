@@ -41,7 +41,7 @@ public class ExponentialBackoffTest {
     @Test
     public void testBaseGreaterThanMaxDelay() {
         assertThrows(IllegalArgumentException.class, () -> new ExponentialBackoff(new ExponentialBackoffOptions()
-            .setMaxRetries(3).setMaxDelay(Duration.ofSeconds(1)).setBaseDelay(Duration.ofMillis(500))));
+            .setMaxRetries(3).setBaseDelay(Duration.ofSeconds(1)).setMaxDelay(Duration.ofMillis(500))));
     }
 
     @Test

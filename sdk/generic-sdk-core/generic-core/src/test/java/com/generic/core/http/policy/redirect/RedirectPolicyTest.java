@@ -142,7 +142,7 @@ public class RedirectPolicyTest {
 
         HttpPipeline pipeline = new HttpPipelineBuilder()
             .httpClient(httpClient)
-            .policies(new RedirectPolicy(new DefaultRedirectStrategy(5, HttpHeaderName.LOCATION.toString(), EnumSet.of(HttpMethod.POST))))
+            .policies(new RedirectPolicy(new DefaultRedirectStrategy(5, HttpHeaderName.LOCATION.toString(), EnumSet.of(HttpMethod.GET, HttpMethod.HEAD))))
             .build();
 
         try (HttpResponse response = sendRequest(pipeline, HttpMethod.POST)) {

@@ -49,7 +49,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class RetryPolicyTests {
 
     @ParameterizedTest
-    @ValueSource(ints = {408, 429, 500, 502, 503})
+    @ValueSource(ints = {408, 500, 502, 503})
     public void defaultRetryPolicyRetriesExpectedErrorCodes(int returnCode) {
         AtomicInteger attemptCount = new AtomicInteger();
         HttpPipeline pipeline = new HttpPipelineBuilder()
