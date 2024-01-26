@@ -38,15 +38,12 @@ import static com.generic.core.util.configuration.Configuration.PROPERTY_REQUEST
 public class RetryPolicy implements HttpPipelinePolicy {
     // RetryPolicy is a commonly used policy, use a static logger.
     private static final ClientLogger LOGGER = new ClientLogger(RetryPolicy.class);
+    private static final double JITTER_FACTOR = 0.05;
     private Integer maxRetries;
     private static final int DEFAULT_MAX_RETRIES;
-    private static final RetryStrategy DEFAULT_RETRY_STRATEGY = new ExponentialBackoffDelay();
-
     private RetryStrategy retryStrategy;
     private final HeaderName retryAfterHeader;
     private final ChronoUnit retryAfterTimeUnit;
-
-    private RetryOptions retryOptions;
 
     static {
         String envDefaultMaxRetries = Configuration.getGlobalConfiguration().get(PROPERTY_REQUEST_RETRY_COUNT);
@@ -68,7 +65,8 @@ public class RetryPolicy implements HttpPipelinePolicy {
     }
 
     /**
-     * Creates {@link RetryPolicy} using {@link ExponentialBackoffDelay} as the {@link RetryStrategy}.
+     * Creates {@link RetryPolicy} using {@link ExponentialBackoffDelay} as the {@link RetryStrategy} and defaulting to
+     * three retries.
      */
     public RetryPolicy() {
         this(new ExponentialBackoffDelay(), null, null, null);
@@ -101,7 +99,7 @@ public class RetryPolicy implements HttpPipelinePolicy {
      * @param retryOptions The {@link RetryOptions} used to configure this {@link RetryPolicy}.
      * @throws NullPointerException If {@code retryOptions} is null.
      */
-    public RetryPolicy(RetryOptions retryOptions) {
+    RetryPolicy(RetryOptions retryOptions) {
         this(ImplUtils.getRetryStrategyFromOptions(retryOptions), retryOptions.getMaxRetries(), null, null);
     }
 
@@ -148,14 +146,11 @@ public class RetryPolicy implements HttpPipelinePolicy {
         return retryStrategy.calculateRetryDelay(tryCount);
     }
 
-
-
     /**
      * The interface for determining the retry strategy of clients.
      */
     @FunctionalInterface
     public interface RetryStrategy {
-        double JITTER_FACTOR = 0.05;
 
         /**
          * Computes the delay between each retry.
@@ -251,7 +246,6 @@ public class RetryPolicy implements HttpPipelinePolicy {
             return httpResponse;
         }
     }
-
 
     /*
      * Determines the delay duration that should be waited before retrying.

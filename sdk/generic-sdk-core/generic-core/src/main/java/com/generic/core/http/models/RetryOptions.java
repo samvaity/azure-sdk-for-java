@@ -3,21 +3,62 @@
 
 package com.generic.core.http.models;
 
-import com.generic.core.http.policy.RetryPolicy;
 import com.generic.core.util.ClientLogger;
 
+import java.time.Duration;
+import java.util.Objects;
 import java.util.function.Predicate;
 
+/**
+ * Options to configure the retry policy's behavior.
+ */
 public class RetryOptions {
     private static final ClientLogger LOGGER = new ClientLogger(RetryOptions.class);
     private Integer maxRetries;
-    private RetryPolicy.RetryStrategy retryStrategy;
     private Predicate<HttpResponse> shouldRetry;
     private Predicate<Throwable> shouldRetryException;
+    private Duration baseDelay;
+    private Duration maxDelay;
+    private Duration fixedDelay;
+
+    /**
+     * Creates an instance of {@link RetryOptions} with values for {@code baseDelay} and {@code maxDelay}. Use this
+     * constructor for exponential retry delay strategy.
+     * @param baseDelay The base delay duration for retry.
+     * @param maxDelay The max delay duration for retry.
+     */
+    public RetryOptions(Duration baseDelay, Duration maxDelay) {
+        Objects.requireNonNull(baseDelay, "'baseDelay' cannot be null.");
+        Objects.requireNonNull(maxDelay, "'maxDelay' cannot be null.");
+        this.baseDelay = baseDelay;
+        this.maxDelay = maxDelay;
+    }
+
+    /**
+     * Creates an instance of {@link RetryOptions} with values for {@code fixedDelay}. Use this constructor for
+     * fixed retry delay strategy.
+     * @param fixedDelay The fixed delay duration between retry attempts.
+     */
+    public RetryOptions(Duration fixedDelay) {
+        Objects.requireNonNull(fixedDelay, "'fixedDelay' cannot be null.");
+        this.fixedDelay = fixedDelay;
+    }
+
+
+    /**
+     * Get the maximum number of retry attempts to be made.
+     * @return the max retry attempts.
+     */
     public Integer getMaxRetries() {
         return maxRetries;
     }
 
+    /**
+     * Set the maximum number of retry attempts to be made.
+     * @param maxRetries the max retry attempts.
+     * @return the updated {@link RetryOptions} object.
+     * @throws IllegalArgumentException if {@code maxRetries} is less than 0.
+     */
     public RetryOptions setMaxRetries(Integer maxRetries) {
         if (maxRetries < 0) {
             throw LOGGER.logThrowableAsError(new IllegalArgumentException("Max retries cannot be less than 0."));
@@ -26,14 +67,28 @@ public class RetryOptions {
         return this;
     }
 
-
-    public RetryPolicy.RetryStrategy getRetryStrategy() {
-        return retryStrategy;
+    /**
+     * Get the base delay duration for retry.
+     * @return the base delay duration.
+     */
+    public Duration getBaseDelay() {
+        return baseDelay;
     }
 
-    public RetryOptions setRetryStrategy(RetryPolicy.RetryStrategy retryStrategy) {
-        this.retryStrategy = retryStrategy;
-        return this;
+    /**
+     * Get the max delay duration for retry.
+     * @return the max delay duration.
+     */
+    public Duration getMaxDelay() {
+        return maxDelay;
+    }
+
+    /**
+     * Get the fixed delay duration between retry attempts.
+     * @return the fixed delay duration.
+     */
+    public Duration getFixedDelay() {
+        return fixedDelay;
     }
 
     /**

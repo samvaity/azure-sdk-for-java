@@ -254,7 +254,7 @@ public class RetryPolicyTests {
         };
 
         final HttpPipeline pipeline = new HttpPipelineBuilder()
-            .policies(new RetryPolicy(new RetryOptions().setRetryStrategy(new FixedDelay(Duration.ofMillis(1))).setMaxRetries(2)))
+            .policies(new RetryPolicy(new RetryOptions(Duration.ofMillis(1)).setMaxRetries(2)))
             .httpClient(new NoOpHttpClient() {
 
                 @Override
@@ -272,7 +272,7 @@ public class RetryPolicyTests {
     public void propagatingExceptionHasOtherErrorsAsSuppressedExceptions() {
         AtomicInteger count = new AtomicInteger();
         final HttpPipeline pipeline = new HttpPipelineBuilder()
-            .policies(new RetryPolicy(new RetryOptions().setRetryStrategy(new FixedDelay(Duration.ofMillis(1))).setMaxRetries(2)))
+            .policies(new RetryPolicy(new RetryOptions(Duration.ofMillis(1)).setMaxRetries(2)))
             .httpClient(new NoOpHttpClient() {
                 @Override
                 public HttpResponse send(HttpRequest request) {

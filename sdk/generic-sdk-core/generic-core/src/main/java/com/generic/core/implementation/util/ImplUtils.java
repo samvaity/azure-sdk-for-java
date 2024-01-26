@@ -375,7 +375,7 @@ public final class ImplUtils {
         }
     }
     /**
-     * Converts the {@link RetryOptions} into a {@link RetryStrategy} so it can be more easily consumed.
+     * Converts the {@link RetryOptions} into a {@link RetryPolicy.RetryStrategy} so it can be more easily consumed.
      *
      * @param retryOptions The retry options.
      * @return The retry strategy based on the retry options.
@@ -385,12 +385,10 @@ public final class ImplUtils {
     public static RetryPolicy.RetryStrategy getRetryStrategyFromOptions(RetryOptions retryOptions) {
         Objects.requireNonNull(retryOptions, "'retryOptions' cannot be null.");
 
-        if (retryOptions.getRetryStrategy() instanceof ExponentialBackoffDelay) {
-            ExponentialBackoffDelay exponentialBackoffDelay = (ExponentialBackoffDelay) retryOptions.getRetryStrategy();
-            return new ExponentialBackoffDelay(exponentialBackoffDelay.getBaseDelay(), exponentialBackoffDelay.getMaxDelay());
-        } else if (retryOptions.getRetryStrategy() instanceof FixedDelay) {
-            FixedDelay fixedDelay = (FixedDelay) retryOptions.getRetryStrategy();
-            return new FixedDelay(fixedDelay.getBaseDelay());
+        if (retryOptions.getBaseDelay() != null && retryOptions.getMaxDelay() != null) {
+            return new ExponentialBackoffDelay(retryOptions.getBaseDelay(), retryOptions.getMaxDelay());
+        } else if (retryOptions.getFixedDelay() != null) {
+            return new FixedDelay(retryOptions.getFixedDelay());
         } else {
             // This should never happen.
             throw new IllegalArgumentException("'retryOptions' didn't define any retry strategy");
