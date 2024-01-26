@@ -3,6 +3,10 @@
 
 package com.generic.core.implementation.util;
 
+import com.generic.core.http.models.RetryOptions;
+import com.generic.core.http.policy.RetryPolicy;
+import com.generic.core.implementation.http.policy.ExponentialBackoffDelay;
+import com.generic.core.implementation.http.policy.FixedDelay;
 import com.generic.core.models.HeaderName;
 import com.generic.core.models.Headers;
 import com.generic.core.util.ClientLogger;
@@ -368,6 +372,28 @@ public final class ImplUtils {
         } catch (ClassNotFoundException e) {
             throw LOGGER.logThrowableAsError(new RuntimeException(
                 "Class '" + className + "' is not found on the classpath.", e));
+        }
+    }
+    /**
+     * Converts the {@link RetryOptions} into a {@link RetryStrategy} so it can be more easily consumed.
+     *
+     * @param retryOptions The retry options.
+     * @return The retry strategy based on the retry options.
+     * @throws NullPointerException If {@code retryOptions} is null.
+     * @throws IllegalArgumentException If {@code retryOptions} doesn't define any retry strategy options.
+     */
+    public static RetryPolicy.RetryStrategy getRetryStrategyFromOptions(RetryOptions retryOptions) {
+        Objects.requireNonNull(retryOptions, "'retryOptions' cannot be null.");
+
+        if (retryOptions.getRetryStrategy() instanceof ExponentialBackoffDelay) {
+            ExponentialBackoffDelay exponentialBackoffDelay = (ExponentialBackoffDelay) retryOptions.getRetryStrategy();
+            return new ExponentialBackoffDelay(exponentialBackoffDelay.getBaseDelay(), exponentialBackoffDelay.getMaxDelay());
+        } else if (retryOptions.getRetryStrategy() instanceof FixedDelay) {
+            FixedDelay fixedDelay = (FixedDelay) retryOptions.getRetryStrategy();
+            return new FixedDelay(fixedDelay.getBaseDelay());
+        } else {
+            // This should never happen.
+            throw new IllegalArgumentException("'retryOptions' didn't define any retry strategy");
         }
     }
 

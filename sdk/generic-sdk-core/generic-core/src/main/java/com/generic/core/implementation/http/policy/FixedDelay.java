@@ -15,21 +15,25 @@ import java.util.Objects;
 public class FixedDelay implements RetryPolicy.RetryStrategy {
     private static final ClientLogger LOGGER = new ClientLogger(FixedDelay.class);
 
-    private final Duration delay;
+    private final Duration baseDelay;
 
     /**
      * Creates an instance of {@link FixedDelay}.
      *
-     * @param delay The fixed delay duration between retry attempts.
+     * @param baseDelay The fixed delay duration between retry attempts.
      * @throws IllegalArgumentException If {@code maxRetries} is negative.
      * @throws NullPointerException If {@code delay} is {@code null}.
      */
-    public FixedDelay(Duration delay) {
-        this.delay = Objects.requireNonNull(delay, "'delay' cannot be null.");
+    public FixedDelay(Duration baseDelay) {
+        this.baseDelay = Objects.requireNonNull(baseDelay, "'delay' cannot be null.");
     }
 
     @Override
     public Duration calculateRetryDelay(int retryAttempts) {
-        return delay;
+        return baseDelay;
+    }
+
+    public Duration getBaseDelay() {
+        return baseDelay;
     }
 }

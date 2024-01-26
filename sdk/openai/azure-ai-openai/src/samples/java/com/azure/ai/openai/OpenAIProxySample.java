@@ -9,6 +9,7 @@ import com.azure.ai.openai.models.CompletionsOptions;
 import com.azure.ai.openai.models.CompletionsUsage;
 import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.http.ProxyOptions;
+import com.azure.core.http.policy.RetryOptions;
 import com.azure.core.util.HttpClientOptions;
 
 import java.net.InetSocketAddress;
@@ -38,6 +39,7 @@ public class OpenAIProxySample {
             .endpoint(endpoint)
             .credential(new AzureKeyCredential(azureOpenaiKey))
             .clientOptions(new HttpClientOptions().setProxyOptions(proxyOptions))
+            .retryOptions(new RetryOptions().setMaxRetries(3).setRetryDelay().setRetryStrategy(RetryStrategy.EXPONENTIAL_BACKOFF).setShouldRetry(null))
             .buildClient();
 
         List<String> prompt = new ArrayList<>();

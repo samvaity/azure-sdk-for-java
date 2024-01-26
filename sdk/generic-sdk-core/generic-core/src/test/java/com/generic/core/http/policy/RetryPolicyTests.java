@@ -8,6 +8,7 @@ import com.generic.core.http.NoOpHttpClient;
 import com.generic.core.http.models.HttpMethod;
 import com.generic.core.http.models.HttpRequest;
 import com.generic.core.http.models.HttpResponse;
+import com.generic.core.http.models.RetryOptions;
 import com.generic.core.http.pipeline.HttpPipeline;
 import com.generic.core.http.pipeline.HttpPipelineBuilder;
 import com.generic.core.implementation.http.policy.ExponentialBackoffDelay;
@@ -133,7 +134,7 @@ public class RetryPolicyTests {
         int expectedStatusCode) {
         AtomicInteger attempt = new AtomicInteger();
         HttpPipeline pipeline = new HttpPipelineBuilder()
-            .policies(new RetryPolicy().setRetryStrategy(retryStrategy).setMaxRetries(2))
+            .policies(new RetryPolicy(retryStrategy, 2, null, null))
             .httpClient(new NoOpHttpClient() {
 
                 @Override
@@ -161,7 +162,7 @@ public class RetryPolicyTests {
                     return new MockHttpResponse(request, 500);
                 }
             })
-            .policies(new RetryPolicy().setRetryStrategy(new FixedDelay(Duration.ofMillis(1))).setMaxRetries(5))
+            .policies(new RetryPolicy(new FixedDelay(Duration.ofMillis(1)), 5, null, null))
             .build();
 
         try (HttpResponse response = sendRequest(pipeline)) {
@@ -194,7 +195,7 @@ public class RetryPolicyTests {
                     return new MockHttpResponse(request, 500);
                 }
             })
-            .policies(new RetryPolicy().setRetryStrategy(new FixedDelay(Duration.ofMillis(delayMillis))).setMaxRetries(5))
+            .policies(new RetryPolicy(new FixedDelay(Duration.ofMillis(delayMillis)), 5, null, null))
             .build();
 
         try (HttpResponse response = sendRequest(pipeline)) {
@@ -233,7 +234,7 @@ public class RetryPolicyTests {
                     return new MockHttpResponse(request, 503);
                 }
             })
-            .policies(new RetryPolicy().setRetryStrategy(exponentialBackoff).setMaxRetries(maxRetries))
+            .policies(new RetryPolicy(exponentialBackoff, 5, null, null))
             .build();
 
         try (HttpResponse response = sendRequest(pipeline)) {
@@ -253,7 +254,7 @@ public class RetryPolicyTests {
         };
 
         final HttpPipeline pipeline = new HttpPipelineBuilder()
-            .policies(new RetryPolicy().setRetryStrategy(new FixedDelay(Duration.ofMillis(1))).setMaxRetries(2))
+            .policies(new RetryPolicy(new RetryOptions().setRetryStrategy(new FixedDelay(Duration.ofMillis(1))).setMaxRetries(2)))
             .httpClient(new NoOpHttpClient() {
 
                 @Override
@@ -271,7 +272,7 @@ public class RetryPolicyTests {
     public void propagatingExceptionHasOtherErrorsAsSuppressedExceptions() {
         AtomicInteger count = new AtomicInteger();
         final HttpPipeline pipeline = new HttpPipelineBuilder()
-            .policies(new RetryPolicy().setRetryStrategy(new FixedDelay(Duration.ofMillis(1))).setMaxRetries(2))
+            .policies(new RetryPolicy(new RetryOptions().setRetryStrategy(new FixedDelay(Duration.ofMillis(1))).setMaxRetries(2)))
             .httpClient(new NoOpHttpClient() {
                 @Override
                 public HttpResponse send(HttpRequest request) {

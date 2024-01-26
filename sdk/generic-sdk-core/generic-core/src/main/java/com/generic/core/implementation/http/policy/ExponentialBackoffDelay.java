@@ -9,7 +9,6 @@ import com.generic.core.util.ClientLogger;
 
 import java.time.Duration;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A truncated exponential backoff implementation of {@link RetryPolicy.RetryStrategy} that has a delay duration that exponentially
@@ -17,12 +16,11 @@ import java.util.concurrent.ThreadLocalRandom;
  * provided max delay duration.
  */
 public class ExponentialBackoffDelay implements RetryPolicy.RetryStrategy {
-    private static final double JITTER_FACTOR = 0.05;
     private static final Duration DEFAULT_BASE_DELAY = Duration.ofMillis(800);
     private static final Duration DEFAULT_MAX_DELAY = Duration.ofSeconds(8);
     private static final ClientLogger LOGGER = new ClientLogger(ExponentialBackoffDelay.class);
-    private final long baseDelayNanos;
-    private final long maxDelayNanos;
+    private final Duration baseDelay;
+    private final Duration maxDelay;
 
     /**
      * Creates an instance of {@link ExponentialBackoffDelay} with a maximum number of retry attempts configured by the
@@ -54,15 +52,20 @@ public class ExponentialBackoffDelay implements RetryPolicy.RetryStrategy {
             throw LOGGER
                 .logThrowableAsError(new IllegalArgumentException("'baseDelay' cannot be greater than 'maxDelay'."));
         }
-        this.baseDelayNanos = baseDelay.toNanos();
-        this.maxDelayNanos = maxDelay.toNanos();
+        this.baseDelay = baseDelay;
+        this.maxDelay = maxDelay;
     }
 
     @Override
     public Duration calculateRetryDelay(int retryAttempts) {
-        // Introduce a small amount of jitter to base delay
-        long delayWithJitterInNanos = ThreadLocalRandom.current()
-            .nextLong((long) (baseDelayNanos * (1 - JITTER_FACTOR)), (long) (baseDelayNanos * (1 + JITTER_FACTOR)));
-        return Duration.ofNanos(Math.min((1L << retryAttempts) * delayWithJitterInNanos, maxDelayNanos));
+        return calculateExponentialRetryDelay(retryAttempts, baseDelay, maxDelay);
+    }
+
+    public Duration getBaseDelay() {
+        return baseDelay;
+    }
+
+    public Duration getMaxDelay() {
+        return maxDelay;
     }
 }
