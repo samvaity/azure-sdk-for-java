@@ -3,6 +3,7 @@
 
 package com.azure.core.http.okhttp;
 
+import com.azure.core.http.ContentType;
 import com.azure.core.http.HttpClient;
 import com.azure.core.http.HttpHeader;
 import com.azure.core.http.HttpHeaderName;
@@ -18,12 +19,17 @@ import com.azure.core.http.okhttp.implementation.OkHttpProgressReportingRequestB
 import com.azure.core.implementation.util.BinaryDataContent;
 import com.azure.core.implementation.util.BinaryDataHelper;
 import com.azure.core.implementation.util.FluxByteBufferContent;
+import com.azure.core.implementation.util.ServerSentEventHelper;
+import com.azure.core.models.ServerSentEvent;
+import com.azure.core.models.ServerSentEventListener;
 import com.azure.core.util.BinaryData;
 import com.azure.core.util.Context;
 import com.azure.core.util.Contexts;
 import com.azure.core.util.ProgressReporter;
 import com.azure.core.util.logging.ClientLogger;
+import com.azure.core.util.logging.LogLevel;
 import okhttp3.Call;
+import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -33,8 +39,16 @@ import okhttp3.ResponseBody;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.MonoSink;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UncheckedIOException;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * This class provides a OkHttp-based implementation for the {@link HttpClient} interface. Creating an instance of this
@@ -75,6 +89,10 @@ class OkHttpAsyncHttpClient implements HttpClient {
     private static final String AZURE_EAGERLY_CONVERT_HEADERS = "azure-eagerly-convert-headers";
 
     final OkHttpClient httpClient;
+    private static final String LAST_EVENT_ID = "Last-Event-Id";
+    private static final String DEFAULT_EVENT = "message";
+    private static final Pattern DIGITS_ONLY = Pattern.compile("^[\\d]*$");
+
 
     OkHttpAsyncHttpClient(OkHttpClient httpClient) {
         this.httpClient = httpClient;
@@ -144,7 +162,7 @@ class OkHttpAsyncHttpClient implements HttpClient {
      * @param progressReporter the {@link ProgressReporter}. Can be null.
      * @return the okhttp request
      */
-    private okhttp3.Request toOkHttpRequest(HttpRequest request, ProgressReporter progressReporter) {
+    private Request toOkHttpRequest(HttpRequest request, ProgressReporter progressReporter) {
         Request.Builder requestBuilder = new Request.Builder().url(request.getUrl());
 
         if (request.getHeaders() != null) {
@@ -211,33 +229,188 @@ class OkHttpAsyncHttpClient implements HttpClient {
         return contentLength;
     }
 
-    private static HttpResponse toHttpResponse(HttpRequest request, okhttp3.Response response,
+    private static HttpResponse toHttpResponse(HttpRequest request, Response response,
         boolean eagerlyReadResponse, boolean ignoreResponseBody, boolean eagerlyConvertHeaders) throws IOException {
-        // For now, eagerlyReadResponse and ignoreResponseBody works the same.
-        // if (ignoreResponseBody) {
-        // ResponseBody body = response.body();
-        // if (body != null) {
-        // if (body.contentLength() > 0) {
-        // LOGGER.log(LogLevel.WARNING, () -> "Received HTTP response body when one wasn't expected. "
-        // + "Response body will be ignored as directed.");
-        // }
-        // body.close();
-        // }
-        //
-        // return new OkHttpAsyncBufferedResponse(response, request, EMPTY_BODY, eagerlyConvertHeaders);
-        // }
-
-        /*
-         * Use a buffered response when we are eagerly reading the response from the network and the body isn't
-         * empty.
-         */
-        if (eagerlyReadResponse || ignoreResponseBody) {
-            try (ResponseBody body = response.body()) {
-                byte[] bytes = (body != null) ? body.bytes() : EMPTY_BODY;
-                return new OkHttpAsyncBufferedResponse(response, request, bytes, eagerlyConvertHeaders);
+        Headers responseHeaders = null;
+        if (eagerlyReadResponse) {
+            responseHeaders = response.headers();
+        }
+        if (isTextEventStream(responseHeaders)) {
+            ServerSentEventListener listener = request.getServerSentEventListener();
+            if (listener != null && response.body() != null) {
+                processTextEventStream(request, response.body().byteStream(), listener);
+            } else {
+                LOGGER.log(LogLevel.INFORMATIONAL, () -> "No listener attached to the server sent event" +
+                    " http request. Treating response as regular response.");
             }
+            return new OkHttpAsyncBufferedResponse(response, request, EMPTY_BODY, eagerlyConvertHeaders);
         } else {
-            return new OkHttpAsyncResponse(response, request, eagerlyConvertHeaders);
+            if (eagerlyReadResponse || ignoreResponseBody) {
+                try (ResponseBody body = response.body()) {
+                    byte[] bytes = (body != null) ? body.bytes() : EMPTY_BODY;
+                    return new OkHttpAsyncBufferedResponse(response, request, bytes, eagerlyConvertHeaders);
+                }
+            } else {
+                return new OkHttpAsyncResponse(response, request, eagerlyConvertHeaders);
+            }
+        }
+    }
+
+    private static void processTextEventStream(HttpRequest httpRequest, InputStream inputStream, ServerSentEventListener listener) {
+        RetrySSEResult retrySSEResult;
+        try (BufferedReader reader
+                 = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"))) {
+            retrySSEResult = processBuffer(reader, listener);
+            if (retrySSEResult != null) {
+                retryExceptionForSSE(retrySSEResult, listener, httpRequest);
+            }
+        } catch (IOException e) {
+            throw LOGGER.logThrowableAsError(new UncheckedIOException(e));
+        }
+    }
+
+    /**
+     * Processes the sse buffer and dispatches the event
+     *
+     * @param reader The BufferedReader object
+     * @param listener The listener object attached with the httpRequest
+     */
+    private static RetrySSEResult processBuffer(BufferedReader reader, ServerSentEventListener listener) {
+        StringBuilder collectedData = new StringBuilder();
+        ServerSentEvent event = null;
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                collectedData.append(line).append("\n");
+                if (isEndOfBlock(collectedData)) {
+                    event = processLines(collectedData.toString().split("\n"));
+                    if (!Objects.equals(event.getEvent(), DEFAULT_EVENT) || event.getData() != null) {
+                        listener.onEvent(event);
+                    }
+                    collectedData = new StringBuilder(); // clear the collected data
+                }
+            }
+            listener.onClose();
+        } catch (IOException e) {
+            return new RetrySSEResult(e,
+                event != null ? event.getId() : -1,
+                event != null ? ServerSentEventHelper.getRetryAfter(event) : null);
+        }
+        return null;
+    }
+
+    private static boolean isEndOfBlock(StringBuilder sb) {
+        // blocks of data are separated by double newlines
+        // add more end of blocks here if needed
+        return sb.indexOf("\n\n") >= 0;
+    }
+
+    private static ServerSentEvent processLines(String[] lines) {
+        List<String> eventData = null;
+        ServerSentEvent event = new ServerSentEvent();
+
+        for (String line : lines) {
+            int idx = line.indexOf(':');
+            if (idx == 0) {
+                ServerSentEventHelper.setComment(event, line.substring(1).trim());
+                continue;
+            }
+            String field = line.substring(0, idx < 0 ? lines.length : idx).trim().toLowerCase();
+            String value = idx < 0 ? "" : line.substring(idx + 1).trim();
+
+            switch (field) {
+                case "event":
+                    ServerSentEventHelper.setEvent(event, value);
+                    break;
+                case "data":
+                    if(eventData == null) {
+                        eventData = new ArrayList<>();
+                    }
+                    eventData.add(value);
+                    break;
+                case "id":
+                    if (!value.isEmpty()) {
+                        ServerSentEventHelper.setId(event, Long.parseLong(value));
+                    }
+                    break;
+                case "retry":
+                    if (!value.isEmpty() && DIGITS_ONLY.matcher(value).matches()) {
+                        ServerSentEventHelper.setRetryAfter(event, Duration.ofMillis(Long.parseLong(value)));
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid data received from server");
+            }
+        }
+
+        if (event.getEvent() == null) {
+            ServerSentEventHelper.setEvent(event, DEFAULT_EVENT);
+        }
+        if (eventData != null) {
+            ServerSentEventHelper.setData(event, eventData);
+        }
+
+        return event;
+    }
+
+    /**
+     * Retries the request if the listener allows it
+     *
+     * @param retrySSEResult  the result of the retry
+     * @param listener The listener object attached with the httpRequest
+     * @param httpRequest the HTTP Request being sent
+     */
+    private static void retryExceptionForSSE(RetrySSEResult retrySSEResult, ServerSentEventListener listener, HttpRequest httpRequest) {
+        if (Thread.currentThread().isInterrupted()
+            || !listener.shouldRetry(retrySSEResult.getException(),
+                retrySSEResult.getRetryAfter(),
+                retrySSEResult.getLastEventId())) {
+            listener.onError(retrySSEResult.getException());
+            return;
+        }
+
+        if (retrySSEResult.getLastEventId() != -1) {
+            httpRequest.getHeaders()
+                .add(HttpHeaderName.fromString(LAST_EVENT_ID), String.valueOf(retrySSEResult.getLastEventId()));
+        }
+
+        try {
+            if (retrySSEResult.getRetryAfter() != null) {
+                Thread.sleep(retrySSEResult.getRetryAfter().toMillis());
+            }
+        } catch (InterruptedException ignored) {
+            return;
+        }
+
+        if (!Thread.currentThread().isInterrupted()) {
+            sendSync(httpRequest, Context.NONE);
+        }
+    }
+
+    /**
+     * Inner class to hold the result for a retry of an SSE request
+     */
+    private static class RetrySSEResult {
+        private final long lastEventId;
+        private final Duration retryAfter;
+        private final IOException ioException;
+
+        public RetrySSEResult(IOException e, long lastEventId, Duration retryAfter) {
+            this.ioException = e;
+            this.lastEventId = lastEventId;
+            this.retryAfter = retryAfter;
+        }
+
+        public long getLastEventId() {
+            return lastEventId;
+        }
+
+        public Duration getRetryAfter() {
+            return retryAfter;
+        }
+
+        public IOException getException() {
+            return ioException;
         }
     }
 
@@ -280,5 +453,10 @@ class OkHttpAsyncHttpClient implements HttpClient {
                 sink.error(ex);
             }
         }
+    }
+
+    private static boolean isTextEventStream(Headers responseHeaders) {
+        return responseHeaders != null && responseHeaders.get(HttpHeaderName.CONTENT_TYPE.toString()) != null &&
+            responseHeaders.get(HttpHeaderName.CONTENT_TYPE.toString()).equals(ContentType.TEXT_EVENT_STREAM);
     }
 }

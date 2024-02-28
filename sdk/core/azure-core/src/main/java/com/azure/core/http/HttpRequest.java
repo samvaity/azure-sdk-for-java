@@ -6,6 +6,7 @@ package com.azure.core.http;
 import com.azure.core.implementation.ImplUtils;
 import com.azure.core.implementation.util.BinaryDataHelper;
 import com.azure.core.implementation.util.FluxByteBufferContent;
+import com.azure.core.models.ServerSentEventListener;
 import com.azure.core.util.BinaryData;
 import com.azure.core.util.logging.ClientLogger;
 import reactor.core.publisher.Flux;
@@ -35,6 +36,7 @@ public class HttpRequest {
     private URL url;
     private HttpHeaders headers;
     private BinaryData body;
+    private ServerSentEventListener serverSentEventListener;
 
     /**
      * Create a new HttpRequest instance.
@@ -302,5 +304,23 @@ public class HttpRequest {
     public HttpRequest copy() {
         final HttpHeaders bufferedHeaders = new HttpHeaders(headers);
         return new HttpRequest(httpMethod, url, bufferedHeaders, body);
+    }
+
+    /**
+     * Get the specified event stream listener for this request.
+     * @return the listener for this request.
+     */
+    public ServerSentEventListener getServerSentEventListener() {
+        return serverSentEventListener;
+    }
+
+    /**
+     * Set an event stream listener for this request.
+     * @param serverSentEventListener the listener to set for this request.
+     * @return This HttpRequest.
+     */
+    public HttpRequest setServerSentEventListener(ServerSentEventListener serverSentEventListener) {
+        this.serverSentEventListener = serverSentEventListener;
+        return this;
     }
 }
