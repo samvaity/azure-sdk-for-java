@@ -62,6 +62,7 @@ class DefaultHttpClient implements HttpClient {
 
     private static final BinaryData EMPTY_BODY = BinaryData.fromBytes(new byte[0]);
     private static final ClientLogger LOGGER = new ClientLogger(DefaultHttpClient.class);
+
     private final long connectionTimeout;
     private final long readTimeout;
     private final ProxyOptions proxyOptions;
@@ -144,14 +145,14 @@ class DefaultHttpClient implements HttpClient {
             connection.setReadTimeout((int) readTimeout);
         }
 
-            if (keepConnectionAlive) {
-                connection.setRequestProperty(HttpHeaderName.CONNECTION.toString(), "keep-alive");
-            }
+        if (keepConnectionAlive) {
+            connection.setRequestProperty(HttpHeaderName.CONNECTION.toString(), "keep-alive");
+        }
 
-            if (maxConnections > 0) {
-                connection.setRequestProperty(HttpHeaderName.CONNECTION.toString(), "keep-alive");
-                connection.setRequestProperty(HttpHeaderName.KEEP_ALIVE.toString(), "max=" + maxConnections);
-            }
+        if (maxConnections > 0) {
+            connection.setRequestProperty(HttpHeaderName.CONNECTION.toString(), "keep-alive");
+            connection.setRequestProperty(HttpHeaderName.KEEP_ALIVE.toString(), "max=" + maxConnections);
+        }
 
         connection.setRequestMethod(httpRequest.getHttpMethod().toString());
 
@@ -369,12 +370,11 @@ class DefaultHttpClient implements HttpClient {
          * @param socket An instance of the SocketClient
          * @return an instance of Response
          */
-        @SuppressWarnings("deprecation")
         private static Response<?> doInputOutput(HttpRequest httpRequest, Socket socket) throws IOException {
             HttpHeaders requestHeaders = httpRequest.getHeaders();
             requestHeaders.set(HttpHeaderName.HOST, httpRequest.getUrl().getHost());
             if (keepConnectionAlive) {
-                socket.setKeepAlive(true);
+                requestHeaders.set(HttpHeaderName.CONNECTION, "keep-alive");
             }
 
             if (maxConnections > 0) {
