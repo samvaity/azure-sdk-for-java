@@ -3,22 +3,23 @@
 
 package com.azure.sdk.template.stress;
 
-import com.azure.core.http.HttpHeaderName;
-import com.azure.core.http.HttpMethod;
-import com.azure.core.http.HttpPipeline;
-import com.azure.core.http.HttpPipelineBuilder;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.http.policy.HttpLogDetailLevel;
-import com.azure.core.http.policy.HttpLogOptions;
-import com.azure.core.http.policy.HttpLoggingPolicy;
-import com.azure.core.http.policy.HttpPipelinePolicy;
-import com.azure.core.http.policy.RetryPolicy;
-import com.azure.core.util.Context;
-import com.azure.core.util.logging.ClientLogger;
+import com.azure.perf.test.core.PerfStressOptions;
 import com.azure.sdk.template.stress.util.TelemetryHelper;
+import com.generic.core.http.Response;
+import com.generic.core.http.models.HttpLogOptions;
+import com.generic.core.http.models.HttpMethod;
+import com.generic.core.http.models.HttpRequest;
+import com.generic.core.http.okhttp.OkHttpHttpClientProvider;
+import com.generic.core.http.pipeline.HttpPipeline;
+import com.generic.core.http.pipeline.HttpPipelineBuilder;
+import com.generic.core.http.pipeline.HttpPipelinePolicy;
+import com.generic.core.http.policy.HttpLoggingPolicy;
+import com.generic.core.http.policy.RetryPolicy;
+import com.generic.core.models.HeaderName;
+import com.generic.core.util.ClientLogger;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicLong;
@@ -51,9 +52,11 @@ public class HttpDownload extends ScenarioBase<StressOptions> {
 
     private void runInternal() {
         // no need to handle exceptions here, they will be handled (and recorded) by the telemetry helper
-        try (HttpResponse response = pipeline.sendSync(createRequest(), Context.NONE)) {
-            byte[] fileData = response.getBodyAsBinaryData().toBytes();
-            LOGGER.info("Downloaded file of size: {}", fileData.length);
+        try (Response<?> response = pipeline.send(createRequest())) {
+            byte[] fileData = response.getBody().toBytes();
+            LOGGER.atInfo().log(String.format("Downloaded file of size: {%s}", fileData.length));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -65,22 +68,25 @@ public class HttpDownload extends ScenarioBase<StressOptions> {
         String receiptUrl = "https://raw.githubusercontent.com/Azure/azure-sdk-for-java/main/sdk/formrecognizer"
             + "/azure-ai-formrecognizer/src/samples/resources/sample-forms/receipts/contoso-allinone.jpg";
         HttpRequest request = new HttpRequest(HttpMethod.GET, receiptUrl);
-        request.getHeaders().set(HttpHeaderName.USER_AGENT, "azsdk-java-stress");
-        request.getHeaders().set(HttpHeaderName.X_MS_CLIENT_REQUEST_ID, String.valueOf(clientRequestId.incrementAndGet()));
+        request.getHeaders().set(HeaderName.USER_AGENT, "azsdk-java-stress");
+        request.getHeaders().set(HeaderName.fromString("x-client-id"), String.valueOf(clientRequestId.incrementAndGet()));
         return request;
     }
 
     private HttpPipelineBuilder getPipelineBuilder() {
         HttpLogOptions logOptions = new HttpLogOptions()
-            .setLogLevel(HttpLogDetailLevel.HEADERS);
+            .setLogLevel(HttpLogOptions.HttpLogDetailLevel.HEADERS);
 
         ArrayList<HttpPipelinePolicy> policies = new ArrayList<>();
 
         policies.add(new RetryPolicy());
         policies.add(new HttpLoggingPolicy(logOptions));
 
-        return new HttpPipelineBuilder()
-            .httpClient(super.httpClient)
+        HttpPipelineBuilder builder = new HttpPipelineBuilder()
             .policies(policies.toArray(new HttpPipelinePolicy[0]));
+        if (options.getHttpClient() == PerfStressOptions.HttpClientType.OKHTTP) {
+            builder.httpClient(new OkHttpHttpClientProvider().createInstance());
+        }
+        return builder;
     }
 }
