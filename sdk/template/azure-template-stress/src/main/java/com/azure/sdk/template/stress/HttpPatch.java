@@ -35,6 +35,7 @@ public class HttpPatch extends ScenarioBase<StressOptions> {
     private static final TelemetryHelper TELEMETRY_HELPER = new TelemetryHelper(HttpPatch.class);
     private static final ClientLogger LOGGER = new ClientLogger(HttpPatch.class);
     private final HttpPipeline pipeline;
+    private final URL url;
 
 
     // This is almost-unique-id generator. We could use UUID, but it's a bit more expensive to use.
@@ -47,6 +48,11 @@ public class HttpPatch extends ScenarioBase<StressOptions> {
     public HttpPatch(StressOptions options) {
         super(options, TELEMETRY_HELPER);
         pipeline = getPipelineBuilder().build();
+        try {
+            url = new URL(options.getServiceEndpoint());
+        } catch (MalformedURLException ex) {
+            throw LOGGER.logThrowableAsError(new IllegalArgumentException("'url' must be a valid URL.", ex));
+        }
     }
 
     @Override
@@ -70,12 +76,13 @@ public class HttpPatch extends ScenarioBase<StressOptions> {
     }
 
     private HttpRequest createRequest() {
-        String body = "{\"key\":\"value\"}";
-        HttpRequest request = new HttpRequest(HttpMethod.PATCH, "http://example.com/resource").setBody(BinaryData.fromString(body));
+        String body = "{\"test\":\"value\"}";
+        HttpRequest request = new HttpRequest(HttpMethod.PATCH, url).setBody(BinaryData.fromString(body));
 
         request.getHeaders().set(HeaderName.USER_AGENT, "azsdk-java-stress");
         request.getHeaders().set(HeaderName.fromString("x-client-id"), String.valueOf(clientRequestId.incrementAndGet()));
         request.getHeaders().set(HeaderName.CONTENT_TYPE, "application/json");
+        request.getHeaders().set(HeaderName.fromString("response-length"), "42");
         return request;
     }
 
