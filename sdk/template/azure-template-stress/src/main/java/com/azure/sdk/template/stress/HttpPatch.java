@@ -15,11 +15,14 @@ import com.generic.core.http.pipeline.HttpPipelineBuilder;
 import com.generic.core.http.pipeline.HttpPipelinePolicy;
 import com.generic.core.http.policy.HttpLoggingPolicy;
 import com.generic.core.http.policy.RetryPolicy;
+import com.generic.core.models.BinaryData;
 import com.generic.core.models.HeaderName;
 import com.generic.core.util.ClientLogger;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicLong;
@@ -27,11 +30,12 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Performance test for simple HTTP GET against test server.
  */
-public class HttpDownload extends ScenarioBase<StressOptions> {
+public class HttpPatch extends ScenarioBase<StressOptions> {
     // there will be multiple instances of scenario
     private static final TelemetryHelper TELEMETRY_HELPER = new TelemetryHelper(HttpPatch.class);
     private static final ClientLogger LOGGER = new ClientLogger(HttpPatch.class);
     private final HttpPipeline pipeline;
+
 
     // This is almost-unique-id generator. We could use UUID, but it's a bit more expensive to use.
     private final AtomicLong clientRequestId = new AtomicLong(Instant.now().getEpochSecond());
@@ -40,7 +44,7 @@ public class HttpDownload extends ScenarioBase<StressOptions> {
      * Creates an instance of performance test.
      * @param options stress test options
      */
-    public HttpDownload(StressOptions options) {
+    public HttpPatch(StressOptions options) {
         super(options, TELEMETRY_HELPER);
         pipeline = getPipelineBuilder().build();
     }
@@ -53,8 +57,9 @@ public class HttpDownload extends ScenarioBase<StressOptions> {
     private void runInternal() {
         // no need to handle exceptions here, they will be handled (and recorded) by the telemetry helper
         try (Response<?> response = pipeline.send(createRequest())) {
-            byte[] fileData = response.getBody().toBytes();
-            LOGGER.atInfo().log(String.format("Downloaded file of size: {%s}", fileData.length));
+            int responseCode = response.getStatusCode();
+            System.out.println("Response Code : " + responseCode);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -65,11 +70,12 @@ public class HttpDownload extends ScenarioBase<StressOptions> {
     }
 
     private HttpRequest createRequest() {
-        String receiptUrl = "https://raw.githubusercontent.com/Azure/azure-sdk-for-java/main/sdk/formrecognizer"
-            + "/azure-ai-formrecognizer/src/samples/resources/sample-forms/receipts/contoso-allinone.jpg";
-        HttpRequest request = new HttpRequest(HttpMethod.GET, receiptUrl);
+        String body = "{\"key\":\"value\"}";
+        HttpRequest request = new HttpRequest(HttpMethod.PATCH, "http://example.com/resource").setBody(BinaryData.fromString(body));
+
         request.getHeaders().set(HeaderName.USER_AGENT, "azsdk-java-stress");
         request.getHeaders().set(HeaderName.fromString("x-client-id"), String.valueOf(clientRequestId.incrementAndGet()));
+        request.getHeaders().set(HeaderName.CONTENT_TYPE, "application/json");
         return request;
     }
 

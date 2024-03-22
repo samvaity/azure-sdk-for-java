@@ -20,7 +20,7 @@ public class App {
 
         PerfStressProgram.run(new Class<?>[]{
             // HttpGet.class,
-            HttpDownload.class,
+            HttpPatch.class,
             // add other stress tests here
         }, args);
     }
