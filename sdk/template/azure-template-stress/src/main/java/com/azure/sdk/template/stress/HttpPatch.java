@@ -82,6 +82,7 @@ public class HttpPatch extends ScenarioBase<StressOptions> {
         request.getHeaders().set(HeaderName.fromString("x-client-id"), String.valueOf(clientRequestId.incrementAndGet()));
         request.getHeaders().set(HeaderName.CONTENT_TYPE, "application/json");
         request.getHeaders().set(HeaderName.fromString("response-length"), "128");
+        request.getHeaders().set(HeaderName.fromString("X-HTTP-Method-Override"), "PATCH");
         return request;
     }
 
