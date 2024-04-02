@@ -5,17 +5,17 @@ package com.azure.sdk.template.stress;
 
 import com.azure.perf.test.core.PerfStressOptions;
 import com.azure.sdk.template.stress.util.TelemetryHelper;
-import com.generic.core.http.Response;
+import com.generic.core.http.models.HttpHeaderName;
 import com.generic.core.http.models.HttpLogOptions;
 import com.generic.core.http.models.HttpMethod;
 import com.generic.core.http.models.HttpRequest;
+import com.generic.core.http.models.Response;
 import com.generic.core.http.okhttp.OkHttpHttpClientProvider;
+import com.generic.core.http.pipeline.HttpLoggingPolicy;
 import com.generic.core.http.pipeline.HttpPipeline;
 import com.generic.core.http.pipeline.HttpPipelineBuilder;
 import com.generic.core.http.pipeline.HttpPipelinePolicy;
-import com.generic.core.http.policy.HttpLoggingPolicy;
-import com.generic.core.http.policy.RetryPolicy;
-import com.generic.core.models.HeaderName;
+import com.generic.core.http.pipeline.HttpRetryPolicy;
 import com.generic.core.util.ClientLogger;
 import reactor.core.publisher.Mono;
 
@@ -68,8 +68,8 @@ public class HttpDownload extends ScenarioBase<StressOptions> {
         String receiptUrl = "https://raw.githubusercontent.com/Azure/azure-sdk-for-java/main/sdk/formrecognizer"
             + "/azure-ai-formrecognizer/src/samples/resources/sample-forms/receipts/contoso-allinone.jpg";
         HttpRequest request = new HttpRequest(HttpMethod.GET, receiptUrl);
-        request.getHeaders().set(HeaderName.USER_AGENT, "azsdk-java-stress");
-        request.getHeaders().set(HeaderName.fromString("x-client-id"), String.valueOf(clientRequestId.incrementAndGet()));
+        request.getHeaders().set(HttpHeaderName.USER_AGENT, "azsdk-java-stress");
+        request.getHeaders().set(HttpHeaderName.fromString("x-client-id"), String.valueOf(clientRequestId.incrementAndGet()));
         return request;
     }
 
@@ -79,7 +79,7 @@ public class HttpDownload extends ScenarioBase<StressOptions> {
 
         ArrayList<HttpPipelinePolicy> policies = new ArrayList<>();
 
-        policies.add(new RetryPolicy());
+        policies.add(new HttpRetryPolicy());
         policies.add(new HttpLoggingPolicy(logOptions));
 
         HttpPipelineBuilder builder = new HttpPipelineBuilder()

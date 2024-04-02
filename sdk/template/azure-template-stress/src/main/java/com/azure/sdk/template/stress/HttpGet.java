@@ -3,6 +3,7 @@
 
 package com.azure.sdk.template.stress;
 
+
 import com.azure.perf.test.core.PerfStressOptions;
 import com.azure.sdk.template.stress.util.TelemetryHelper;
 import io.clientcore.core.http.client.DefaultHttpClientBuilder;
@@ -25,6 +26,7 @@ import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**

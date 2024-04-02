@@ -5,19 +5,19 @@ package com.azure.sdk.template.stress;
 
 import com.azure.perf.test.core.PerfStressOptions;
 import com.azure.sdk.template.stress.util.TelemetryHelper;
-import com.generic.core.http.Response;
+import com.generic.core.http.models.HttpHeaderName;
 import com.generic.core.http.models.HttpLogOptions;
 import com.generic.core.http.models.HttpMethod;
 import com.generic.core.http.models.HttpRequest;
+import com.generic.core.http.models.Response;
 import com.generic.core.http.okhttp.OkHttpHttpClientProvider;
+import com.generic.core.http.pipeline.HttpLoggingPolicy;
 import com.generic.core.http.pipeline.HttpPipeline;
 import com.generic.core.http.pipeline.HttpPipelineBuilder;
 import com.generic.core.http.pipeline.HttpPipelinePolicy;
-import com.generic.core.http.policy.HttpLoggingPolicy;
-import com.generic.core.http.policy.RetryPolicy;
-import com.generic.core.models.BinaryData;
-import com.generic.core.models.HeaderName;
+import com.generic.core.http.pipeline.HttpRetryPolicy;
 import com.generic.core.util.ClientLogger;
+import com.generic.core.util.binarydata.BinaryData;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
@@ -78,11 +78,11 @@ public class HttpPatch extends ScenarioBase<StressOptions> {
         String body = "{\"test\":\"value\"}";
         HttpRequest request = new HttpRequest(HttpMethod.PATCH, url).setBody(BinaryData.fromString(body));
 
-        request.getHeaders().set(HeaderName.USER_AGENT, "azsdk-java-stress");
-        request.getHeaders().set(HeaderName.fromString("x-client-id"), String.valueOf(clientRequestId.incrementAndGet()));
-        request.getHeaders().set(HeaderName.CONTENT_TYPE, "application/json");
-        request.getHeaders().set(HeaderName.fromString("response-length"), "128");
-        request.getHeaders().set(HeaderName.fromString("X-HTTP-Method-Override"), "PATCH");
+        request.getHeaders().set(HttpHeaderName.USER_AGENT, "azsdk-java-stress");
+        request.getHeaders().set(HttpHeaderName.fromString("x-client-id"), String.valueOf(clientRequestId.incrementAndGet()));
+        request.getHeaders().set(HttpHeaderName.CONTENT_TYPE, "application/json");
+        request.getHeaders().set(HttpHeaderName.fromString("response-length"), "128");
+        request.getHeaders().set(HttpHeaderName.fromString("X-HTTP-Method-Override"), "PATCH");
         return request;
     }
 
@@ -92,7 +92,7 @@ public class HttpPatch extends ScenarioBase<StressOptions> {
 
         ArrayList<HttpPipelinePolicy> policies = new ArrayList<>();
 
-        policies.add(new RetryPolicy());
+        policies.add(new HttpRetryPolicy());
         policies.add(new HttpLoggingPolicy(logOptions));
 
         HttpPipelineBuilder builder = new HttpPipelineBuilder()
