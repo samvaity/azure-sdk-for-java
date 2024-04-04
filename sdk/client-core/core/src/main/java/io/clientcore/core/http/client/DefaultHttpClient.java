@@ -374,7 +374,7 @@ class DefaultHttpClient implements HttpClient {
             HttpHeaders requestHeaders = httpRequest.getHeaders();
             requestHeaders.set(HttpHeaderName.HOST, httpRequest.getUrl().getHost());
             if (keepConnectionAlive) {
-                requestHeaders.set(HttpHeaderName.CONNECTION, "keep-alive");
+                socket.setKeepAlive(true);
             }
 
             if (maxConnections > 0) {

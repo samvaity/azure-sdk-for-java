@@ -167,6 +167,12 @@ Execute the perf test with Application Insights enabled:
 >Note: If you're running tests locally, you need to provide `APPLICATIONINSIGHTS_CONNECTION_STRING` environment variable,
 skip setting the `javaagent` explicitly to send telemetry to Application Insights.
 
+Execute the perf test with Application Insights enabled:
+`$env:APPLICATIONINSIGHTS_CONNECTION_STRING="value"; java -jar "/path to/your file.jar" <options-for-the-test>`
+
+>Note: If you're running tests locally, you need to provide `APPLICATIONINSIGHTS_CONNECTION_STRING` environment variable,
+skip setting the `javaagent` explicitly to send telemetry to Application Insights.
+
 ### Logging
 
 We use [logback.xml][logback_xml] to configure the logging. By default, the stress test run on cluster will output
