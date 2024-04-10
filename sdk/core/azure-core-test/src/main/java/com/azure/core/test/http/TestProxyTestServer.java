@@ -23,7 +23,7 @@ public class TestProxyTestServer implements Closeable {
     private static final String TEST_XML_RESPONSE_BODY = "{\"Body\":\"<UserDelegationKey>"
         + "<SignedTid>sensitiveInformation=</SignedTid></UserDelegationKey>\",\"primaryKey\":"
         + "\"<PrimaryKey>fakePrimaryKey</PrimaryKey>\", \"TableName\":\"listtable09bf2a3d\"}";
-
+    private static final String TEST_BODY_KEY_JSON = "{\"operationId\":\"31476478748_0ce26cf3-2a12-4361-9614-d1527efb87ef\",\"kind\":\"documentClassifierBuild\",\"targetResourceId\": \"/subscriptions/baa080as-d3f0-35ad-8cje-k1a859ca8j56/resourceGroups/rg-name/providers/Microsoft.CognitiveServices/accounts/account-Name\",\"resourceLocation\":\"REDACTED\",\"result\":{\"classifierId\":\"ce59dd57-b99a-47b8-8deb-bc72827e9c45\",\"createdDateTime\":\"2023-07-20T21:41:08Z\",\"expirationDateTime\":\"2025-07-19T21:41:08Z\",\"apiVersion\":\"2023-07-31\",\"docTypes\":{\"IRS-1040-B\":{\"azureBlobFileListSource\":{\"containerUrl\":\"https://azuresdktrainingdata.blob.core.windows.net/training-data-classifier\",\"fileList\":\"IRS-1040-B.jsonl\"}}}}}";
     /**
      * Constructor for TestProxyTestServer
      */
@@ -51,6 +51,10 @@ public class TestProxyTestServer implements Closeable {
                             "https://resourceInfo.cognitiveservices.azure.com/fr/models//905a58f9-131e-42b8-8410-493ab1517d62")
                         .sendString(Mono.just(TEST_JSON_RESPONSE_BODY));
                 })
+                .post("/testBodyKey",
+                    (req, res) -> res.status(HttpResponseStatus.OK)
+                        .addHeader("Content-Type", "application/json")
+                        .sendString(Mono.just(TEST_BODY_KEY_JSON)))
                 .get("/fr/path/2",
                     (req, res) -> res.status(HttpResponseStatus.OK)
                         .addHeader("Content-Type", "application/json")

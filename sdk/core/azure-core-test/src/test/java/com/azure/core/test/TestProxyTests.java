@@ -38,6 +38,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -298,8 +299,8 @@ public class TestProxyTests extends TestProxyTestBase {
         HttpPipeline pipeline = new HttpPipelineBuilder().httpClient(client).build();
         interceptorManager.addMatchers(new CustomMatcher().setHeadersKeyOnlyMatch(Collections.singletonList("Accept")));
 
-        //        HttpClient client = new HttpURLConnectionHttpClient();
-        //        HttpPipeline pipeline = new HttpPipelineBuilder().httpClient(client).policies(interceptorManager.getRecordPolicy()).build();
+        // HttpClient client = new HttpURLConnectionHttpClient();
+        // HttpPipeline pipeline = new HttpPipelineBuilder().httpClient(client).policies(interceptorManager.getRecordPolicy()).build();
 
         HttpRequest request = new HttpRequest(HttpMethod.POST, "http://localhost:" + server.port() + "/post");
         request.setHeader(HttpHeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded");
@@ -313,6 +314,37 @@ public class TestProxyTests extends TestProxyTestBase {
         RecordedTestProxyData.TestProxyDataRecord record = recordedTestProxyData.getTestProxyDataRecords().get(0);
 
         assertEquals(record.getRequestBody(), "first_value=value&client_secret=REDACTED&other=value&is=cool");
+
+    }
+
+    @Test
+    @Tag("Record")
+    public void testRedactRequestResponseBodyKey() {
+
+//        HttpClient client = interceptorManager.getPlaybackClient();
+//        HttpPipeline pipeline = new HttpPipelineBuilder().httpClient(client).build();
+        interceptorManager.addMatchers(new CustomMatcher().setHeadersKeyOnlyMatch(Collections.singletonList("Accept")));
+        final String ZERO_UUID = "00000000-0000-0000-0000-000000000000";
+         HttpClient client = new HttpURLConnectionHttpClient();
+         HttpPipeline pipeline = new HttpPipelineBuilder().httpClient(client).policies(interceptorManager.getRecordPolicy()).build();
+         TestProxySanitizer blobSasUrlSanitizer = new TestProxySanitizer("(?<=http://|https://)([a-zA-Z0-9]+(?=.blob.core.windows.net))(.*)", "blob_sas_url", TestProxySanitizerType.BODY_REGEX);
+         TestProxySanitizer subscriptionSanitizer = new TestProxySanitizer("(?<=/subscriptions/)([^/?]+)", ZERO_UUID,
+            TestProxySanitizerType.BODY_REGEX);
+         TestProxySanitizer phoneNumberSanitizer = new TestProxySanitizer("((?:\\\\u002B)[0-9]{11,})|((?:\\\\%2B)[0-9]{11,})|((?:[+]?)[0-9]{11,})", "REDACTED", TestProxySanitizerType.BODY_REGEX);
+
+        interceptorManager.addSanitizers(Arrays.asList(blobSasUrlSanitizer, subscriptionSanitizer, phoneNumberSanitizer));
+        HttpRequest request = new HttpRequest(HttpMethod.POST, "http://localhost:" + server.port() + "/testBodyKey");
+        request.setHeader(HttpHeaderName.CONTENT_TYPE, "application/json");
+        request.setBody("{\"classifierId\":\"ce59dd57-b99a-47b8-8deb-bc72827e9c45\",\"docTypes\":{\"IRS-1040-B\":{\"azureBlobFileListSource\":{\"containerUrl\":\"https://azuresdktrainingdata.blob.core.windows.net/training-data-classifier?sp=racwdl&st=2023-04-03T18:30:52Z&se=2027-04-04T02:30:52Z&spr=https&sv=2021-12-02&sr=c&sig=Pt9tz%2BVZqlvcpEEs168RMVU%2BB9rUP1tP%2FWyPOK7Irhc%3D\",\"fileList\":\"IRS-1040-B.jsonl\"}}}}");
+
+        try (HttpResponse response = pipeline.sendSync(request, Context.NONE)) {
+            assertEquals(200, response.getStatusCode());
+        }
+
+//        RecordedTestProxyData recordedTestProxyData = readDataFromFile();
+//        RecordedTestProxyData.TestProxyDataRecord record = recordedTestProxyData.getTestProxyDataRecords().get(0);
+//
+//        assertEquals(record.getRequestBody(), "first_value=value&client_secret=REDACTED&other=value&is=cool");
 
     }
 
