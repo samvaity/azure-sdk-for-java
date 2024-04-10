@@ -74,6 +74,7 @@ class DefaultHttpClient implements HttpClient {
      */
     @Override
     public Response<?> send(HttpRequest httpRequest) {
+        HttpConnectionCache.HttpConnection connection = httpConnectionCache.get(new HttpConnectionProperties(httpRequest, httpRequest.getUrl(), proxyOptions));
         if (httpRequest.getHttpMethod() == HttpMethod.PATCH) {
             return sendPatchViaSocket(httpRequest);
         }
@@ -419,6 +420,12 @@ class DefaultHttpClient implements HttpClient {
             if (httpRequest.getBody() != null) {
                 request.append("\r\n").append(httpRequest.getBody().toString()).append("\r\n");
             }
+
+//            PrintWriter writer = new PrintWriter(output, true);
+//           StringBuilder st = new StringBuilder("PATCH /test HTTP/1.1 \n");
+//            st.append("Host:localhost \n");
+//            st.append("Connection:Close \n");
+//            st.append("\n");
 
             out.write(request.toString());
             out.flush();

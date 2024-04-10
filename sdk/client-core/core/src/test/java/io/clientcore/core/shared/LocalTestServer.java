@@ -3,6 +3,10 @@
 
 package io.clientcore.core.shared;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.http.trafficlistener.WiremockNetworkTrafficListener;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Request;
@@ -23,6 +27,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.any;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 
 /**
  * Local server that will reply to requests based on the configured {@link HttpServlet}.
@@ -31,6 +42,7 @@ public class LocalTestServer {
     private final Server server;
     private final ServerConnector httpConnector;
     private final ServerConnector httpsConnector;
+    private WireMockServer wireMockServer;
 
     /**
      * Creates a new instance of {@link LocalTestServer} that will reply to requests based on the passed
@@ -108,6 +120,45 @@ public class LocalTestServer {
             server.start();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void startWithTrafficListener() {
+        WireMock.configureFor("localhost", wireMockServer.port());
+        WireMock.stubFor(WireMock.get(WireMock.urlEqualTo("/test")).willReturn(WireMock.aResponse().withBody("Response")));
+
+        wireMockServer = new WireMockServer(
+            new WireMockConfiguration().dynamicPort().networkTrafficListener(new ConnectionCountingTrafficListener())
+        );
+
+        wireMockServer.stubFor(any(urlPathEqualTo("/")).willReturn(aResponse().withStatus(200)));
+        wireMockServer.start();
+    }
+
+    private static class ConnectionCountingTrafficListener implements WiremockNetworkTrafficListener {
+        private final AtomicInteger openedConnections = new AtomicInteger(0);
+
+        @Override
+        public void opened(Socket socket) {
+            System.out.println("Opened connection");
+            openedConnections.incrementAndGet();
+            System.out.println("Opened connections: " + openedConnections.get());
+        }
+
+        @Override
+        public void incoming(Socket socket, ByteBuffer bytes) {
+        }
+
+        @Override
+        public void outgoing(Socket socket, ByteBuffer bytes) {
+        }
+
+        @Override
+        public void closed(Socket socket) {
+        }
+
+        public int openedConnections() {
+            return openedConnections.get();
         }
     }
 

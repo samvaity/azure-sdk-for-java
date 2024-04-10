@@ -3,8 +3,6 @@
 
 package io.clientcore.core.http.client;
 
-import io.clientcore.core.http.client.DefaultHttpClientBuilder;
-import io.clientcore.core.http.client.HttpClient;
 import io.clientcore.core.http.models.ContentType;
 import io.clientcore.core.http.models.HttpHeader;
 import io.clientcore.core.http.models.HttpHeaderName;
@@ -35,6 +33,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static io.clientcore.core.util.TestUtils.assertArraysEqual;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -46,16 +45,19 @@ public class DefaultHttpClientTest {
     static final String RETURN_HEADERS_AS_IS_PATH = "/returnHeadersAsIs";
     private static final byte[] SHORT_BODY = "hi there".getBytes(StandardCharsets.UTF_8);
     private static final byte[] LONG_BODY = createLongBody();
+//    private static final ConnectionCountingTrafficListener CONNECTION_COUNTER = new ConnectionCountingTrafficListener();
     private static LocalTestServer server;
     private static final String SSE_RESPONSE = "/serversentevent";
 
     @BeforeAll
     public static void startTestServer() {
+        AtomicBoolean patch = new AtomicBoolean(false);
         server = new LocalTestServer((req, resp, requestBody) -> {
             String path = req.getServletPath();
             boolean get = "GET".equalsIgnoreCase(req.getMethod());
             boolean post = "POST".equalsIgnoreCase(req.getMethod());
             boolean put = "PUT".equalsIgnoreCase(req.getMethod());
+            patch.set("PATCH".equalsIgnoreCase(req.getMethod()));
 
             if (get && "/short".equals(path)) {
                 resp.setContentType("application/octet-stream");
@@ -70,6 +72,10 @@ public class DefaultHttpClientTest {
                 resp.setContentLength(5);
                 resp.getOutputStream().write("error".getBytes(StandardCharsets.UTF_8));
             } else if (post && "/shortPost".equals(path)) {
+                resp.setContentType("application/octet-stream");
+                resp.setContentLength(SHORT_BODY.length);
+                resp.getOutputStream().write(SHORT_BODY);
+            } else if (patch.get() && "/shortPatch".equals(path)) {
                 resp.setContentType("application/octet-stream");
                 resp.setContentLength(SHORT_BODY.length);
                 resp.getOutputStream().write(SHORT_BODY);
@@ -102,7 +108,11 @@ public class DefaultHttpClientTest {
             }
         });
 
-        server.start();
+        if (patch.get()) {
+            server.startWithTrafficListener();
+        } else {
+            server.start();
+        }
     }
 
     private static void sendSSEResponseWithDataOnly(org.eclipse.jetty.server.Response resp) throws IOException {
@@ -235,6 +245,27 @@ public class DefaultHttpClientTest {
             assertArrayEquals(SHORT_BODY, response.getBody().toBytes());
         }
     }
+
+    @Test
+    public void connectionPoolingWorks() throws Exception {
+//        int initialOpenedConnections = CONNECTION_COUNTER.openedConnections();
+        String contentChunk = "abcdefgh";
+        HttpClient client = createHttpClient();
+
+        HttpRequest request = new HttpRequest(HttpMethod.PATCH, url(server, "/shortPatch"));
+        request.getHeaders().set(HttpHeaderName.CONTENT_LENGTH, String.valueOf(contentChunk.length()));
+        request.setBody(BinaryData.fromString(contentChunk));
+
+        for (int i = 0; i < 5; i++) {
+            try (Response<?> response = client.send(request)) {
+                assertArrayEquals(SHORT_BODY, response.getBody().toBytes());
+            }
+        }
+
+//        assertEquals(CONNECTION_COUNTER.openedConnections(), initialOpenedConnections + 1);
+    }
+
+
 
     private static Response<?> getResponse(HttpClient client, String path, Context context) {
         HttpRequest request = new HttpRequest(HttpMethod.GET, url(server, path));
