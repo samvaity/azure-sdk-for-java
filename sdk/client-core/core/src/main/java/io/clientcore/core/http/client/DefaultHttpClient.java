@@ -15,6 +15,7 @@ import io.clientcore.core.http.models.ResponseBodyMode;
 import io.clientcore.core.http.models.ServerSentEventListener;
 import io.clientcore.core.implementation.AccessibleByteArrayOutputStream;
 import io.clientcore.core.implementation.http.HttpResponseAccessHelper;
+import io.clientcore.core.implementation.util.CoreUtils;
 import io.clientcore.core.implementation.util.ServerSentEventUtil;
 import io.clientcore.core.util.ClientLogger;
 import io.clientcore.core.util.binarydata.BinaryData;
@@ -26,6 +27,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UncheckedIOException;
 import java.net.ConnectException;
@@ -38,9 +40,12 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static io.clientcore.core.http.models.ContentType.APPLICATION_OCTET_STREAM;
 import static io.clientcore.core.http.models.HttpHeaderName.CONTENT_TYPE;
@@ -59,11 +64,23 @@ class DefaultHttpClient implements HttpClient {
     private final long connectionTimeout;
     private final long readTimeout;
     private final ProxyOptions proxyOptions;
+    private static int maxConnections;
+    private static boolean keepConnectionAlive;
+    private final HttpConnectionCache httpConnectionCache;
 
     DefaultHttpClient(Duration connectionTimeout, Duration readTimeout, ProxyOptions proxyOptions) {
         this.connectionTimeout = connectionTimeout == null ? -1 : connectionTimeout.toMillis();
         this.readTimeout = readTimeout == null ? -1 : readTimeout.toMillis();
         this.proxyOptions = proxyOptions;
+        String keepAlive = System.getProperty("http.keepAlive");
+        if (keepAlive != null && !Boolean.parseBoolean(keepAlive)) {
+            keepConnectionAlive = false;
+        }
+        String maxConnectionsString = System.getProperty("http.maxConnections");
+        maxConnections = maxConnectionsString != null
+            ? Integer.parseInt(maxConnectionsString)
+            : 5;
+        this.httpConnectionCache = HttpConnectionCache.getInstance(keepConnectionAlive, maxConnections);
     }
 
     /**
@@ -74,31 +91,25 @@ class DefaultHttpClient implements HttpClient {
      */
     @Override
     public Response<?> send(HttpRequest httpRequest) {
-        HttpConnectionCache.HttpConnection connection = httpConnectionCache.get(new HttpConnectionProperties(httpRequest, httpRequest.getUrl(), proxyOptions));
         if (httpRequest.getHttpMethod() == HttpMethod.PATCH) {
-            return sendPatchViaSocket(httpRequest);
+            HttpConnectionCache.HttpConnection connection = httpConnectionCache.get(new HttpConnectionProperties(httpRequest, httpRequest.getUrl().getHost(), String.valueOf(httpRequest.getUrl().getPort())));
+
+            Response<?> response = SocketClient.sendPatchRequest(httpRequest, connection.getSocketInputStream(), connection.getSocketOutputStream());
+
+            // Handle connection reusing
+            httpConnectionCache.reuseConnection(connection);
+            return response;
+
         }
 
-        HttpURLConnection connection = connect(httpRequest);
+        HttpURLConnection urlConnection = connect(httpRequest);
 
-        sendBody(httpRequest, connection);
+        sendBody(httpRequest, urlConnection);
 
-        return receiveResponse(httpRequest, connection);
+        return receiveResponse(httpRequest, urlConnection);
     }
 
-    /**
-     * Synchronously sends a PATCH request via a socket client.
-     *
-     * @param httpRequest The HTTP request being sent
-     * @return The Response object
-     */
-    private Response<?> sendPatchViaSocket(HttpRequest httpRequest) {
-        try {
-            return SocketClient.sendPatchRequest(httpRequest);
-        } catch (IOException e) {
-            throw LOGGER.logThrowableAsWarning(new UncheckedIOException(e));
-        }
-    }
+
 
     /**
      * Open a connection based on the HttpRequest URL
@@ -139,6 +150,15 @@ class DefaultHttpClient implements HttpClient {
 
             if (readTimeout != -1) {
                 connection.setReadTimeout((int) readTimeout);
+            }
+
+            if (keepConnectionAlive) {
+                connection.setRequestProperty(HttpHeaderName.CONNECTION.toString(), "keep-alive");
+            }
+
+            if (maxConnections > 0) {
+                connection.setRequestProperty(HttpHeaderName.CONNECTION.toString(), "keep-alive");
+                connection.setRequestProperty(HttpHeaderName.KEEP_ALIVE.toString(), "max=" + maxConnections);
             }
 
             try {
@@ -326,60 +346,249 @@ class DefaultHttpClient implements HttpClient {
         return outputStream;
     }
 
+    /*
+     * Inner class maintaining a cache of connections
+     */
+    private static class HttpConnectionCache {
+        private static HttpConnectionCache INSTANCE;
+        private final int maxConnections;
+        private final Map<HttpConnectionProperties, List<HttpConnection>> connectionPool
+            = new HashMap<HttpConnectionProperties, List<HttpConnection>>();
+
+        private HttpConnectionCache(boolean connectionKeepAlive, int maximumConnections) {
+            if (!connectionKeepAlive) {
+                maxConnections = 0;
+            } else {
+                this.maxConnections = maximumConnections;
+            }
+        }
+
+        public static synchronized HttpConnectionCache getInstance(boolean connectionKeepAlive, int maximumConnections) {
+            if (INSTANCE == null) {
+                INSTANCE = new HttpConnectionCache(connectionKeepAlive, maximumConnections);
+            }
+            return INSTANCE;
+        }
+
+
+        public HttpConnection get(HttpConnectionProperties httpConnectionProperties) {
+
+            HttpConnection connection = null;
+
+            // Try-Get a connection from the cache
+            synchronized (connectionPool) {
+                List<HttpConnection> connections = connectionPool.get(httpConnectionProperties);
+                while (!CoreUtils.isNullOrEmpty(connections)) {
+                    connection = connections.remove(connections.size() - 1);
+                    if (connections.isEmpty()) {
+                        connectionPool.remove(httpConnectionProperties);
+                        connections = null;
+                    }
+                    // keep removing connections from list until we find a use-able one, disregard other connections in use
+                    if (connection.canBeReused()) {
+                        return connection;
+                    }
+                }
+            }
+
+            // If no connection is available, create a new one
+            if (connection == null) {
+                // If the request is a PATCH request, we need to use a socket connection
+                connection = getSocketHttpConnection(httpConnectionProperties);
+            }
+
+            synchronized (connectionPool) {
+                List<HttpConnection> connections = connectionPool.get(httpConnectionProperties);
+                if (connections == null) {
+                    connections = new ArrayList<>();
+                    connectionPool.put(httpConnectionProperties, connections);
+                }
+            }
+            return connection;
+        }
+
+        void reuseConnection(HttpConnection connection) {
+
+            if (maxConnections > 0 && connection.canBeReused()) {
+                HttpConnectionProperties connectionProperties = connection.getConnectionProperties();
+                synchronized (connectionPool) {
+                    List<HttpConnection> connections = connectionPool.get(connectionProperties);
+                    if (connections == null) {
+                        connections = new ArrayList<HttpConnection>();
+                        connectionPool.put(connectionProperties, connections);
+                    }
+                    if (connections.size() < maxConnections) {
+                        connection.markAvailableForReuse();
+                        connections.add(connection);
+                        return; // keep the connection open
+                    }
+                }
+            }
+
+            // close streams when connection cannot be reused.
+            connection.closeSocketAndStreams();
+        }
+
+        private static HttpConnection getSocketHttpConnection(HttpConnectionProperties httpConnectionProperties) {
+            HttpConnection connection;
+            URL requestUrl = httpConnectionProperties.getHttpRequest().getUrl();
+            String protocol = requestUrl.getProtocol();
+            String host = requestUrl.getHost();
+            int port = requestUrl.getPort();
+            Socket socket;
+            try {
+                socket = protocol.equals("https")
+                    ? (SSLSocket) SSLSocketFactory.getDefault().createSocket(host, port)
+                    : new Socket(host, port);
+            } catch (IOException e) {
+                throw LOGGER.logThrowableAsError(new UncheckedIOException(e));
+            }
+            connection = new HttpConnection(socket, httpConnectionProperties);
+
+            return connection;
+        }
+
+        /*
+         * Inner class to hold the HttpConnection and its properties
+         */
+        private static class HttpConnection {
+            private final Socket socket;
+            private OutputStream socketOutputStream;
+            private InputStream socketInputStream;
+            private final HttpConnectionProperties connectionProperties;
+            private boolean canBeReused = false;
+
+            HttpConnection(Socket socket, HttpConnectionProperties httpConnectionProperties) {
+                this.socket = socket;
+                this.connectionProperties = httpConnectionProperties;
+            }
+
+            OutputStream getSocketOutputStream() {
+                if (socketOutputStream == null) {
+                    try {
+                        return socket.getOutputStream();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    return socketOutputStream;
+                }
+            }
+
+            InputStream getSocketInputStream() {
+                if (socketInputStream == null) {
+                    try {
+                        return socket.getInputStream();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    return socketInputStream;
+                }
+            }
+
+            HttpConnectionProperties getConnectionProperties() {
+                return connectionProperties;
+            }
+
+            public void markAvailableForReuse() {
+                this.canBeReused = true;
+            }
+
+            public void closeSocketAndStreams() {
+                if (socketInputStream != null) {
+                    try {
+                        socketInputStream.close();
+                    } catch (IOException e) {
+                        throw LOGGER.logThrowableAsError(new UncheckedIOException(e));
+                    }
+                }
+                if (socketOutputStream != null) {
+                    try {
+                        socketOutputStream.close();
+                    } catch (IOException e) {
+                        throw LOGGER.logThrowableAsError(new UncheckedIOException(e));
+                    }
+                }
+                if (socket instanceof SSLSocket) {
+                    SSLSocket sslSocket = (SSLSocket) socket;
+                    try {
+                        sslSocket.close();
+                    } catch (IOException e) {
+                        throw LOGGER.logThrowableAsError(new UncheckedIOException(e));
+                    }
+                } else {
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        throw LOGGER.logThrowableAsError(new UncheckedIOException(e));
+                    }
+                }
+            }
+
+            protected boolean canBeReused() {
+                return !socket.isClosed()
+                    && !socket.isInputShutdown()
+                    && !socket.isOutputShutdown();
+            }
+        }
+    }
+
+    /*
+     * Inner class to hold the properties of the HttpConnection
+     */
+    private static class HttpConnectionProperties {
+        private final HttpRequest httpRequest;
+        private final String host;
+        private final String port;
+
+        public HttpConnectionProperties(HttpRequest httpRequest, String host, String port) {
+            this.httpRequest = httpRequest;
+            this.host = host;
+            this.port = port;
+        }
+
+        @Override public boolean equals(Object other) {
+            if (other instanceof HttpConnectionProperties) {
+                HttpConnectionProperties that = (HttpConnectionProperties) other;
+                return Objects.equals(this.host, that.host)
+                    && this.port.equals(that.port);
+            }
+            return false;
+        }
+        @Override public int hashCode() {
+            int result = 17;
+            result = 31 * result + (port != null ? port.hashCode() : 0);
+            return result;
+        }
+
+        public HttpRequest getHttpRequest() {
+            return httpRequest;
+        }
+    }
+
     private static class SocketClient {
 
         private static final String HTTP_VERSION = " HTTP/1.1";
-        private static final SSLSocketFactory SSL_SOCKET_FACTORY = (SSLSocketFactory) SSLSocketFactory.getDefault();
-
-        /**
-         * Opens a socket connection, then writes the PATCH request across the connection and reads the response
-         *
-         * @param httpRequest The HTTP Request being sent
-         * @return an instance of HttpUrlConnectionResponse
-         * @throws ProtocolException If the protocol is not HTTP or HTTPS
-         * @throws IOException If an I/O error occurs
-         */
-        public static Response<?> sendPatchRequest(HttpRequest httpRequest) throws IOException {
-            final URL requestUrl = httpRequest.getUrl();
-            final String protocol = requestUrl.getProtocol();
-            final String host = requestUrl.getHost();
-            final int port = requestUrl.getPort();
-
-            switch (protocol) {
-                case "https":
-                    try (SSLSocket socket = (SSLSocket) SSL_SOCKET_FACTORY.createSocket(host, port)) {
-                        return doInputOutput(httpRequest, socket);
-                    }
-
-                case "http":
-                    try (Socket socket = new Socket(host, port)) {
-                        return doInputOutput(httpRequest, socket);
-                    }
-
-                default:
-                    throw LOGGER.logThrowableAsWarning(
-                        new ProtocolException("Only HTTP and HTTPS are supported by this client."));
-            }
-        }
 
         /**
          * Calls buildAndSend to send a String representation of the request across the output stream, then calls
          * buildResponse to get an instance of HttpUrlConnectionResponse from the input stream
          *
          * @param httpRequest The HTTP Request being sent
-         * @param socket An instance of the SocketClient
+         * @param inputStream the input stream from the socket
+         * @param outputStream the output stream from the socket for writing the request
          * @return an instance of Response
          */
-        @SuppressWarnings("deprecation")
-        private static Response<?> doInputOutput(HttpRequest httpRequest, Socket socket) throws IOException {
+        private static Response<?> sendPatchRequest(HttpRequest httpRequest, InputStream inputStream, OutputStream outputStream) {
             httpRequest.getHeaders().set(HttpHeaderName.HOST, httpRequest.getUrl().getHost());
             if (!"keep-alive".equalsIgnoreCase(httpRequest.getHeaders().getValue(HttpHeaderName.CONNECTION))) {
                 httpRequest.getHeaders().set(HttpHeaderName.CONNECTION, "close");
             }
 
             try (BufferedReader in = new BufferedReader(
-                new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-                OutputStreamWriter out = new OutputStreamWriter(socket.getOutputStream())) {
+                new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                 OutputStreamWriter out = new OutputStreamWriter(outputStream)) {
 
                 buildAndSend(httpRequest, out);
 
@@ -393,9 +602,11 @@ class DefaultHttpClient implements HttpClient {
                     } else {
                         httpRequest.setUrl(new URL(httpRequest.getUrl(), redirectLocation));
                     }
-                    return sendPatchRequest(httpRequest);
+                    return sendPatchRequest(httpRequest, inputStream, outputStream);
                 }
                 return response;
+            }  catch (IOException e) {
+                throw LOGGER.logThrowableAsError(new UncheckedIOException(e));
             }
         }
 
@@ -421,12 +632,6 @@ class DefaultHttpClient implements HttpClient {
                 request.append("\r\n").append(httpRequest.getBody().toString()).append("\r\n");
             }
 
-//            PrintWriter writer = new PrintWriter(output, true);
-//           StringBuilder st = new StringBuilder("PATCH /test HTTP/1.1 \n");
-//            st.append("Host:localhost \n");
-//            st.append("Connection:Close \n");
-//            st.append("\n");
-
             out.write(request.toString());
             out.flush();
         }
@@ -436,7 +641,7 @@ class DefaultHttpClient implements HttpClient {
          * HttpUrlConnectionResponse
          *
          * @param httpRequest The HTTP Request being sent
-         * @param reader the input stream from the socket
+         * @param reader      the input stream from the socket
          * @return an instance of HttpUrlConnectionResponse
          * @throws IOException If an I/O error occurs
          */
