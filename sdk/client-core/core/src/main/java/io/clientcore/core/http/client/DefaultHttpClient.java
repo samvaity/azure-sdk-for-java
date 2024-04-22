@@ -23,6 +23,7 @@ import io.clientcore.core.util.binarydata.BinaryData;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -50,6 +51,7 @@ import static io.clientcore.core.http.models.ResponseBodyMode.BUFFER;
 import static io.clientcore.core.http.models.ResponseBodyMode.IGNORE;
 import static io.clientcore.core.http.models.ResponseBodyMode.STREAM;
 import static io.clientcore.core.util.ServerSentEventUtils.NO_LISTENER_ERROR_MESSAGE;
+import static io.clientcore.core.util.ServerSentEventUtils.isTextEventStreamContentType;
 import static io.clientcore.core.util.ServerSentEventUtils.processTextEventStream;
 import static io.clientcore.core.util.ServerSentEventUtils.shouldRetry;
 
@@ -188,6 +190,11 @@ class DefaultHttpClient implements HttpClient {
     private Response<?> receiveResponse(HttpRequest httpRequest, HttpURLConnection connection) throws IOException {
         HttpHeaders responseHeaders = getResponseHeaders(connection);
         HttpResponse<?> httpResponse = createHttpResponse(httpRequest, connection);
+        RequestOptions options = httpRequest.getRequestOptions();
+        ResponseBodyMode responseBodyMode = null;
+        if (options != null) {
+            responseBodyMode = options.getResponseBodyMode();
+        }
 
         // First check if we've gotten back an error response. If so, handle it now and ignore everything else.
         if (connection.getErrorStream() != null) {
@@ -211,47 +218,45 @@ class DefaultHttpClient implements HttpClient {
                 && !Thread.currentThread().isInterrupted()) {
                 this.send(httpRequest);
             }
-        } else {
-            RequestOptions options = httpRequest.getRequestOptions();
-            ResponseBodyMode responseBodyMode = null;
+        }
 
-            if (options != null) {
-                responseBodyMode = options.getResponseBodyMode();
+        if (responseBodyMode == null) {
+            HttpHeader contentType = httpResponse.getHeaders().get(CONTENT_TYPE);
+
+            if (httpRequest.getHttpMethod() == HEAD) {
+                responseBodyMode = IGNORE;
+            } else if (contentType != null && (APPLICATION_OCTET_STREAM
+                .regionMatches(true, 0, contentType.getValue(), 0, APPLICATION_OCTET_STREAM.length())
+                || isTextEventStream(responseHeaders))) {
+
+                responseBodyMode = STREAM;
+            } else {
+                responseBodyMode = BUFFER;
             }
+        }
 
-            if (responseBodyMode == null) {
-                HttpHeader contentType = httpResponse.getHeaders().get(CONTENT_TYPE);
+        switch (responseBodyMode) {
+            case IGNORE:
+                HttpResponseAccessHelper.setBody(httpResponse, BinaryData.EMPTY);
 
-                if (httpRequest.getHttpMethod() == HEAD) {
-                    responseBodyMode = IGNORE;
-                } else if (contentType != null && APPLICATION_OCTET_STREAM
-                    .regionMatches(true, 0, contentType.getValue(), 0, APPLICATION_OCTET_STREAM.length())) {
+                // Close the response InputStream rather than using disconnect. Disconnect will close the Socket
+                // connection when the InputStream is still open, which can result in keep alive handling not being
+                // applied.
+                connection.getInputStream().close();
 
-                    responseBodyMode = STREAM;
-                } else {
-                    responseBodyMode = BUFFER;
+                break;
+            case STREAM:
+                streamResponseBody(httpResponse, connection);
+
+                break;
+            case BUFFER:
+            case DESERIALIZE: // Deserialization will occur at a later point in HttpResponseBodyDecoder.
+                if (isTextEventStream(responseHeaders)) {
+                    eagerlyBufferResponseBody(httpResponse, new BufferedInputStream());
                 }
-            }
+            default:
+                eagerlyBufferResponseBody(httpResponse, connection.getInputStream());
 
-            switch (responseBodyMode) {
-                case IGNORE:
-                    HttpResponseAccessHelper.setBody(httpResponse, BinaryData.EMPTY);
-
-                    // Close the response InputStream rather than using disconnect. Disconnect will close the Socket
-                    // connection when the InputStream is still open, which can result in keep alive handling not being
-                    // applied.
-                    connection.getInputStream().close();
-
-                    break;
-                case STREAM:
-                    streamResponseBody(httpResponse, connection);
-
-                    break;
-                case BUFFER:
-                case DESERIALIZE: // Deserialization will occur at a later point in HttpResponseBodyDecoder.
-                default:
-                    eagerlyBufferResponseBody(httpResponse, connection.getInputStream());
-            }
         }
 
         return httpResponse;

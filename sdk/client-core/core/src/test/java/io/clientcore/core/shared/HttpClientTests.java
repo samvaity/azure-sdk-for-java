@@ -1805,6 +1805,22 @@ public abstract class HttpClientTests {
         assertThrows(RuntimeException.class, () -> getHttpClient().send(request).close());
     }
 
+
+    @Test
+    public void bodyIsDeserializedForServerSentEventType() throws IOException {
+        RequestOptions requestOptions = new RequestOptions().setResponseBodyMode(DESERIALIZE);
+        HttpRequest request = new HttpRequest(HttpMethod.POST, getRequestUrl(SSE_RESPONSE)).setRequestOptions(requestOptions);
+
+        List<String> expected = Arrays.asList("YHOO", "+2", "10");
+
+        try (Response<?> response =
+                 getHttpClient().send(request.setServerSentEventListener(sse -> assertEquals(expected, sse.getData())))) {
+            assertNotNull(response.getBody());
+            assertNotEquals(0, response.getBody().getLength());
+            assertNotNull(response.getValue());
+        }
+    }
+
     private static Stream<BiConsumer<String, Service29>> voidErrorReturnsErrorBodySupplier() {
         return Stream.of((url, service29) -> service29.headvoid(url), (url, service29) -> service29.headVoid(url),
             (url, service29) -> service29.headResponseVoid(url));
