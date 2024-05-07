@@ -10,8 +10,13 @@ matrix:
     - dockerfiles/java21
   httpClient: [default, okhttp, jdk]
   scenarios:
-    get:
-      imageBuildDir: ..\..\..\
-      testDurationMin: 30
-      testScenario: httpget
-      concurrency: 75
+#    get:
+#      imageBuildDir: ..\..\..\
+#      testDurationMin: 30
+#      testScenario: httpget
+#      concurrency: 75
+    patch:
+        imageBuildDir: ..\..\..\
+        testDurationMin: 30
+        testScenario: httppatch
+        concurrency: 75
