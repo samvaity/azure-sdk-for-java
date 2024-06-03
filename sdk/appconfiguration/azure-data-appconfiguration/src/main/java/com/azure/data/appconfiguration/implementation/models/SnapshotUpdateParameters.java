@@ -4,17 +4,16 @@
 
 package com.azure.data.appconfiguration.implementation.models;
 
-import com.azure.core.annotation.Fluent;
+
 import com.azure.data.appconfiguration.models.ConfigurationSnapshotStatus;
-import com.azure.json.JsonReader;
-import com.azure.json.JsonSerializable;
-import com.azure.json.JsonToken;
-import com.azure.json.JsonWriter;
+import io.clientcore.core.json.JsonReader;
+import io.clientcore.core.json.JsonSerializable;
+import io.clientcore.core.json.JsonToken;
+import io.clientcore.core.json.JsonWriter;
 import java.io.IOException;
 import java.util.Objects;
 
 /** Parameters used to update a snapshot. */
-@Fluent
 public final class SnapshotUpdateParameters implements JsonSerializable<SnapshotUpdateParameters> {
     /*
      * The desired status of the snapshot.

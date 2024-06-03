@@ -3,22 +3,18 @@
 
 package com.azure.data.appconfiguration.implementation;
 
-import com.azure.core.http.rest.PagedResponse;
-import com.azure.core.http.rest.PagedResponseBase;
-import com.azure.core.http.rest.Response;
-import com.azure.core.http.rest.SimpleResponse;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.data.appconfiguration.implementation.models.KeyValue;
 import com.azure.data.appconfiguration.models.ConfigurationSetting;
 import com.azure.data.appconfiguration.models.FeatureFlagConfigurationSetting;
 import com.azure.data.appconfiguration.models.FeatureFlagFilter;
 import com.azure.data.appconfiguration.models.SecretReferenceConfigurationSetting;
-import com.azure.json.JsonProviders;
-import com.azure.json.JsonReader;
-import com.azure.json.JsonToken;
+import io.clientcore.core.http.models.Response;
+import io.clientcore.core.json.JsonProviders;
+import io.clientcore.core.json.JsonReader;
+import io.clientcore.core.json.JsonToken;
+import io.clientcore.core.util.ClientLogger;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,18 +37,6 @@ public final class ConfigurationSettingDeserializationHelper {
     static final String FEATURE_FLAG_CONTENT_TYPE = "application/vnd.microsoft.appconfig.ff+json;charset=utf-8";
     static final String SECRET_REFERENCE_CONTENT_TYPE =
         "application/vnd.microsoft.appconfig.keyvaultref+json;charset=utf-8";
-
-    /*
-     * Utility method for translating KeyValue to ConfigurationSetting with PagedResponse.
-     */
-    public static PagedResponseBase<Object, ConfigurationSetting> toConfigurationSettingWithPagedResponse(
-        PagedResponse<KeyValue> pagedResponse) {
-        List<ConfigurationSetting> settings = new ArrayList<>(pagedResponse.getValue().size());
-        pagedResponse.getValue().forEach(keyValue -> settings.add(toConfigurationSetting(keyValue)));
-
-        return new PagedResponseBase<>(pagedResponse.getRequest(), pagedResponse.getStatusCode(),
-            pagedResponse.getHeaders(), settings, pagedResponse.getContinuationToken(), null);
-    }
 
     /*
      *  Utility method for translating KeyValue to ConfigurationSetting with response.
@@ -126,7 +110,7 @@ public final class ConfigurationSettingDeserializationHelper {
         try (JsonReader jsonReader = JsonProviders.createReader(valueInJson)) {
             return getFeatureFlagPropertyValue(jsonReader);
         } catch (IOException e) {
-            throw LOGGER.logExceptionAsError(new IllegalStateException(e));
+            throw LOGGER.logThrowableAsError(new IllegalStateException(e));
         }
     }
 
@@ -150,7 +134,7 @@ public final class ConfigurationSettingDeserializationHelper {
                 return new SecretReferenceConfigurationSetting(key, secretId);
             });
         } catch (IOException e) {
-            throw LOGGER.logExceptionAsError(new IllegalStateException(e));
+            throw LOGGER.logThrowableAsError(new IllegalStateException(e));
         }
     }
 

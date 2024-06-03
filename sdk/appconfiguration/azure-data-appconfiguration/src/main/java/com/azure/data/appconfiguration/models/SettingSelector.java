@@ -3,14 +3,11 @@
 
 package com.azure.data.appconfiguration.models;
 
-import com.azure.core.annotation.Fluent;
-import com.azure.core.http.MatchConditions;
-import com.azure.core.util.CoreUtils;
-import com.azure.data.appconfiguration.ConfigurationAsyncClient;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * A set of options for selecting configuration settings from App Configuration service.
@@ -30,16 +27,14 @@ import java.util.List;
  * </li>
  * </ul>
  *
- * @see ConfigurationAsyncClient
  */
-@Fluent
 public class SettingSelector {
     private String keyFilter;
     private String labelFilter;
     private SettingFields[] fields;
     private String acceptDatetime;
 
-    private List<MatchConditions> matchConditions;
+//    private List<MatchConditions> matchConditions;
 
     /**
      * Creates a setting selector that will populate responses with all of the {@link ConfigurationSetting
@@ -133,7 +128,7 @@ public class SettingSelector {
      * @return The set of {@link ConfigurationSetting} fields to return for a GET request.
      */
     public SettingFields[] getFields() {
-        return fields == null ? new SettingFields[0] : CoreUtils.clone(fields);
+        return fields == null ? new SettingFields[0] : null;
     }
 
     /**
@@ -150,33 +145,33 @@ public class SettingSelector {
         return this;
     }
 
-    /**
-     * Get the match conditions
-     *
-     * @return The match conditions
-     */
-    public List<MatchConditions> getMatchConditions() {
-        return matchConditions;
-    }
-
-    /**
-     * Set the match conditions
-     *
-     * @param matchConditions The match conditions
-     * @return The updated SettingSelector object.
-     */
-    public SettingSelector setMatchConditions(List<MatchConditions> matchConditions) {
-        this.matchConditions = matchConditions;
-        return this;
-    }
+//    /**
+//     * Get the match conditions
+//     *
+//     * @return The match conditions
+//     */
+//    public List<MatchConditions> getMatchConditions() {
+//        return matchConditions;
+//    }
+//
+//    /**
+//     * Set the match conditions
+//     *
+//     * @param matchConditions The match conditions
+//     * @return The updated SettingSelector object.
+//     */
+//    public SettingSelector setMatchConditions(List<MatchConditions> matchConditions) {
+//        this.matchConditions = matchConditions;
+//        return this;
+//    }
 
     @Override
     public String toString() {
         String fields;
-        if (CoreUtils.isNullOrEmpty(this.fields)) {
+        if (this.fields == null || this.fields.length == 0) {
             fields = "ALL_FIELDS";
         } else {
-            fields = CoreUtils.arrayToString(this.fields, SettingFields::toStringMapper);
+            fields =  Arrays.stream(this.fields).map(SettingFields::toStringMapper).collect(Collectors.joining(","));
         }
 
         return String.format("SettingSelector(keyFilter=%s, labelFilter=%s, acceptDateTime=%s, fields=%s)",

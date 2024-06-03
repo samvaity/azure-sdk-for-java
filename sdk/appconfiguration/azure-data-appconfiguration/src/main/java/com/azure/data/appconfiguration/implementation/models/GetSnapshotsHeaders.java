@@ -4,12 +4,11 @@
 
 package com.azure.data.appconfiguration.implementation.models;
 
-import com.azure.core.annotation.Fluent;
+
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 
 /** The GetSnapshotsHeaders model. */
-@Fluent
 public final class GetSnapshotsHeaders {
     /*
      * The Sync-Token property.

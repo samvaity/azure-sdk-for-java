@@ -3,11 +3,12 @@
 
 package com.azure.data.appconfiguration.implementation;
 
-import com.azure.core.http.HttpPipelineCallContext;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.http.policy.HttpPipelineSyncPolicy;
-import com.azure.core.util.CoreUtils;
-import com.azure.core.util.logging.ClientLogger;
+import io.clientcore.core.http.models.HttpHeaderName;
+import io.clientcore.core.http.models.HttpRequest;
+import io.clientcore.core.http.models.Response;
+import io.clientcore.core.http.pipeline.HttpPipelineNextPolicy;
+import io.clientcore.core.http.pipeline.HttpPipelinePolicy;
+import io.clientcore.core.util.ClientLogger;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,27 +19,13 @@ import java.util.stream.Collectors;
  * policy will retrieve all sync-tokens without sequence number segment from the concurrent map and use it in the HTTP
  * request. Also after received the HTTP response, update the latest sync-tokens to the map.
  */
-public final class SyncTokenPolicy extends HttpPipelineSyncPolicy {
+public final class SyncTokenPolicy implements HttpPipelinePolicy {
     private static final String COMMA = ",";
     private static final String EQUAL = "=";
     private static final String SYNC_TOKEN = "Sync-Token";
     private static final String SKIP_INVALID_TOKEN = "Skipping invalid sync token '{}'.";
     private final Map<String, SyncToken> syncTokenMap = new ConcurrentHashMap<>(); // key is sync-token id
     private final ClientLogger logger = new ClientLogger(SyncTokenPolicy.class);
-
-    @Override
-    protected void beforeSendingRequest(HttpPipelineCallContext context) {
-        context.getHttpRequest().setHeader(SYNC_TOKEN, getSyncTokenHeader());
-    }
-
-    @Override
-    protected HttpResponse afterReceivedResponse(HttpPipelineCallContext context, HttpResponse response) {
-        if (response != null) {
-            getUpdateSyncTokenHeaderValue(response);
-        }
-        return response;
-    }
-
 
     /**
      * Get all latest sync-tokens from the concurrent map and convert to one sync-token string.
@@ -60,7 +47,7 @@ public final class SyncTokenPolicy extends HttpPipelineSyncPolicy {
         // Sync-Token header could have more than one value
         final String[] syncTokens = token.split(COMMA);
         for (final String syncTokenString : syncTokens) {
-            if (CoreUtils.isNullOrEmpty(syncTokenString)) {
+            if (syncTokenString != null && syncTokenString.isEmpty()) {
                 continue;
             }
 
@@ -68,7 +55,7 @@ public final class SyncTokenPolicy extends HttpPipelineSyncPolicy {
             try {
                 syncToken = SyncToken.createSyncToken(syncTokenString);
             } catch (Exception ex) {
-                logger.info(SKIP_INVALID_TOKEN, syncTokenString);
+                logger.atInfo().addKeyValue(SKIP_INVALID_TOKEN, syncTokenString);
                 continue;
             }
 
@@ -85,13 +72,23 @@ public final class SyncTokenPolicy extends HttpPipelineSyncPolicy {
         }
     }
 
-    private void getUpdateSyncTokenHeaderValue(HttpResponse httpResponse) {
+    private void getUpdateSyncTokenHeaderValue(Response httpResponse) {
         // Get the sync-token from HTTP response header
-        final String syncTokenValue = httpResponse.getHeaders().getValue(SYNC_TOKEN);
+        final String syncTokenValue = httpResponse.getHeaders().getValue(HttpHeaderName.fromString(SYNC_TOKEN));
 
         // Skip sync-token updates of concurrent map if no 'Sync-Token' header
         if (syncTokenValue != null) {
             updateSyncToken(syncTokenValue);
         }
+    }
+
+    @Override
+    public Response<?> process(HttpRequest httpRequest, HttpPipelineNextPolicy next) {
+        httpRequest.getHeaders().set(HttpHeaderName.fromString(SYNC_TOKEN), getSyncTokenHeader());
+        Response<?> response = next.process();
+        if (response != null) {
+            getUpdateSyncTokenHeaderValue(response);
+        }
+        return response;
     }
 }

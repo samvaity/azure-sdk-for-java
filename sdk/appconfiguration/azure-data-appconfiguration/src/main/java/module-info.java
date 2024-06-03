@@ -2,8 +2,8 @@
 // Licensed under the MIT License.
 
 module com.azure.data.appconfiguration {
-    requires transitive com.azure.core;
-    requires com.azure.json;
+    requires transitive io.clientcore.core;
+    requires io.clientcore.core.json;
 
     opens com.azure.data.appconfiguration.implementation to com.azure.core;
     opens com.azure.data.appconfiguration.implementation.models to com.azure.core;

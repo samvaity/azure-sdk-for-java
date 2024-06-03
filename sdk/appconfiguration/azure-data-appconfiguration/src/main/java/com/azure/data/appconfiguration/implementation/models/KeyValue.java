@@ -4,18 +4,17 @@
 
 package com.azure.data.appconfiguration.implementation.models;
 
-import com.azure.core.annotation.Fluent;
-import com.azure.json.JsonReader;
-import com.azure.json.JsonSerializable;
-import com.azure.json.JsonToken;
-import com.azure.json.JsonWriter;
+
+import io.clientcore.core.json.JsonReader;
+import io.clientcore.core.json.JsonSerializable;
+import io.clientcore.core.json.JsonToken;
+import io.clientcore.core.json.JsonWriter;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.Objects;
 
 /** The KeyValue model. */
-@Fluent
 public final class KeyValue implements JsonSerializable<KeyValue> {
     /*
      * The key of the key-value.

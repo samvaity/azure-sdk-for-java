@@ -3,24 +3,6 @@
 
 package com.azure.data.appconfiguration;
 
-import com.azure.core.annotation.ReturnType;
-import com.azure.core.annotation.ServiceClient;
-import com.azure.core.annotation.ServiceMethod;
-import com.azure.core.credential.TokenCredential;
-import com.azure.core.exception.HttpResponseException;
-import com.azure.core.exception.ResourceModifiedException;
-import com.azure.core.exception.ResourceNotFoundException;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.http.MatchConditions;
-import com.azure.core.http.rest.PagedIterable;
-import com.azure.core.http.rest.PagedResponse;
-import com.azure.core.http.rest.Response;
-import com.azure.core.http.rest.ResponseBase;
-import com.azure.core.http.rest.SimpleResponse;
-import com.azure.core.util.Context;
-import com.azure.core.util.logging.ClientLogger;
-import com.azure.core.util.polling.PollOperationDetails;
-import com.azure.core.util.polling.SyncPoller;
 import com.azure.data.appconfiguration.implementation.AzureAppConfigurationImpl;
 import com.azure.data.appconfiguration.implementation.CreateSnapshotUtilClient;
 import com.azure.data.appconfiguration.implementation.SyncTokenPolicy;
@@ -38,7 +20,12 @@ import com.azure.data.appconfiguration.models.SettingFields;
 import com.azure.data.appconfiguration.models.SettingSelector;
 import com.azure.data.appconfiguration.models.SnapshotFields;
 import com.azure.data.appconfiguration.models.SnapshotSelector;
-
+import io.clientcore.core.annotation.ReturnType;
+import io.clientcore.core.annotation.ServiceClient;
+import io.clientcore.core.annotation.ServiceMethod;
+import io.clientcore.core.http.models.Response;
+import io.clientcore.core.util.ClientLogger;
+import io.clientcore.core.util.Context;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -117,7 +104,7 @@ import static com.azure.data.appconfiguration.implementation.Utility.validateSet
  * </pre>
  * <!-- end com.azure.data.appconfiguration.ConfigurationClient.addConfigurationSetting#ConfigurationSetting -->
  *
- * <p><strong>Note:</strong> For asynchronous sample, refer to {@link ConfigurationAsyncClient}.</p>
+
  *
  * <br/>
  *
@@ -147,7 +134,7 @@ import static com.azure.data.appconfiguration.implementation.Utility.validateSet
  * </pre>
  * <!-- end com.azure.data.appconfiguration.ConfigurationClient.setConfigurationSetting#ConfigurationSetting -->
  *
- * <p><strong>Note:</strong> For asynchronous sample, refer to {@link ConfigurationAsyncClient}.</p>
+
  *
  * <br/>
  *
@@ -169,7 +156,7 @@ import static com.azure.data.appconfiguration.implementation.Utility.validateSet
  * </pre>
  * <!-- end com.azure.data.applicationconfig.configurationclient.getConfigurationSetting#ConfigurationSetting -->
  *
- * <p><strong>Note:</strong> For asynchronous sample, refer to {@link ConfigurationAsyncClient}.</p>
+
  *
  * <br/>
  *
@@ -191,7 +178,7 @@ import static com.azure.data.appconfiguration.implementation.Utility.validateSet
  * </pre>
  * <!-- end com.azure.data.applicationconfig.configurationclient.deleteConfigurationSetting#ConfigurationSetting -->
  *
- * <p><strong>Note:</strong> For asynchronous sample, refer to {@link ConfigurationAsyncClient}.</p>
+
  *
  * <br/>
  *
@@ -214,7 +201,7 @@ import static com.azure.data.appconfiguration.implementation.Utility.validateSet
  * </pre>
  * <!-- end com.azure.data.applicationconfig.configurationclient.setReadOnly#ConfigurationSetting-boolean -->
  *
- * <p><strong>Note:</strong> For asynchronous sample, refer to {@link ConfigurationAsyncClient}.</p>
+
  *
  * <br/>
  *
@@ -237,7 +224,7 @@ import static com.azure.data.appconfiguration.implementation.Utility.validateSet
  * </pre>
  * <!-- end com.azure.data.applicationconfig.configurationclient.setReadOnly#ConfigurationSetting-boolean-clearReadOnly -->
  *
- * <p><strong>Note:</strong> For asynchronous sample, refer to {@link ConfigurationAsyncClient}.</p>
+
  *
  * <br/>
  *
@@ -259,7 +246,7 @@ import static com.azure.data.appconfiguration.implementation.Utility.validateSet
  * </pre>
  * <!-- end com.azure.data.applicationconfig.configurationclient.listConfigurationSettings#settingSelector -->
  *
- * <p><strong>Note:</strong> For asynchronous sample, refer to {@link ConfigurationAsyncClient}.</p>
+
  *
  * <br/>
  *
@@ -284,7 +271,7 @@ import static com.azure.data.appconfiguration.implementation.Utility.validateSet
  * </pre>
  * <!-- end com.azure.data.applicationconfig.configurationclient.listRevisions#settingSelector -->
  *
- * <p><strong>Note:</strong> For asynchronous sample, refer to {@link ConfigurationAsyncClient}.</p>
+
  *
  * @see ConfigurationClientBuilder
  * @see ConfigurationSetting
@@ -348,7 +335,7 @@ public final class ConfigurationClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ConfigurationSetting addConfigurationSetting(String key, String label, String value) {
         return addConfigurationSettingWithResponse(
-            new ConfigurationSetting().setKey(key).setLabel(label).setValue(value), Context.NONE).getValue();
+            new ConfigurationSetting().setKey(key).setLabel(label).setValue(value), Context.empty()).getValue();
     }
 
     /**
@@ -384,7 +371,7 @@ public final class ConfigurationClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ConfigurationSetting addConfigurationSetting(ConfigurationSetting setting) {
-        return addConfigurationSettingWithResponse(setting, Context.NONE).getValue();
+        return addConfigurationSettingWithResponse(setting, Context.empty()).getValue();
     }
 
     /**
@@ -424,12 +411,12 @@ public final class ConfigurationClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public Response<ConfigurationSetting> addConfigurationSettingWithResponse(ConfigurationSetting setting,
-        Context context) {
+                                                                              Context context) {
         validateSetting(setting);
         // This service method call is similar to setConfigurationSetting except we're passing If-Not-Match = "*".
         // If the service finds any existing configuration settings, then its e-tag will match and the service will
         // return an error.
-        final ResponseBase<PutKeyValueHeaders, KeyValue> response =
+        final Response<KeyValue> response =
             serviceClient.putKeyValueWithResponse(setting.getKey(), setting.getLabel(), null, ETAG_ANY,
                 toKeyValue(setting), context);
         return toConfigurationSettingWithResponse(response);
@@ -467,7 +454,7 @@ public final class ConfigurationClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ConfigurationSetting setConfigurationSetting(String key, String label, String value) {
         return setConfigurationSettingWithResponse(
-            new ConfigurationSetting().setKey(key).setLabel(label).setValue(value), false, Context.NONE).getValue();
+            new ConfigurationSetting().setKey(key).setLabel(label).setValue(value), false, Context.empty()).getValue();
     }
 
     /**
@@ -513,7 +500,7 @@ public final class ConfigurationClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ConfigurationSetting setConfigurationSetting(ConfigurationSetting setting) {
-        return setConfigurationSettingWithResponse(setting, false, Context.NONE).getValue();
+        return setConfigurationSettingWithResponse(setting, false, Context.empty()).getValue();
     }
 
     /**
@@ -637,7 +624,7 @@ public final class ConfigurationClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ConfigurationSetting getConfigurationSetting(String key, String label, OffsetDateTime acceptDateTime) {
         return getConfigurationSettingWithResponse(new ConfigurationSetting().setKey(key).setLabel(label),
-            acceptDateTime, false, Context.NONE).getValue();
+            acceptDateTime, false, Context.empty()).getValue();
     }
 
     /**
@@ -672,7 +659,7 @@ public final class ConfigurationClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ConfigurationSetting getConfigurationSetting(ConfigurationSetting setting) {
-        return getConfigurationSettingWithResponse(setting, null, false, Context.NONE).getValue();
+        return getConfigurationSettingWithResponse(setting, null, false, Context.empty()).getValue();
     }
 
     /**
@@ -760,7 +747,7 @@ public final class ConfigurationClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ConfigurationSetting deleteConfigurationSetting(String key, String label) {
         return deleteConfigurationSettingWithResponse(new ConfigurationSetting().setKey(key).setLabel(label),
-            false, Context.NONE).getValue();
+            false, Context.empty()).getValue();
     }
 
     /**
@@ -797,7 +784,7 @@ public final class ConfigurationClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ConfigurationSetting deleteConfigurationSetting(ConfigurationSetting setting) {
-        return deleteConfigurationSettingWithResponse(setting, false, Context.NONE).getValue();
+        return deleteConfigurationSettingWithResponse(setting, false, Context.empty()).getValue();
     }
 
     /**
@@ -889,7 +876,7 @@ public final class ConfigurationClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ConfigurationSetting setReadOnly(String key, String label, boolean isReadOnly) {
-        return setReadOnlyWithResponse(new ConfigurationSetting().setKey(key).setLabel(label), isReadOnly, Context.NONE)
+        return setReadOnlyWithResponse(new ConfigurationSetting().setKey(key).setLabel(label), isReadOnly, Context.empty())
             .getValue();
     }
 
@@ -937,7 +924,7 @@ public final class ConfigurationClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ConfigurationSetting setReadOnly(ConfigurationSetting setting, boolean isReadOnly) {
-        return setReadOnlyWithResponse(setting, isReadOnly, Context.NONE).getValue();
+        return setReadOnlyWithResponse(setting, isReadOnly, Context.empty()).getValue();
     }
 
     /**
@@ -956,7 +943,7 @@ public final class ConfigurationClient {
      *         .setKey&#40;&quot;prodDBConnection&quot;&#41;
      *         .setLabel&#40;&quot;westUS&quot;&#41;,
      *         true,
-     *         Context.NONE&#41;
+     *         Context.empty()&#41;
      *     .getValue&#40;&#41;;
      * System.out.printf&#40;&quot;Key: %s, Value: %s&quot;, resultSetting.getKey&#40;&#41;, resultSetting.getValue&#40;&#41;&#41;;
      * </pre>
@@ -1022,7 +1009,7 @@ public final class ConfigurationClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<ConfigurationSetting> listConfigurationSettings(SettingSelector selector) {
-        return listConfigurationSettings(selector, Context.NONE);
+        return listConfigurationSettings(selector, Context.empty());
     }
 
     /**
@@ -1104,7 +1091,7 @@ public final class ConfigurationClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<ConfigurationSetting> listConfigurationSettingsForSnapshot(String snapshotName) {
-        return listConfigurationSettingsForSnapshot(snapshotName, null, Context.NONE);
+        return listConfigurationSettingsForSnapshot(snapshotName, null, Context.empty());
     }
 
     /**
@@ -1179,7 +1166,7 @@ public final class ConfigurationClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<ConfigurationSetting> listRevisions(SettingSelector selector) {
-        return listRevisions(selector, Context.NONE);
+        return listRevisions(selector, Context.empty());
     }
 
     /**
@@ -1281,7 +1268,7 @@ public final class ConfigurationClient {
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ConfigurationSnapshot getSnapshot(String snapshotName) {
-        return getSnapshotWithResponse(snapshotName, null, Context.NONE).getValue();
+        return getSnapshotWithResponse(snapshotName, null, Context.empty()).getValue();
     }
 
     /**
@@ -1342,7 +1329,7 @@ public final class ConfigurationClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ConfigurationSnapshot archiveSnapshot(String snapshotName) {
         return updateSnapshotSync(snapshotName, null, ConfigurationSnapshotStatus.ARCHIVED, serviceClient,
-            Context.NONE).getValue();
+            Context.empty()).getValue();
     }
 
     /**
@@ -1401,7 +1388,7 @@ public final class ConfigurationClient {
     @ServiceMethod(returns = ReturnType.SINGLE)
     public ConfigurationSnapshot recoverSnapshot(String snapshotName) {
         return updateSnapshotSync(snapshotName, null, ConfigurationSnapshotStatus.READY, serviceClient,
-            Context.NONE).getValue();
+            Context.empty()).getValue();
     }
 
     /**
@@ -1461,7 +1448,7 @@ public final class ConfigurationClient {
      */
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<ConfigurationSnapshot> listSnapshots(SnapshotSelector selector) {
-        return listSnapshots(selector, Context.NONE);
+        return listSnapshots(selector, Context.empty());
     }
 
     /**

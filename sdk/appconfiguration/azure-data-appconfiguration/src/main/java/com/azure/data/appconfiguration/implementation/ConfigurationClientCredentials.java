@@ -2,15 +2,12 @@
 // Licensed under the MIT License.
 package com.azure.data.appconfiguration.implementation;
 
-import com.azure.core.http.HttpHeaderName;
-import com.azure.core.http.HttpHeaders;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.util.BinaryData;
-import com.azure.core.util.CoreUtils;
-import com.azure.core.util.DateTimeRfc1123;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.data.appconfiguration.ConfigurationClientBuilder;
-import reactor.core.Exceptions;
+import io.clientcore.core.http.models.HttpHeaderName;
+import io.clientcore.core.http.models.HttpHeaders;
+import io.clientcore.core.http.models.HttpRequest;
+import io.clientcore.core.util.ClientLogger;
+import io.clientcore.core.util.binarydata.BinaryData;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -20,8 +17,6 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.Base64;
 import java.util.Locale;
 
@@ -68,7 +63,7 @@ public class ConfigurationClientCredentials {
      * @param httpRequest The request being authenticated.
      */
     void setAuthorizationHeaders(HttpRequest httpRequest) {
-        BinaryData binaryData = httpRequest.getBodyAsBinaryData();
+        BinaryData binaryData = httpRequest.getBody();
         final ByteBuffer byteBuffer = binaryData == null ? EMPTY_BYTE_BUFFER : binaryData.toByteBuffer();
 
         try {
@@ -90,7 +85,7 @@ public class ConfigurationClientCredentials {
             HttpHeaders headers = httpRequest.getHeaders();
             String date = headers.getValue(HttpHeaderName.DATE);
             if (date == null) {
-                date = DateTimeRfc1123.toRfc1123String(OffsetDateTime.now(ZoneOffset.UTC));
+                // date = DateTimeRfc1123.toRfc1123String(OffsetDateTime.now(ZoneOffset.UTC));
                 headers.set(HttpHeaderName.DATE, date);
             }
 
@@ -110,7 +105,7 @@ public class ConfigurationClientCredentials {
             headers.set(HttpHeaderName.AUTHORIZATION, "HMAC-SHA256 Credential=" + credentials.id()
                 + "&SignedHeaders=Host;Date;x-ms-content-sha256&Signature=" + signature);
         } catch (GeneralSecurityException e) {
-            throw LOGGER.logExceptionAsError(Exceptions.propagate(e));
+            LOGGER.logThrowableAsError(e);
         }
     }
 
@@ -136,7 +131,7 @@ public class ConfigurationClientCredentials {
         }
 
         CredentialInformation(String connectionString) {
-            if (CoreUtils.isNullOrEmpty(connectionString)) {
+            if (connectionString == null || connectionString.isEmpty()) {
                 throw new IllegalArgumentException("'connectionString' cannot be null or empty.");
             }
 
@@ -170,7 +165,7 @@ public class ConfigurationClientCredentials {
             this.id = id;
             this.secret = secret;
 
-            if (this.baseUri == null || CoreUtils.isNullOrEmpty(this.id)
+            if (this.baseUri == null || this.id == null || this.id.isEmpty()
                 || this.secret == null || this.secret.length == 0) {
                 throw new IllegalArgumentException("Could not parse 'connectionString'."
                     + " Expected format: 'endpoint={endpoint};id={id};secret={secret}'. Actual:" + connectionString);

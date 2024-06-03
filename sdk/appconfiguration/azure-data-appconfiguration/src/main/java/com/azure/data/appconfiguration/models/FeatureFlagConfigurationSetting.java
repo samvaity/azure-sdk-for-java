@@ -5,9 +5,8 @@ package com.azure.data.appconfiguration.models;
 
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.data.appconfiguration.implementation.Conditions;
-import com.azure.json.JsonProviders;
-import com.azure.json.JsonReader;
-import com.azure.json.JsonToken;
+import io.clientcore.core.json.JsonProviders;
+import io.clientcore.core.json.JsonWriter;
 import com.azure.json.JsonWriter;
 
 import java.io.ByteArrayOutputStream;

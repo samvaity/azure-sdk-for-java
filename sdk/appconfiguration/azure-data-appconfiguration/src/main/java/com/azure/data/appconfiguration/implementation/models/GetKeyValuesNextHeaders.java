@@ -4,12 +4,11 @@
 
 package com.azure.data.appconfiguration.implementation.models;
 
-import com.azure.core.annotation.Fluent;
+
 import com.azure.core.http.HttpHeaderName;
 import com.azure.core.http.HttpHeaders;
 
 /** The GetKeyValuesNextHeaders model. */
-@Fluent
 public final class GetKeyValuesNextHeaders {
     /*
      * The ETag property.

@@ -3,32 +3,19 @@
 
 package com.azure.data.appconfiguration.implementation;
 
-import com.azure.core.exception.HttpResponseException;
-import com.azure.core.http.HttpHeaderName;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.http.MatchConditions;
-import com.azure.core.http.rest.PagedResponse;
-import com.azure.core.http.rest.PagedResponseBase;
-import com.azure.core.http.rest.Response;
-import com.azure.core.http.rest.ResponseBase;
-import com.azure.core.http.rest.SimpleResponse;
-import com.azure.core.util.Context;
-import com.azure.core.util.CoreUtils;
-import com.azure.core.util.logging.ClientLogger;
 import com.azure.data.appconfiguration.implementation.models.KeyValue;
 import com.azure.data.appconfiguration.implementation.models.SnapshotUpdateParameters;
 import com.azure.data.appconfiguration.implementation.models.UpdateSnapshotHeaders;
 import com.azure.data.appconfiguration.models.ConfigurationSetting;
 import com.azure.data.appconfiguration.models.ConfigurationSnapshot;
-import com.azure.data.appconfiguration.models.ConfigurationSnapshotStatus;
 import com.azure.data.appconfiguration.models.SettingFields;
-import reactor.core.publisher.Mono;
+import io.clientcore.core.http.models.Response;
+import io.clientcore.core.util.Context;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * App Configuration Utility methods, use internally.
@@ -97,39 +84,17 @@ public class Utility {
             throw new IllegalArgumentException("Parameter 'key' is required and cannot be null.");
         }
     }
-    /*
-     * Asynchronously validate that setting and key is not null. The key is used in the service URL,
-     *  so it cannot be null.
-     */
-    public static Mono<ConfigurationSetting> validateSettingAsync(ConfigurationSetting setting) {
-        if (setting == null) {
-            return Mono.error(new NullPointerException("Configuration setting cannot be null"));
-        }
-        if (setting.getKey() == null) {
-            return Mono.error(new IllegalArgumentException("Parameter 'key' is required and cannot be null."));
-        }
-        return Mono.just(setting);
-    }
 
     public static Response<ConfigurationSnapshot> updateSnapshotSync(String snapshotName,
-        MatchConditions matchConditions, ConfigurationSnapshotStatus status,
-        AzureAppConfigurationImpl serviceClient, Context context) {
-        final String ifMatch = matchConditions == null ? null : matchConditions.getIfMatch();
+                                                                     AzureAppConfigurationImpl serviceClient, Context context) {
+//        final String ifMatch = matchConditions == null ? null : matchConditions.getIfMatch();
 
         final ResponseBase<UpdateSnapshotHeaders, ConfigurationSnapshot> response =
             serviceClient.updateSnapshotWithResponse(snapshotName,
-                new SnapshotUpdateParameters().setStatus(status), ifMatch, null, context);
+                new SnapshotUpdateParameters().setStatus(status), null, null, context);
         return new SimpleResponse<>(response, response.getValue());
     }
 
-    public static Mono<Response<ConfigurationSnapshot>> updateSnapshotAsync(String snapshotName,
-        MatchConditions matchConditions, ConfigurationSnapshotStatus status,
-        AzureAppConfigurationImpl serviceClient) {
-        final String ifMatch = matchConditions == null ? null : matchConditions.getIfMatch();
-        return serviceClient.updateSnapshotWithResponseAsync(snapshotName,
-                new SnapshotUpdateParameters().setStatus(status), ifMatch, null)
-            .map(response -> new SimpleResponse<>(response, response.getValue()));
-    }
 
     // Parse the next link from the link header, if it exists. And return the continuation token url without the "<" and ">"
     public static String parseNextLink(String nextLink) {
@@ -141,54 +106,5 @@ public class Utility {
         String[] parts = nextLink.split(";");
 
         return parts[0].substring(1, parts[0].length() - 1);
-    }
-
-    // Handle 304 status code to a valid response or pass error as it is if not 304.
-    // Async handler
-    public static Mono<PagedResponse<KeyValue>> handleNotModifiedErrorToValidResponse(HttpResponseException error) {
-        HttpResponse httpResponse = error.getResponse();
-        if (httpResponse == null) {
-            return Mono.error(error);
-        }
-
-        String continuationToken = parseNextLink(httpResponse.getHeaderValue(HttpHeaderName.LINK));
-        if (httpResponse.getStatusCode() == 304) {
-            return Mono.just(new PagedResponseBase<>(httpResponse.getRequest(), httpResponse.getStatusCode(),
-                httpResponse.getHeaders(), null, continuationToken, null));
-        }
-
-        return Mono.error(error);
-    }
-    // Sync Handler
-    public static PagedResponse<ConfigurationSetting> handleNotModifiedErrorToValidResponse(HttpResponseException error,
-        ClientLogger logger) {
-        HttpResponse httpResponse = error.getResponse();
-        if (httpResponse == null) {
-            throw logger.logExceptionAsError(error);
-        }
-
-        String continuationToken = parseNextLink(httpResponse.getHeaderValue(HttpHeaderName.LINK));
-        if (httpResponse.getStatusCode() == 304) {
-            return new PagedResponseBase<>(httpResponse.getRequest(), httpResponse.getStatusCode(),
-                httpResponse.getHeaders(), null, continuationToken, null);
-        }
-
-        throw logger.logExceptionAsError(error);
-    }
-
-    // Get the ETag from a list
-    public static String getPageETag(List<MatchConditions> matchConditionsList, AtomicInteger pageETagIndex) {
-        if (CoreUtils.isNullOrEmpty(matchConditionsList)) {
-            return null;
-        }
-
-        String nextPageETag = null;
-        int pageETagIndexValue = pageETagIndex.get();
-        if (pageETagIndexValue < matchConditionsList.size()) {
-            nextPageETag = matchConditionsList.get(pageETagIndexValue).getIfNoneMatch();
-            pageETagIndex.set(pageETagIndexValue + 1);
-        }
-
-        return nextPageETag;
     }
 }

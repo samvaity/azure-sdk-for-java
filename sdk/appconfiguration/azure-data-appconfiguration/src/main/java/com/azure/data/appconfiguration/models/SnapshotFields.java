@@ -4,11 +4,12 @@
 
 package com.azure.data.appconfiguration.models;
 
-import com.azure.core.util.ExpandableStringEnum;
+import io.clientcore.core.util.ExpandableEnum;
+
 import java.util.Collection;
 
 /** Defines values for SnapshotFields. */
-public final class SnapshotFields extends ExpandableStringEnum<SnapshotFields> {
+public final class SnapshotFields implements ExpandableEnum<SnapshotFields> {
     /** Populates the snapshot 'name' from the service. */
     public static final SnapshotFields NAME = fromString("name");
 
@@ -57,7 +58,7 @@ public final class SnapshotFields extends ExpandableStringEnum<SnapshotFields> {
      * @return the corresponding SnapshotFields.
      */
     public static SnapshotFields fromString(String name) {
-        return fromString(name, SnapshotFields.class);
+        return null;
     }
 
     /**
@@ -66,6 +67,11 @@ public final class SnapshotFields extends ExpandableStringEnum<SnapshotFields> {
      * @return known SnapshotFields values.
      */
     public static Collection<SnapshotFields> values() {
-        return values(SnapshotFields.class);
+        return null;
+    }
+
+    @Override
+    public SnapshotFields getValue() {
+        return null;
     }
 }

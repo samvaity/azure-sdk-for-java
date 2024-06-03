@@ -2,14 +2,11 @@
 // Licensed under the MIT License.
 package com.azure.data.appconfiguration.implementation;
 
-import com.azure.core.http.HttpPipelineCallContext;
-import com.azure.core.http.HttpPipelineNextPolicy;
-import com.azure.core.http.HttpPipelineNextSyncPolicy;
-import com.azure.core.http.HttpResponse;
-import com.azure.core.http.policy.HttpPipelinePolicy;
-import com.azure.data.appconfiguration.ConfigurationAsyncClient;
 import com.azure.data.appconfiguration.ConfigurationClientBuilder;
-import reactor.core.publisher.Mono;
+import io.clientcore.core.http.models.HttpRequest;
+import io.clientcore.core.http.models.Response;
+import io.clientcore.core.http.pipeline.HttpPipelineNextPolicy;
+import io.clientcore.core.http.pipeline.HttpPipelinePolicy;
 
 import java.util.Objects;
 
@@ -18,7 +15,6 @@ import java.util.Objects;
  * is leveraged in {@link ConfigurationClientCredentials} to generate the correct "Authorization" header value.
  *
  * @see ConfigurationClientCredentials
- * @see ConfigurationAsyncClient
  * @see ConfigurationClientBuilder
  */
 public final class ConfigurationCredentialsPolicy implements HttpPipelinePolicy {
@@ -42,31 +38,16 @@ public final class ConfigurationCredentialsPolicy implements HttpPipelinePolicy 
     /**
      * Adds the required headers to authenticate a request to Azure App Configuration service.
      *
-     * @param context The request context
+     * @param httpRequest The request context
      * @param next The next HTTP pipeline policy to process the {@code context's} request after this policy
      *     completes.
-     * @return A {@link Mono} representing the HTTP response that will arrive asynchronously.
+     * @return A {@link Response} that will arrive synchronously.
      */
     @Override
-    public Mono<HttpResponse> process(HttpPipelineCallContext context, HttpPipelineNextPolicy next) {
-        credentials.setAuthorizationHeaders(context.getHttpRequest());
+    public Response<?> process(HttpRequest httpRequest, HttpPipelineNextPolicy next) {
+        credentials.setAuthorizationHeaders(httpRequest);
 
         return next.process();
-    }
-
-    /**
-     * Adds the required headers to authenticate a request to Azure App Configuration service.
-     *
-     * @param context The request context
-     * @param next The next HTTP pipeline policy to process the {@code context's} request after this policy
-     *     completes.
-     * @return A {@link HttpResponse} that will arrive synchronously.
-     */
-    @Override
-    public HttpResponse processSync(HttpPipelineCallContext context, HttpPipelineNextSyncPolicy next) {
-        credentials.setAuthorizationHeaders(context.getHttpRequest());
-
-        return next.processSync();
     }
 }
 

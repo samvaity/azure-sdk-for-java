@@ -4,17 +4,16 @@
 
 package com.azure.data.appconfiguration.models;
 
-import com.azure.core.annotation.Fluent;
-import com.azure.json.JsonReader;
-import com.azure.json.JsonSerializable;
-import com.azure.json.JsonToken;
-import com.azure.json.JsonWriter;
+import io.clientcore.core.json.JsonReader;
+import io.clientcore.core.json.JsonSerializable;
+import io.clientcore.core.json.JsonToken;
+import io.clientcore.core.json.JsonWriter;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /** Enables filtering of key-values. */
-@Fluent
 public final class ConfigurationSettingsFilter implements JsonSerializable<ConfigurationSettingsFilter> {
     /*
      * Filters key-values by their key field.

@@ -2,12 +2,11 @@
 // Licensed under the MIT License.
 package com.azure.data.appconfiguration.models;
 
-import com.azure.core.annotation.Fluent;
 import com.azure.data.appconfiguration.implementation.ConfigurationSettingHelper;
-import com.azure.json.JsonReader;
-import com.azure.json.JsonSerializable;
-import com.azure.json.JsonToken;
-import com.azure.json.JsonWriter;
+import io.clientcore.core.json.JsonReader;
+import io.clientcore.core.json.JsonSerializable;
+import io.clientcore.core.json.JsonToken;
+import io.clientcore.core.json.JsonWriter;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -19,7 +18,6 @@ import java.util.Objects;
  * ConfigurationSetting is a resource identified by unique combination of {@link #getKey() key} and {@link #getLabel()
  * label}. By default, the label is {@code null}. To explicitly reference the default label use {@link #NO_LABEL}.
  */
-@Fluent
 public class ConfigurationSetting implements JsonSerializable<ConfigurationSetting> {
     /**
      * The default label for configuration settings is the label, "\0". Users use this value when they want to

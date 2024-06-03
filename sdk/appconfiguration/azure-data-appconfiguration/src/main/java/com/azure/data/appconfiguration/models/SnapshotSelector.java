@@ -3,7 +3,7 @@
 
 package com.azure.data.appconfiguration.models;
 
-import com.azure.core.annotation.Fluent;
+
 import com.azure.core.util.CoreUtils;
 import com.azure.core.util.IterableStream;
 
@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 /**
  * Snapshot selector, the optional bag
  */
-@Fluent
 public final class SnapshotSelector {
     private String nameFilter;
     private List<ConfigurationSnapshotStatus> status;

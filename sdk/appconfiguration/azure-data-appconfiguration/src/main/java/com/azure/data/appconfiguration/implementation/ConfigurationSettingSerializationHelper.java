@@ -5,8 +5,8 @@ package com.azure.data.appconfiguration.implementation;
 
 import com.azure.data.appconfiguration.models.FeatureFlagConfigurationSetting;
 import com.azure.data.appconfiguration.models.SecretReferenceConfigurationSetting;
-import com.azure.json.JsonProviders;
-import com.azure.json.JsonWriter;
+import io.clientcore.core.json.JsonProviders;
+import io.clientcore.core.json.JsonWriter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
