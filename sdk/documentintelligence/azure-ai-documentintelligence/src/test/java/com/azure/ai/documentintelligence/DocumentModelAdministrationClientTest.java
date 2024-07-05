@@ -47,8 +47,8 @@ public class DocumentModelAdministrationClientTest extends DocumentAdministratio
                                                                                   DocumentIntelligenceServiceVersion serviceVersion) {
         return getModelAdminClientBuilder(
             interceptorManager.isPlaybackMode() ? interceptorManager.getPlaybackClient() : httpClient,
-            serviceVersion,
-            true)
+            serviceVersion
+        )
             .buildClient();
     }
 

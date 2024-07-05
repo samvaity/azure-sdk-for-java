@@ -63,8 +63,8 @@ public class DocumentModelAdministrationAsyncClientTest extends DocumentAdminist
         return getModelAdminClientBuilder(
             buildAsyncAssertingClient(interceptorManager.isPlaybackMode() ? interceptorManager.getPlaybackClient()
                 : httpClient),
-            serviceVersion,
-            true)
+            serviceVersion
+        )
             .buildAsyncClient();
     }
 

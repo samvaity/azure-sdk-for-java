@@ -52,8 +52,8 @@ public class DocumentIntelligenceClientTest extends DocumentIntelligenceClientTe
                                                                  DocumentIntelligenceServiceVersion serviceVersion) {
         return getDocumentAnalysisBuilder(
             buildSyncAssertingClient(interceptorManager.isPlaybackMode() ? interceptorManager.getPlaybackClient() : httpClient),
-            serviceVersion,
-            true)
+            serviceVersion
+        )
             .buildClient();
     }
 
@@ -61,8 +61,8 @@ public class DocumentIntelligenceClientTest extends DocumentIntelligenceClientTe
                                                                                  DocumentIntelligenceServiceVersion serviceVersion) {
         return getDocumentModelAdminClientBuilder(
             buildSyncAssertingClient(interceptorManager.isPlaybackMode() ? interceptorManager.getPlaybackClient() : httpClient),
-            serviceVersion,
-            true)
+            serviceVersion
+        )
             .buildClient();
     }
 
