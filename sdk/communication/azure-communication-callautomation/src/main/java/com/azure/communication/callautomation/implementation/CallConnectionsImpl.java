@@ -162,8 +162,8 @@ public final class CallConnectionsImpl {
         @UnexpectedResponseExceptionType(CommunicationErrorResponseException.class)
         Mono<Response<CallParticipantInternal>> getParticipant(@HostParam("endpoint") String endpoint,
             @PathParam("callConnectionId") String callConnectionId,
-            @PathParam(value = "participantRawId", encoded = true) String participantRawId,
-            @QueryParam("api-version") String apiVersion, @HeaderParam("Accept") String accept, Context context);
+            @PathParam("participantRawId") String participantRawId, @QueryParam("api-version") String apiVersion,
+            @HeaderParam("Accept") String accept, Context context);
 
         @Get("{nextLink}")
         @ExpectedResponses({ 200 })

@@ -20,7 +20,7 @@ public class CallautomationCustomizations extends Customization {
 
         try {
             customizeCallAutomation(customization);
-            encodePathParam(customization, logger);
+            // encodePathParam(customization, logger);
         } catch (IllegalArgumentException e) {
             logger.info("Package Not Found: " + e.getMessage());
         } catch (Exception e) {

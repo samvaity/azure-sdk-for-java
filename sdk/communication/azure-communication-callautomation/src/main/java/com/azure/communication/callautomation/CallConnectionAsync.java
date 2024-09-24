@@ -194,7 +194,7 @@ public final class CallConnectionAsync {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            return callConnectionInternal.getParticipantWithResponseAsync(callConnectionId, escapedParticipantMri, context)
+            return callConnectionInternal.getParticipantWithResponseAsync(callConnectionId, participantMri, context)
                 .map(response ->
                     new SimpleResponse<>(response, CallParticipantConverter.convert(response.getValue())));
         } catch (RuntimeException ex) {
