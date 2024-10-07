@@ -5,8 +5,8 @@ package io.clientcore.http.okhttp3.implementation;
 
 import io.clientcore.core.http.models.HttpMethod;
 import io.clientcore.core.util.ClientLogger;
-import io.clientcore.core.util.auth.AuthorizationChallengeHandler;
 import io.clientcore.core.util.auth.AuthUtils;
+import io.clientcore.core.util.auth.AuthorizationChallengeHandler;
 import io.clientcore.core.util.binarydata.BinaryData;
 import okhttp3.Authenticator;
 import okhttp3.Challenge;
@@ -21,9 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static io.clientcore.core.implementation.util.auth.DigestHandler.isNullOrEmpty;
-import static io.clientcore.core.util.auth.AuthUtils.PROXY_AUTHENTICATION_INFO;
-import static io.clientcore.core.util.auth.AuthUtils.isNullOrEmpty;
 import static io.clientcore.core.util.auth.AuthUtils.PROXY_AUTHENTICATION_INFO;
 import static io.clientcore.core.util.auth.AuthUtils.PROXY_AUTHORIZATION;
 import static io.clientcore.core.util.auth.AuthUtils.isNullOrEmpty;
@@ -90,7 +87,7 @@ public final class ProxyAuthenticator implements Authenticator {
     @Override
     public Request authenticate(Route route, Response response) {
         String authorizationHeader =
-            challengeHandler.attemptToPipelineAuthorization(PROXY_METHOD, PROXY_URI_PATH, NO_BODY);
+            challengeHandler.attemptToPipelineAuthorization();
 
         // Pipelining was successful, use the generated authorization header.
         if (!isNullOrEmpty(authorizationHeader)) {
@@ -118,7 +115,7 @@ public final class ProxyAuthenticator implements Authenticator {
         // Prefer digest challenges over basic.
         if (digestChallenges.size() > 0) {
             authorizationHeader =
-                challengeHandler.handleDigest(PROXY_METHOD, PROXY_URI_PATH, digestChallenges, NO_BODY);
+                challengeHandler.handleDigest(PROXY_METHOD, PROXY_URI_PATH, digestChallenges, NO_BODY, null);
         }
 
         /*
