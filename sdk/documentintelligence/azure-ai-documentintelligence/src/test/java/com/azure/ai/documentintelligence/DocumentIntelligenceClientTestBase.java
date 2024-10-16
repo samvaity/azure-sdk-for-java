@@ -114,10 +114,6 @@ public abstract class DocumentIntelligenceClientTestBase extends TestProxyTestBa
         TestUtils.getTrainingDataContainerHelper(testRunner, interceptorManager.isPlaybackMode());
     }
 
-    void buildBatchModelRunner(Consumer<String> testRunner) {
-        TestUtils.getBatchTrainingDataContainerHelper(testRunner, interceptorManager.isPlaybackMode());
-    }
-
     void beginClassifierRunner(Consumer<String> testRunner) {
         TestUtils.getClassifierTrainingDataContainerHelper(testRunner, interceptorManager.isPlaybackMode());
     }
