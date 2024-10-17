@@ -3,6 +3,9 @@
 
 package com.azure.ai.documentintelligence;
 
+import com.azure.ai.documentintelligence.models.AnalyzeBatchDocumentsRequest;
+import com.azure.ai.documentintelligence.models.AnalyzeBatchResult;
+import com.azure.ai.documentintelligence.models.AnalyzeBatchResultOperation;
 import com.azure.ai.documentintelligence.models.AnalyzeDocumentRequest;
 import com.azure.ai.documentintelligence.models.AnalyzeOutputOption;
 import com.azure.ai.documentintelligence.models.AnalyzeResult;
@@ -33,6 +36,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.azure.ai.documentintelligence.TestUtils.BATCH_SAMPLE_PDF;
 import static com.azure.ai.documentintelligence.TestUtils.CONTENT_FORM_JPG;
 import static com.azure.ai.documentintelligence.TestUtils.CONTENT_GERMAN_PDF;
 import static com.azure.ai.documentintelligence.TestUtils.DISPLAY_NAME_WITH_ARGUMENTS;
@@ -484,5 +488,32 @@ public class DocumentIntelligenceClientTest extends DocumentIntelligenceClientTe
             Assertions.assertArrayEquals(new byte[] { (byte) -119, 80, 78, 71, 13 }, figuresHeader);
         }, LAYOUT_SAMPLE);
 
+    }
+
+    @RecordWithoutRequestBody
+    @ParameterizedTest(name = DISPLAY_NAME_WITH_ARGUMENTS)
+    @MethodSource("com.azure.ai.documentintelligence.TestUtils#getTestParameters")
+    @Disabled("Disabled until file available on main")
+    public void analyzeBatchDocuments(HttpClient httpClient,
+                                      DocumentIntelligenceServiceVersion serviceVersion) {
+        client = getDocumentAnalysisClient(httpClient, serviceVersion);
+        DocumentIntelligenceAdministrationClient adminClient = getDocumentModelAdminClient(httpClient, serviceVersion);
+        buildBatchModelRunner((trainingFilesUrl) -> {
+            SyncPoller<DocumentModelBuildOperationDetails, DocumentModelDetails> buildModelPoller =
+                adminClient
+                    .beginBuildDocumentModel(new BuildDocumentModelRequest("modelID" + UUID.randomUUID(), DocumentBuildMode.TEMPLATE).setAzureBlobSource(new AzureBlobContentSource(trainingFilesUrl)))
+                    .setPollInterval(durationTestMode);
+            buildModelPoller.waitForCompletion();
+
+            String modelId = buildModelPoller.getFinalResult().getModelId();
+
+            urlRunner((sourceUrl) -> {
+                SyncPoller<AnalyzeBatchResultOperation, AnalyzeBatchResult>
+                    syncPoller
+                    = client.beginAnalyzeBatchDocuments(modelId, null, null, null, null, null, null, Collections.singletonList(PDF), new AnalyzeBatchDocumentsRequest(trainingFilesUrl).setResultPrefix("trainingDocsResult/").setAzureBlobSource(new AzureBlobContentSource(sourceUrl)))
+                    .setPollInterval(durationTestMode);
+                syncPoller.waitForCompletion();
+            }, BATCH_SAMPLE_PDF);
+        });
     }
 }
