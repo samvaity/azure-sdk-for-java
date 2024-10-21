@@ -3,8 +3,8 @@
 
 package io.clientcore.http.okhttp3.implementation;
 
-import io.clientcore.core.implementation.util.auth.BasicHandler;
-import io.clientcore.core.implementation.util.auth.DigestHandler;
+import io.clientcore.core.implementation.util.auth.BasicChallengeHandler;
+import io.clientcore.core.implementation.util.auth.DigestProxyChallengeHandler;
 import io.clientcore.core.util.auth.AuthUtils;
 import io.clientcore.core.util.auth.ChallengeHandler;
 import okhttp3.Address;
@@ -62,7 +62,7 @@ public class ProxyAuthenticatorTests {
         .build();
 
     private static final Predicate<String> BASIC_PREDICATE = "Basic MTox"::equals;
-    private static final Predicate<String> DIGEST_PREDICATE = (authHeader) -> authHeader.startsWith("Digest");
+    private static final Predicate<String> DIGEST_PREDICATE = (authHeader) -> authHeader.startsWith("Digest ");
 
     private static final String ORIGINAL_NONCE = "7ypf/xlj9XXwfDPEoM4URrv/xwf94BcCAzFZH4GiTo0v";
     private static final String UPDATED_NONCE = "FQhe/qaU925kfnzjCev0ciny7QMkPqMAFRtzCUYo5tdS";
@@ -78,7 +78,7 @@ public class ProxyAuthenticatorTests {
      */
     @Test
     public void preemptiveChallengesAreIgnored() {
-        ProxyAuthenticator proxyAuthenticator = new ProxyAuthenticator(ChallengeHandler.of(new DigestHandler("1", "1")));
+        ProxyAuthenticator proxyAuthenticator = new ProxyAuthenticator(ChallengeHandler.of(new DigestProxyChallengeHandler("1", "1", null)));
 
         Response response = mockResponse(PREEMPTIVE_AUTHENTICATE, new Headers.Builder().build());
         Route route = new Route(DEFAULT_ADDRESS, new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 8888)),
@@ -97,7 +97,7 @@ public class ProxyAuthenticatorTests {
     @MethodSource("authorizationIsAppliedSupplier")
     public void authorizationIsApplied(Headers challengeHeaders, Predicate<String> expectedPredicate) {
         ProxyAuthenticator proxyAuthenticator = new ProxyAuthenticator(
-            ChallengeHandler.of(new DigestHandler("1", "1"), new BasicHandler("1", "1")));
+            ChallengeHandler.of(new DigestProxyChallengeHandler("1", "1", null), new BasicChallengeHandler("1", "1")));
 
         Response response = mockResponse("This is a test", challengeHeaders);
         Route route = new Route(DEFAULT_ADDRESS, new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 8888)),
@@ -112,7 +112,7 @@ public class ProxyAuthenticatorTests {
         return Stream.of(
             // ChallengeHolder only containing Basic challenge.
             Arguments.of(new Headers.Builder()
-                .add("Proxy-Authenticate: Basic")
+                .add("Proxy-Authenticate: Basic ")
                 .build(), BASIC_PREDICATE),
 
             // ChallengeHolder only containing Digest challenge.
@@ -135,7 +135,7 @@ public class ProxyAuthenticatorTests {
     @ParameterizedTest
     @MethodSource("authorizationCanBePipelinedSupplier")
     public void authorizationCanBePipelined(Headers challengeHeaders, Predicate<String> expectedPredicate) {
-        ProxyAuthenticator proxyAuthenticator = new ProxyAuthenticator(ChallengeHandler.of(new DigestHandler("1", "1"), new BasicHandler("1", "1")));
+        ProxyAuthenticator proxyAuthenticator = new ProxyAuthenticator(ChallengeHandler.of(new DigestProxyChallengeHandler("1", "1", null), new BasicChallengeHandler("1", "1")));
 
         Response response = mockResponse("This is a test", challengeHeaders);
         Route route = new Route(DEFAULT_ADDRESS, new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 8888)),
@@ -175,7 +175,7 @@ public class ProxyAuthenticatorTests {
      */
     @Test
     public void nullOrEmptyProxyAuthenticateInfoIsIgnored() throws IOException {
-        ProxyAuthenticator proxyAuthenticator = new ProxyAuthenticator(ChallengeHandler.of(new DigestHandler("1", "1")));
+        ProxyAuthenticator proxyAuthenticator = new ProxyAuthenticator(ChallengeHandler.of(new DigestProxyChallengeHandler("1", "1", null)));
 
         Response response = mockResponse("This is a test", DIGEST_CHALLENGE_HEADERS);
         Route route = new Route(DEFAULT_ADDRESS, new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 8888)),
@@ -207,7 +207,7 @@ public class ProxyAuthenticatorTests {
      */
     @Test
     public void proxyAuthenticateInfoValidatesProxyAuthorization() throws IOException {
-        ProxyAuthenticator proxyAuthenticator = new ProxyAuthenticator(ChallengeHandler.of(new DigestHandler("1", "1")));
+        ProxyAuthenticator proxyAuthenticator = new ProxyAuthenticator(ChallengeHandler.of(new DigestProxyChallengeHandler("1", "1", null)));
 
         Response response = mockResponse("This is a test", DIGEST_CHALLENGE_HEADERS);
         Route route = new Route(DEFAULT_ADDRESS, new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 8888)),
@@ -247,7 +247,7 @@ public class ProxyAuthenticatorTests {
      */
     @Test
     public void proxyAuthenticateInfoFailsValidation() throws IOException {
-        ProxyAuthenticator proxyAuthenticator = new ProxyAuthenticator(ChallengeHandler.of(new DigestHandler("1", "1")));
+        ProxyAuthenticator proxyAuthenticator = new ProxyAuthenticator(ChallengeHandler.of(new DigestProxyChallengeHandler("1", "1", null)));
 
         Response response = mockResponse("This is a test", DIGEST_CHALLENGE_HEADERS);
         Route route = new Route(DEFAULT_ADDRESS, new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 8888)),
@@ -275,7 +275,7 @@ public class ProxyAuthenticatorTests {
      */
     @Test
     public void proxyAuthenticateInfoUpdatesNonce() throws IOException {
-        ProxyAuthenticator proxyAuthenticator = new ProxyAuthenticator(ChallengeHandler.of(new DigestHandler("1", "1")));
+        ProxyAuthenticator proxyAuthenticator = new ProxyAuthenticator(ChallengeHandler.of(new DigestProxyChallengeHandler("1", "1", null)));
 
         Response response = mockResponse("This is a test", DIGEST_CHALLENGE_HEADERS);
         Route route = new Route(DEFAULT_ADDRESS, new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 8888)),
