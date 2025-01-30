@@ -210,6 +210,7 @@ public class JavaPoetTemplateProcessor implements TemplateProcessor {
             .addAnnotation(Override.class)
             .returns(inferTypeNameFromReturnType(method.getMethodReturnType()));
 
+        System.out.println("method.getMethodReturnType(): " + method.getMethodReturnType());
         // add method parameters, with Context at the end
         for (HttpRequestContext.MethodParameter parameter : method.getParameters()) {
             if (parameter.getName().equals("endpoint") || parameter.getName().equals("apiVersion")) {
@@ -230,7 +231,7 @@ public class JavaPoetTemplateProcessor implements TemplateProcessor {
         } else {
             methodBuilder.addStatement("$L($L)", method.getMethodName(), params);
         }
-
+        System.out.println("methodBuilder: " + methodBuilder.build());
         return methodBuilder.build();
     }
 
@@ -480,10 +481,13 @@ public class JavaPoetTemplateProcessor implements TemplateProcessor {
         // Get the Class objects for the raw type and type arguments
         Class<?> rawType;
         Class<?> typeArgument;
+        System.out.println("rawTypeString: " + rawTypeString);
+        System.out.println("typeArgumentsString: " + typeArgumentsString);
         try {
             rawType = Class.forName(rawTypeString);
             typeArgument = Class.forName(typeArgumentsString);
         } catch (ClassNotFoundException e) {
+            System.out.println("Exception ===> does it come here?");
             throw new RuntimeException(e);
         }
         // Use the inferTypeNameFromReturnType method to create a ParameterizedTypeName
@@ -498,8 +502,10 @@ public class JavaPoetTemplateProcessor implements TemplateProcessor {
         ClassName rawTypeName = ClassName.get(rawType);
         TypeName[] typeArgumentNames = new TypeName[typeArguments.length];
         for (int i = 0; i < typeArguments.length; i++) {
-            typeArgumentNames[i] = ClassName.get(typeArguments[i]);
+            typeArgumentNames[i] = ClassName.bestGuess(typeArguments[i].getName());
         }
-        return ParameterizedTypeName.get(rawTypeName, typeArgumentNames);
+        ParameterizedTypeName l = ParameterizedTypeName.get(rawTypeName, typeArgumentNames);
+        System.out.println("ParameterizedTypeName: " + l);
+        return l;
     }
 }

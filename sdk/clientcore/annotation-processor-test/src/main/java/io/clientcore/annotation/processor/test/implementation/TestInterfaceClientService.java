@@ -8,6 +8,8 @@ import io.clientcore.core.http.annotation.BodyParam;
 import io.clientcore.core.http.annotation.HeaderParam;
 import io.clientcore.core.http.annotation.HttpRequestInformation;
 import io.clientcore.core.http.annotation.PathParam;
+import io.clientcore.core.http.annotation.QueryParam;
+import io.clientcore.core.http.annotation.UnexpectedResponseExceptionDetail;
 import io.clientcore.core.http.models.HttpMethod;
 import io.clientcore.core.http.models.Response;
 import io.clientcore.core.http.pipeline.HttpPipeline;
@@ -57,4 +59,9 @@ public interface TestInterfaceClientService {
 
     @HttpRequestInformation(method = HttpMethod.GET, path = "my/uri/path", expectedStatusCodes = { 200 })
     Response<InputStream> testDownload();
+
+    @HttpRequestInformation(method = HttpMethod.GET, path = "/kv/{key}", expectedStatusCodes = { 200 })
+    @UnexpectedResponseExceptionDetail(exceptionBodyClass = Error.class)
+    Response<Foo> getFoo(@PathParam("key") String key, @QueryParam("label") String label,
+                         @HeaderParam("Sync-Token") String syncToken);
 }

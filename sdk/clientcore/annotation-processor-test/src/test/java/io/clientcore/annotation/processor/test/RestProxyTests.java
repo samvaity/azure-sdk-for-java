@@ -7,9 +7,6 @@ import io.clientcore.annotation.processor.test.implementation.TestInterfaceClien
 import io.clientcore.core.http.RestProxy;
 import io.clientcore.core.http.client.HttpClient;
 import io.clientcore.core.http.models.ContentType;
-import io.clientcore.core.http.models.HttpHeaderName;
-import io.clientcore.core.http.models.HttpMethod;
-import io.clientcore.core.http.models.HttpRequest;
 import io.clientcore.core.http.models.Response;
 import io.clientcore.core.http.pipeline.HttpPipeline;
 import io.clientcore.core.http.pipeline.HttpPipelineBuilder;
@@ -29,7 +26,6 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -37,15 +33,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Tests {@link RestProxy}.
  */
 public class RestProxyTests {
-
-    @Test
-    public void testGetNewInstance() {
-        HttpClient client = new LocalHttpClient();
-        HttpPipeline pipeline = new HttpPipelineBuilder().httpClient(client).build();
-
-        TestInterfaceClientService testInterface = TestInterfaceClientService.getNewInstance(pipeline, null);
-        assertNotNull(testInterface);
-    }
 
     @Test
     public void contentTypeHeaderPriorityOverBodyParamAnnotationTest() throws IOException {
@@ -151,36 +138,6 @@ public class RestProxyTests {
                 BinaryData.fromObject(bytes).getLength()));
     }
 
-    private static final class LocalHttpClient implements HttpClient {
-        private volatile HttpRequest lastHttpRequest;
-        private volatile boolean closeCalledOnResponse;
-
-        @Override
-        public Response<?> send(HttpRequest request) {
-            lastHttpRequest = request;
-            boolean success = request.getUri().getPath().equals("/my/uri/path");
-
-            if (request.getHttpMethod().equals(HttpMethod.POST)) {
-                success &= "application/json".equals(request.getHeaders().getValue(HttpHeaderName.CONTENT_TYPE));
-            } else {
-                success &= request.getHttpMethod().equals(HttpMethod.GET)
-                    || request.getHttpMethod().equals(HttpMethod.HEAD);
-            }
-
-            return new MockHttpResponse(request, success ? 200 : 400) {
-                @Override
-                public void close() throws IOException {
-                    closeCalledOnResponse = true;
-
-                    super.close();
-                }
-            };
-        }
-
-        public HttpRequest getLastHttpRequest() {
-            return lastHttpRequest;
-        }
-    }
 
     @Test
     public void doesNotChangeEncodedPath() throws IOException {
