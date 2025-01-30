@@ -8,7 +8,7 @@
   <parent>
     <groupId>io.clientcore</groupId>
     <artifactId>clientcore-parent</artifactId>
-    <version>1.0.0-beta.1</version> <!-- {x-version-update;io.clientcore:clientcore-parent;current} -->
+    <version>1.0.0-beta.2</version> <!-- {x-version-update;io.clientcore:clientcore-parent;current} -->
     <relativePath>../../parents/clientcore-parent</relativePath>
   </parent>
 
@@ -42,6 +42,8 @@
     <spotless.skip>true</spotless.skip>
     <revapi.skip>true</revapi.skip>
     <doclint>all,-missing</doclint>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -86,7 +88,7 @@
               <goal>compile</goal>
             </goals>
             <configuration>
-              <proc>only</proc>
+              <proc>full</proc>
               <generatedSourcesDirectory>${project.build.directory}/generated-sources/</generatedSourcesDirectory>
               <annotationProcessorPaths>
                 <annotationProcessorPath>
