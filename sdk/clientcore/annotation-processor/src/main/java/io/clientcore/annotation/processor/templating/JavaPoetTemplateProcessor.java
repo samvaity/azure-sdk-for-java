@@ -210,7 +210,6 @@ public class JavaPoetTemplateProcessor implements TemplateProcessor {
             .addAnnotation(Override.class)
             .returns(inferTypeNameFromReturnType(method.getMethodReturnType()));
 
-        System.out.println("method.getMethodReturnType(): " + method.getMethodReturnType());
         // add method parameters, with Context at the end
         for (HttpRequestContext.MethodParameter parameter : method.getParameters()) {
             if (parameter.getName().equals("endpoint") || parameter.getName().equals("apiVersion")) {
@@ -231,7 +230,6 @@ public class JavaPoetTemplateProcessor implements TemplateProcessor {
         } else {
             methodBuilder.addStatement("$L($L)", method.getMethodName(), params);
         }
-        System.out.println("methodBuilder: " + methodBuilder.build());
         return methodBuilder.build();
     }
 
@@ -472,40 +470,16 @@ public class JavaPoetTemplateProcessor implements TemplateProcessor {
         // Split the string into raw type and type arguments
         int angleBracketIndex = typeString.indexOf('<');
         if (angleBracketIndex == -1) {
-            // No type arguments
-            return ClassName.get("", typeString);
+            return ClassName.bestGuess(typeString);
         }
+
         String rawTypeString = typeString.substring(0, angleBracketIndex);
         String typeArgumentsString = typeString.substring(angleBracketIndex + 1, typeString.length() - 1);
 
-        // Get the Class objects for the raw type and type arguments
-        Class<?> rawType;
-        Class<?> typeArgument;
-        System.out.println("rawTypeString: " + rawTypeString);
-        System.out.println("typeArgumentsString: " + typeArgumentsString);
-        try {
-            rawType = Class.forName(rawTypeString);
-            typeArgument = Class.forName(typeArgumentsString);
-        } catch (ClassNotFoundException e) {
-            System.out.println("Exception ===> does it come here?");
-            throw new RuntimeException(e);
-        }
-        // Use the inferTypeNameFromReturnType method to create a ParameterizedTypeName
-        return getParameterizedTypeNameFromRawArguments(rawType, typeArgument);
-    }
+        // Directly create ClassName instances without using Class.forName to avoid runtime class loading
+        ClassName rawTypeName = ClassName.bestGuess(rawTypeString);
+        ClassName typeArgumentName = ClassName.bestGuess(typeArgumentsString);
 
-    /*
-     * Get a TypeName for a parameterized type, given the raw type and type arguments as Class objects.
-     */
-    private static ParameterizedTypeName getParameterizedTypeNameFromRawArguments(Class<?> rawType,
-        Class<?>... typeArguments) {
-        ClassName rawTypeName = ClassName.get(rawType);
-        TypeName[] typeArgumentNames = new TypeName[typeArguments.length];
-        for (int i = 0; i < typeArguments.length; i++) {
-            typeArgumentNames[i] = ClassName.bestGuess(typeArguments[i].getName());
-        }
-        ParameterizedTypeName l = ParameterizedTypeName.get(rawTypeName, typeArgumentNames);
-        System.out.println("ParameterizedTypeName: " + l);
-        return l;
+        return ParameterizedTypeName.get(rawTypeName, typeArgumentName);
     }
 }

@@ -3,6 +3,7 @@
 
 package io.clientcore.annotation.processor.test;
 
+import io.clientcore.annotation.processor.test.implementation.Foo;
 import io.clientcore.core.http.client.HttpClient;
 import io.clientcore.core.http.models.HttpHeaderName;
 import io.clientcore.core.http.models.HttpMethod;
@@ -10,6 +11,9 @@ import io.clientcore.core.http.models.HttpRequest;
 import io.clientcore.core.http.models.Response;
 
 import java.io.IOException;
+
+import static io.clientcore.annotation.processor.test.TestInterfaceGenerationTests.SYNC_TOKEN_VALUE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * A mock implementation of {@link HttpClient} that allows for testing the {@link HttpRequest} sent to it.
@@ -21,13 +25,22 @@ public final class LocalHttpClient implements HttpClient {
     @Override
     public Response<?> send(HttpRequest request) {
         lastHttpRequest = request;
-        boolean success = request.getUri().getPath().equals("/my/uri/path");
+        String path = request.getUri().getPath();
+        HttpMethod method = request.getHttpMethod();
+        boolean success = false;
 
-        if (request.getHttpMethod().equals(HttpMethod.POST)) {
-            success &= "application/json".equals(request.getHeaders().getValue(HttpHeaderName.CONTENT_TYPE));
-        } else {
-            success &= request.getHttpMethod().equals(HttpMethod.GET)
-                || request.getHttpMethod().equals(HttpMethod.HEAD);
+        if (path.matches("^/kv/[^/]+$")) {
+            if (method.equals(HttpMethod.GET)) {
+                assertEquals(SYNC_TOKEN_VALUE, request.getHeaders().getValue(HttpHeaderName.fromString("Sync-Token")));
+                Foo responseBody = new Foo().setKey("bar").setLabel("baz");;
+                return new MockHttpResponse(request, 200, responseBody);
+            }
+        } else if (path.equals("/my/uri/path")) {
+            if (method.equals(HttpMethod.POST)) {
+                success = "application/json".equals(request.getHeaders().getValue(HttpHeaderName.CONTENT_TYPE));
+            } else {
+                success = method.equals(HttpMethod.GET) || method.equals(HttpMethod.HEAD);
+            }
         }
 
         return new MockHttpResponse(request, success ? 200 : 400) {
