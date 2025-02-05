@@ -36,7 +36,7 @@ public final class ResponseBodyModeGeneration {
                 .addStatement("responseBodyMode = requestOptions.getResponseBodyMode()")
                 .endControlFlow();
         }
-
+        System.out.println("returnTypeName: " + returnTypeName.toString());
         // Fallback to assignment based on return type if responseBodyMode is still null.
         methodBuilder.beginControlFlow("if (responseBodyMode == null)");
         if (returnTypeName.toString().contains("InputStream")) {

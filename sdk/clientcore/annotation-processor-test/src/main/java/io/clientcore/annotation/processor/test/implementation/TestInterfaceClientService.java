@@ -3,11 +3,14 @@
 
 package io.clientcore.annotation.processor.test.implementation;
 
+import io.clientcore.annotation.processor.test.implementation.models.Foo;
 import io.clientcore.core.annotation.ServiceInterface;
 import io.clientcore.core.http.annotation.BodyParam;
 import io.clientcore.core.http.annotation.HeaderParam;
 import io.clientcore.core.http.annotation.HttpRequestInformation;
 import io.clientcore.core.http.annotation.PathParam;
+import io.clientcore.core.http.annotation.QueryParam;
+import io.clientcore.core.http.annotation.UnexpectedResponseExceptionDetail;
 import io.clientcore.core.http.models.HttpMethod;
 import io.clientcore.core.http.models.Response;
 import io.clientcore.core.http.pipeline.HttpPipeline;
@@ -37,11 +40,11 @@ public interface TestInterfaceClientService {
 
     @HttpRequestInformation(method = HttpMethod.POST, path = "my/uri/path", expectedStatusCodes = { 200 })
     Response<Void> testMethod(@BodyParam("application/octet-stream") ByteBuffer request,
-                              @HeaderParam("Content-Type") String contentType, @HeaderParam("Content-Length") Long contentLength);
+        @HeaderParam("Content-Type") String contentType, @HeaderParam("Content-Length") Long contentLength);
 
     @HttpRequestInformation(method = HttpMethod.POST, path = "my/uri/path", expectedStatusCodes = { 200 })
     Response<Void> testMethod(@BodyParam("application/octet-stream") BinaryData data,
-                              @HeaderParam("Content-Type") String contentType, @HeaderParam("Content-Length") Long contentLength);
+        @HeaderParam("Content-Type") String contentType, @HeaderParam("Content-Length") Long contentLength);
 
     @HttpRequestInformation(method = HttpMethod.GET, path = "{nextLink}", expectedStatusCodes = { 200 })
     Response<Void> testListNext(@PathParam(value = "nextLink", encoded = true) String nextLink);
@@ -57,4 +60,13 @@ public interface TestInterfaceClientService {
 
     @HttpRequestInformation(method = HttpMethod.GET, path = "my/uri/path", expectedStatusCodes = { 200 })
     Response<InputStream> testDownload();
+
+    @HttpRequestInformation(method = HttpMethod.GET, path = "/kv/{key}", expectedStatusCodes = { 200 })
+    @UnexpectedResponseExceptionDetail(exceptionBodyClass = Error.class)
+    Response<Foo> getFoo(@PathParam("key") String key, @QueryParam("label") String label,
+                         @HeaderParam("Sync-Token") String syncToken);
+
+    @HttpRequestInformation(method = HttpMethod.DELETE, path = "/kv/{key}", expectedStatusCodes = { 204, 404 })
+    Response<Void> deleteFoo(@PathParam("key") String key, @QueryParam("label") String label,
+        @HeaderParam("Sync-Token") String syncToken);
 }

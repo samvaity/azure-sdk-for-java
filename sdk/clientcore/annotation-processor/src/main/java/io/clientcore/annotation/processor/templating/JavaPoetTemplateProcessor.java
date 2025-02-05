@@ -83,9 +83,14 @@ public class JavaPoetTemplateProcessor implements TemplateProcessor {
 
         // Create the serviceVersion field
         String serviceVersionPackageName = packageName.substring(0, packageName.lastIndexOf("."));
-        serviceVersionType = ClassName.get(serviceVersionPackageName,
-            serviceInterfaceShortName.substring(0, serviceInterfaceShortName.indexOf("ClientService"))
-                + "ServiceVersion");
+        try {
+            serviceVersionType = ClassName.get(serviceVersionPackageName,
+                serviceInterfaceShortName.substring(0, serviceInterfaceShortName.indexOf("ClientService"))
+                    + "ServiceVersion");
+        } catch (StringIndexOutOfBoundsException e) {
+            throw new IllegalArgumentException(
+                "The service interface name is expected to contain 'ClientService' in its naming.", e);
+        }
         FieldSpec serviceVersion = FieldSpec.builder(serviceVersionType, "serviceVersion", Modifier.PRIVATE).build();
 
         // Create the constructor
@@ -116,10 +121,10 @@ public class JavaPoetTemplateProcessor implements TemplateProcessor {
             .addField(loggerField)
             .addField(defaultPipeline)
             .addField(serializer)
-            .addField(serviceVersion)
+            // .addField(serviceVersion)
             .addField(apiVersion)
             .addMethod(getPipelineMethod())
-            .addMethod(getServiceVersionMethod())
+            // .addMethod(getServiceVersionMethod())
             .addMethod(constructor)
             .addField(instanceField)
             .addMethod(getNewInstanceMethod);
@@ -248,6 +253,7 @@ public class JavaPoetTemplateProcessor implements TemplateProcessor {
         initializeHttpRequest(methodBuilder, method);
         addHeadersToRequest(methodBuilder, method);
         addRequestBody(methodBuilder, method);
+        System.out.println("requestBody" + methodBuilder.toString());
         finalizeHttpRequest(methodBuilder, returnTypeName, method);
 
         classBuilder.addMethod(methodBuilder.build());

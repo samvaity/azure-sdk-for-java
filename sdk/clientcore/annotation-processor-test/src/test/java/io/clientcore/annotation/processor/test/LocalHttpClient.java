@@ -3,7 +3,7 @@
 
 package io.clientcore.annotation.processor.test;
 
-import io.clientcore.annotation.processor.test.implementation.Foo;
+import io.clientcore.annotation.processor.test.implementation.models.Foo;
 import io.clientcore.core.http.client.HttpClient;
 import io.clientcore.core.http.models.HttpHeaderName;
 import io.clientcore.core.http.models.HttpMethod;
