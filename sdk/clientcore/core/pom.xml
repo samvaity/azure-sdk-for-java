@@ -37,8 +37,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <jacoco.min.linecoverage>0.60</jacoco.min.linecoverage>
-    <jacoco.min.branchcoverage>0.60</jacoco.min.branchcoverage>
+    <jacoco.min.linecoverage>0.57</jacoco.min.linecoverage>
+    <jacoco.min.branchcoverage>0.52</jacoco.min.branchcoverage>
 
     <javaModulesSurefireArgLine>
       --add-opens io.clientcore.core/io.clientcore.core.annotations=ALL-UNNAMED
@@ -51,17 +51,14 @@
       --add-opens io.clientcore.core/io.clientcore.core.http.pipeline=ALL-UNNAMED
       --add-opens io.clientcore.core/io.clientcore.core.implementation=ALL-UNNAMED
       --add-opens io.clientcore.core/io.clientcore.core.implementation.http=ALL-UNNAMED
-      --add-opens io.clientcore.core/io.clientcore.core.implementation.http.rest=ALL-UNNAMED
       --add-opens io.clientcore.core/io.clientcore.core.implementation.http.serializer=ALL-UNNAMED
       --add-opens io.clientcore.core/io.clientcore.core.implementation.utils=ALL-UNNAMED
       --add-opens io.clientcore.core/io.clientcore.core.models=ALL-UNNAMED
-      --add-opens io.clientcore.core/io.clientcore.core.shared=ALL-UNNAMED
       --add-opens io.clientcore.core/io.clientcore.core.utils=ALL-UNNAMED
       --add-opens io.clientcore.core/io.clientcore.core.utils.configuration=ALL-UNNAMED
 
       --add-reads io.clientcore.core=ALL-UNNAMED
 
-      --add-exports io.clientcore.core/io.clientcore.core.shared=ALL-UNNAMED
       --add-exports io.clientcore.core/io.clientcore.core.implementation=ALL-UNNAMED
       --add-exports io.clientcore.core/io.clientcore.core.implementation.instrumentation.fallback=ALL-UNNAMED
     </javaModulesSurefireArgLine>

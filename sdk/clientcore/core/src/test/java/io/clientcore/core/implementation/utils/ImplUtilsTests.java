@@ -3,7 +3,6 @@
 package io.clientcore.core.implementation.utils;
 
 import io.clientcore.core.instrumentation.logging.ClientLogger;
-import io.clientcore.core.shared.TestConfigurationSource;
 import io.clientcore.core.utils.CoreUtilsTests;
 import io.clientcore.core.utils.configuration.Configuration;
 import io.clientcore.core.utils.configuration.ConfigurationBuilder;
@@ -18,8 +17,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -109,6 +110,30 @@ public class ImplUtilsTests {
                 new ConfigurationBuilder(EMPTY_SOURCE, EMPTY_SOURCE,
                     new TestConfigurationSource().put(TIMEOUT_PROPERTY_NAME, "42")).build(),
                 Duration.ofMillis(10000), logger, Duration.ofMillis(42)));
+    }
+
+    static class TestConfigurationSource implements ConfigurationSource {
+        private Map<String, String> testData;
+
+        TestConfigurationSource() {
+            this.testData = new HashMap<>();
+        }
+
+        public TestConfigurationSource put(String key, String value) {
+            this.testData.put(key, value);
+            return this;
+        }
+
+        @Override
+        public Map<String, String> getProperties(String path) {
+            if (path == null) {
+                return testData;
+            }
+            return testData.entrySet()
+                .stream()
+                .filter(prop -> prop.getKey().startsWith(path + "."))
+                .collect(Collectors.toMap(Map.Entry<String, String>::getKey, Map.Entry<String, String>::getValue));
+        }
     }
 
     @Test
