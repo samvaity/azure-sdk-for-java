@@ -132,5 +132,9 @@ public final class TestInterfaceClientImpl {
         // Service 3
         @HttpRequestInformation(method = HttpMethod.GET, path = "bytes/100", expectedStatusCodes = { 200 })
         void getNothing(@HostParam("uri") String uri);
+
+        @HttpRequestInformation(method = HttpMethod.GET, path = "anything/{path}", expectedStatusCodes = { 200 })
+        HttpBinJSON getAnythingWithEncodedPathParam(@HostParam("uri") String uri,
+            @PathParam(value = "path", encoded = true) String pathParam);
     }
 }

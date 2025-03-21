@@ -36,9 +36,6 @@ import io.clientcore.core.serialization.ObjectSerializer;
 import io.clientcore.core.serialization.SerializationFormat;
 import io.clientcore.core.serialization.json.JsonSerializer;
 import io.clientcore.core.serialization.xml.XmlSerializer;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.type.TypeMirror;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.io.Writer;
@@ -51,6 +48,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.type.TypeMirror;
 
 import static io.clientcore.annotation.processor.utils.ResponseHandler.generateResponseHandling;
 
@@ -345,8 +344,7 @@ public class JavaParserTemplateProcessor implements TemplateProcessor {
             .anyMatch(parameter -> "uri".equals(parameter.getName()) && "String".equals(parameter.getShortTypeName()));
 
         if (useProvidedUri) {
-            body.addStatement(
-                StaticJavaParser.parseStatement("String url = uri + \"/\" + \"" + method.getPath() + "\";"));
+            body.addStatement(StaticJavaParser.parseStatement("String url = uri + " + method.getHost() + ";"));
         } else {
             body.addStatement(StaticJavaParser.parseStatement("String url = " + method.getHost() + ";"));
         }

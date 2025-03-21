@@ -5,6 +5,7 @@ package io.clientcore.annotation.processor.test;
 
 import io.clientcore.annotation.processor.test.implementation.TestInterfaceClientImpl;
 import io.clientcore.annotation.processor.test.implementation.models.Foo;
+import io.clientcore.annotation.processor.test.implementation.models.HttpBinJSON;
 import io.clientcore.core.http.client.HttpClient;
 import io.clientcore.core.http.models.Response;
 import io.clientcore.core.http.pipeline.HttpPipeline;
@@ -113,6 +114,18 @@ public class TestInterfaceGenerationTests {
         TestInterfaceClientImpl.TestInterfaceClientService testInterface =
             TestInterfaceClientImpl.TestInterfaceClientService.getNewInstance(pipeline);
         assertDoesNotThrow(() -> testInterface.getNothing(getServerUri(false)));
+    }
+
+    @Test
+    public void getRequestWithAnythingWithEncodedPathParam() {
+        HttpPipeline pipeline = new HttpPipelineBuilder().httpClient(getHttpClient()).build();
+        TestInterfaceClientImpl.TestInterfaceClientService testInterface =
+            TestInterfaceClientImpl.TestInterfaceClientService.getNewInstance(pipeline);
+        final HttpBinJSON json
+            = testInterface.getAnythingWithEncodedPathParam(getServerUri(false), "withpathparam");
+
+        assertNotNull(json);
+        //assertMatchWithHttpOrHttps("localhost/anything/withpathparam", json.uri());
     }
 
     private HttpClient getHttpClient() {
