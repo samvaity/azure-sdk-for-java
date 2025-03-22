@@ -38,11 +38,14 @@ import io.clientcore.core.serialization.json.JsonSerializer;
 import io.clientcore.core.serialization.xml.XmlSerializer;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -360,7 +363,17 @@ public class JavaParserTemplateProcessor implements TemplateProcessor {
             body.addStatement("HashMap<String, Object> queryParamMap = new HashMap<>();");
 
             method.getQueryParams().forEach((key, value) -> {
-                body.addStatement("queryParamMap.put(\"" + key + "\", " + value.getValue() + ");");
+                if (value.isEncoded()) {
+                    try {
+                        String encodedKey = URLEncoder.encode(key, StandardCharsets.UTF_8.name());
+                        String encodedValue = URLEncoder.encode(value.getValue(), StandardCharsets.UTF_8.name());
+                        body.addStatement("queryParamMap.put(\"" + encodedKey + "\", \"" + encodedValue + "\");");
+                    } catch (UnsupportedEncodingException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    body.addStatement("queryParamMap.put(\"" + key + "\", " + value.getValue() + ");");
+                }
             });
             body.addStatement("newUrl = CoreUtils.appendQueryParams(url, queryParamMap);");
             body.addStatement("if (newUrl != null) { url = newUrl; }");

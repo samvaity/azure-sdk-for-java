@@ -203,7 +203,7 @@ public final class HttpRequestContext {
         if (queryParams.containsKey(key)) {
             throw new IllegalArgumentException("Cannot add duplicate query parameter '" + key + "'");
         }
-        queryParams.put(key, new QueryParameter(value, isMultiple, false));
+        queryParams.put(key, new QueryParameter(value, isMultiple, encoded));
     }
 
     /**
