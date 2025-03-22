@@ -29,8 +29,8 @@ public class HttpRequestInitializerTest {
         // Arrange: Set up method with query params
         method.setHost(url);
         method.setHttpMethod(HttpMethod.valueOf(httpMethod));
-        method.addQueryParam(queryKey1, queryValue1, false);
-        method.addQueryParam(queryKey2, queryValue2, true);
+        method.addQueryParam(queryKey1, queryValue1, false, queryParam.encoded());
+        method.addQueryParam(queryKey2, queryValue2, true, queryParam.encoded());
         method.addHeader("Content-Type", "application/json");
         method.addHeader("Content-Length", String.valueOf(0));
 

@@ -178,7 +178,7 @@ public class AnnotationProcessor extends AbstractProcessor {
                 method.addHeader(headerParam.value(), param.getSimpleName().toString());
             } else if (queryParam != null) {
                 method.addQueryParam(queryParam.value(), param.getSimpleName().toString(),
-                    queryParam.multipleQueryParams());
+                    queryParam.multipleQueryParams(), queryParam.encoded());
             } else if (bodyParam != null) {
                 method.setBody(new HttpRequestContext.Body(bodyParam.value(), param.asType().toString(),
                     param.getSimpleName().toString()));

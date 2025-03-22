@@ -195,13 +195,15 @@ public final class HttpRequestContext {
      * @param value the query parameter value.
      * @param isMultiple boolean indicating whether this query parameter list values should be sent as individual query
      * params or as a single Json
+     * @param encoded
+     *
      * @throws IllegalArgumentException if a duplicate query parameter is added.
      */
-    public void addQueryParam(String key, String value, boolean isMultiple) {
+    public void addQueryParam(String key, String value, boolean isMultiple, boolean encoded) {
         if (queryParams.containsKey(key)) {
             throw new IllegalArgumentException("Cannot add duplicate query parameter '" + key + "'");
         }
-        queryParams.put(key, new QueryParameter(value, isMultiple));
+        queryParams.put(key, new QueryParameter(value, isMultiple, false));
     }
 
     /**
@@ -393,16 +395,19 @@ public final class HttpRequestContext {
     public static class QueryParameter {
         private final String value;
         private final boolean isMultiple;
+        private final boolean isEncoded;
 
         /**
          * Constructs a new QueryParameter.
          *
          * @param value the value of the query parameter.
          * @param isMultiple whether the parameter can accept multiple values.
+         * @param isEncoded whether the parameter and value is encoded
          */
-        public QueryParameter(String value, boolean isMultiple) {
+        public QueryParameter(String value, boolean isMultiple, boolean isEncoded) {
             this.value = value;
             this.isMultiple = isMultiple;
+            this.isEncoded = isEncoded;
         }
 
         /**
@@ -421,6 +426,10 @@ public final class HttpRequestContext {
          */
         public boolean isMultiple() {
             return isMultiple;
+        }
+
+        public boolean isEncoded() {
+            return isEncoded;
         }
     }
 }
