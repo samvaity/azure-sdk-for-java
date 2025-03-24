@@ -4,6 +4,7 @@
 package io.clientcore.annotation.processor.templating;
 
 import io.clientcore.annotation.processor.models.HttpRequestContext;
+import io.clientcore.annotation.processor.models.Substitution;
 import io.clientcore.core.http.models.HttpMethod;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -20,8 +21,8 @@ public class HttpRequestInitializerTest {
 
     @ParameterizedTest
     @CsvSource({
-        //"GET, \"/my/uri/path\", key1, {value1}, key2, value2",
-        //"POST, \"/my/uri/path2\", key3, value3, key4, value4",
+        "GET, \"/my/uri/path\", key1, {value1}, key2, value2",
+        "POST, \"/my/uri/path2\", key3, value3, key4, value4",
         "GET, \"/anything/{path}\", key5, value5, key6, value6" })
     public void testInitializeHttpRequestWithParameterizedQueryParams(String httpMethod, String url, String queryKey1,
         String queryValue1, String queryKey2, String queryValue2) throws UnsupportedEncodingException {
@@ -32,6 +33,7 @@ public class HttpRequestInitializerTest {
 
         // Arrange: Set up method with query params
         method.setHost(url);
+        method.addSubstitution(new Substitution("path", "with+plus", true));
         method.setHttpMethod(HttpMethod.valueOf(httpMethod));
         method.addQueryParam(queryKey1, queryValue1, false, true);
         method.addQueryParam(queryKey2, queryValue2, true, false);
@@ -53,9 +55,9 @@ public class HttpRequestInitializerTest {
 
         // Ensure each query parameter is appended correctly
         String expectedQueryStatement = "HashMap<String, Object> queryParamMap = new HashMap<>(); "
-            + "queryParamMap.put(\"" + queryKey1 + "\", \"" + URLEncoder.encode(queryValue1, StandardCharsets.UTF_8.name()) + "\"); " +
-            "queryParamMap.put(\"" + queryKey2
-            + "\", " + queryValue2 + "); " + "newUrl = CoreUtils.appendQueryParams(url, queryParamMap);";
+            + "queryParamMap.put(\"" + queryKey1 + "\", \""
+            + URLEncoder.encode(queryValue1, StandardCharsets.UTF_8.name()) + "\"); " + "queryParamMap.put(\""
+            + queryKey2 + "\", " + queryValue2 + "); " + "newUrl = CoreUtils.appendQueryParams(url, queryParamMap);";
 
         assertTrue(normalizedBody.contains(expectedQueryStatement));
 

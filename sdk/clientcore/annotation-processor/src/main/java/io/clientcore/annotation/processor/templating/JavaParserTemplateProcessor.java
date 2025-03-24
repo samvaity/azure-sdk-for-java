@@ -350,8 +350,8 @@ public class JavaParserTemplateProcessor implements TemplateProcessor {
             .anyMatch(parameter -> "uri".equals(parameter.getName()) && "String".equals(parameter.getShortTypeName()));
 
         String urlStatement = useProvidedUri
-            ? String.format("String url = uri + %s + ;", method.getHost().replace("\"", "\\\""))
-            : String.format("String url = %s;", method.getHost().replace("\"", "\\\""));
+            ? String.format("String url = uri + %s;", method.getHost())
+            : String.format("String url = %s;", method.getHost());
 
         System.out.println("url statement" + urlStatement);
 
