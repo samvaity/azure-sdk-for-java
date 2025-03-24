@@ -109,6 +109,7 @@ public class JavaParserTemplateProcessor implements TemplateProcessor {
         setPackageDeclaration(packageName);
 
         createClass(serviceInterfaceImplShortName, serviceInterfaceShortName, templateInput);
+        System.out.println(compilationUnit.toString());
         try (Writer fileWriter = processingEnv.getFiler()
             .createSourceFile(packageName + "." + serviceInterfaceImplShortName)
             .openWriter()) {
@@ -155,7 +156,7 @@ public class JavaParserTemplateProcessor implements TemplateProcessor {
             .addParameter(HttpPipeline.class, "httpPipeline")
             .setBody(StaticJavaParser.parseBlock(
                 "{ this.httpPipeline = httpPipeline; this.jsonSerializer = JsonSerializer.getInstance(); this.xmlSerializer = XmlSerializer.getInstance(); }"));
-
+        System.out.println("before method" + classBuilder.toString());
         classBuilder.addMethod("getNewInstance", Modifier.Keyword.PUBLIC, Modifier.Keyword.STATIC)
             .setType(serviceInterfaceShortName)
             .addParameter(HttpPipeline.class, "httpPipeline")
@@ -304,7 +305,7 @@ public class JavaParserTemplateProcessor implements TemplateProcessor {
                     new NodeList<>(new StringLiteralExpr("unchecked"), new StringLiteralExpr("cast")))))
             .addMarkerAnnotation(Override.class)
             .setType(TypeConverter.getAstType(method.getMethodReturnType()));
-
+        System.out.println("set method" + internalMethod.toString());
         method.getParameters()
             .forEach(param -> internalMethod
                 .addParameter(new Parameter(StaticJavaParser.parseType(param.getShortTypeName()), param.getName())));
@@ -321,19 +322,21 @@ public class JavaParserTemplateProcessor implements TemplateProcessor {
 
     // Helper methods
     private void addRequestOptionsToRequestIfPresent(BlockStmt body, HttpRequestContext method) {
-        // Check if any parameter in the method is of type RequestOptions
         boolean hasRequestOptions = method.getParameters()
             .stream()
-            .anyMatch(parameter -> "options".equals(parameter.getName())
+            .anyMatch(parameter -> "requestOptions".equals(parameter.getName())
                 && "RequestOptions".equals(parameter.getShortTypeName()));
 
         if (hasRequestOptions) {
             // Create a statement for setting request options
-            ExpressionStmt statement = new ExpressionStmt(new MethodCallExpr(new NameExpr("httpRequest"),
-                "setRequestOptions", NodeList.nodeList(new NameExpr("options"))));
+            Statement statement1 = StaticJavaParser
+                .parseStatement("if (requestOptions != null) httpRequest.setRequestOptions(requestOptions);");
+            statement1.setComment(new LineComment("\n Set the Request Options"));
+            Statement statement2 = StaticJavaParser.parseStatement(
+                "if (httpRequest.getRequestOptions() != null) httpRequest.getRequestOptions().getRequestCallback().accept(httpRequest);");
 
-            statement.setComment(new LineComment("\n Set the Request Options"));
-            body.addStatement(statement);
+            body.addStatement(statement1);
+            body.addStatement(statement2);
         }
     }
 
@@ -346,12 +349,13 @@ public class JavaParserTemplateProcessor implements TemplateProcessor {
             .stream()
             .anyMatch(parameter -> "uri".equals(parameter.getName()) && "String".equals(parameter.getShortTypeName()));
 
-        if (useProvidedUri) {
-            body.addStatement(
-                StaticJavaParser.parseStatement("String url = uri + \"/\" + \"" + method.getPath() + "\";"));
-        } else {
-            body.addStatement(StaticJavaParser.parseStatement("String url = " + method.getHost() + ";"));
-        }
+        String urlStatement = useProvidedUri
+            ? String.format("String url = uri + %s + ;", method.getHost().replace("\"", "\\\""))
+            : String.format("String url = %s;", method.getHost().replace("\"", "\\\""));
+
+        System.out.println("url statement" + urlStatement);
+
+        body.addStatement(StaticJavaParser.parseStatement(urlStatement));
 
         // Iterate through the query parameters and append them to the url string if they are not null
         if (!method.getQueryParams().isEmpty()) {

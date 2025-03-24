@@ -428,7 +428,6 @@ public final class CoreUtils {
     /**
      * Appends a query parameter to the given URL.
      *
-<<<<<<< HEAD
      * @param host The base URL to which the query parameter will be appended.
      * @param queryParams A map containing the query parameters and their values.
      * @return The URL with the appended query parameter.
@@ -436,38 +435,6 @@ public final class CoreUtils {
     public static String appendQueryParams(String host, Map<String, Object> queryParams) {
         if (queryParams == null || queryParams.isEmpty()) {
             return host;  // No parameters to append
-=======
-     * @param url the base URL to which the query parameter will be appended.
-     * @param key the name of the query parameter (e.g., "api-version", "name", "After").
-     * @param value the value of the query parameter
-     * @return the updated URL with the appended query parameter.
-     */
-    public static String appendQueryParam(String url, String key, String value) {
-        if (value == null) {
-            return url;
-        }
-
-        // Append query parameter to URL
-        if (url.contains("?")) {
-            return url + "&" + key + "=" + value;
-        } else {
-            return url + "?" + key + "=" + value;
-        }
-    }
-
-    /**
-     * Appends the query parameter list values to the given host URL.
-     *
-     * @param url the base URL to which the query parameter will be appended.
-     * @param key the name of the query parameter (e.g., "api-version", "name", "After").
-     * @param value the value of the query parameter.
-     * @param delimiter The delimiter to use if the value is a list.
-     * @return the updated URL with the appended query parameter.
-     */
-    public static String appendMultiQueryParam(String url, String key, List<?> value, char delimiter) {
-        if (url == null || key == null || value == null) {
-            return url;
->>>>>>> bf90c67541d (update for multi query param)
         }
 
         StringBuilder urlBuilder = new StringBuilder(host);
@@ -478,7 +445,6 @@ public final class CoreUtils {
             String key = entry.getKey();
             Object value = entry.getValue();
 
-<<<<<<< HEAD
             // Skip null values
             if (value == null) {
                 continue;
@@ -496,13 +462,6 @@ public final class CoreUtils {
             urlBuilder.append(hasExistingQuery ? "&" : "?").append(key).append("=").append(valueString);
 
             hasExistingQuery = true; // Ensure subsequent parameters use '&'
-=======
-        for (int i = 0; i < value.size(); i++) {
-            if (i > 0) {
-                newUrl.append(delimiter);
-            }
-            newUrl.append(value.get(i));
->>>>>>> bf90c67541d (update for multi query param)
         }
 
         return urlBuilder.toString();
