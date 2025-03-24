@@ -198,7 +198,6 @@ public class AnnotationProcessor extends AbstractProcessor {
 
     private static String getHost(HttpRequestContext method, boolean isEncoded) {
         String path = method.getPath();
-        System.out.println(path);
         // Set the path after host, concatenating the path segment in the host.
         if (path != null && !path.isEmpty() && !"/".equals(path)) {
             String hostPath = method.getHost();
@@ -206,7 +205,6 @@ public class AnnotationProcessor extends AbstractProcessor {
                 method.setPath(path);
             } else {
                 if (path.startsWith("/")) {
-                    System.out.println("here" + hostPath + path);
                     method.setPath(hostPath + path);
                 } else {
                     method.setPath(hostPath + "/" + path);

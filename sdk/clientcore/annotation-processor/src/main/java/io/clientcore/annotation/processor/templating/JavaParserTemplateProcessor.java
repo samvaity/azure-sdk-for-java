@@ -14,13 +14,10 @@ import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.comments.LineComment;
 import com.github.javaparser.ast.expr.ArrayInitializerExpr;
-import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.Name;
-import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import io.clientcore.annotation.processor.models.HttpRequestContext;
 import io.clientcore.annotation.processor.models.TemplateInput;
@@ -109,7 +106,6 @@ public class JavaParserTemplateProcessor implements TemplateProcessor {
         setPackageDeclaration(packageName);
 
         createClass(serviceInterfaceImplShortName, serviceInterfaceShortName, templateInput);
-        System.out.println(compilationUnit.toString());
         try (Writer fileWriter = processingEnv.getFiler()
             .createSourceFile(packageName + "." + serviceInterfaceImplShortName)
             .openWriter()) {
@@ -156,7 +152,6 @@ public class JavaParserTemplateProcessor implements TemplateProcessor {
             .addParameter(HttpPipeline.class, "httpPipeline")
             .setBody(StaticJavaParser.parseBlock(
                 "{ this.httpPipeline = httpPipeline; this.jsonSerializer = JsonSerializer.getInstance(); this.xmlSerializer = XmlSerializer.getInstance(); }"));
-        System.out.println("before method" + classBuilder.toString());
         classBuilder.addMethod("getNewInstance", Modifier.Keyword.PUBLIC, Modifier.Keyword.STATIC)
             .setType(serviceInterfaceShortName)
             .addParameter(HttpPipeline.class, "httpPipeline")
@@ -305,7 +300,6 @@ public class JavaParserTemplateProcessor implements TemplateProcessor {
                     new NodeList<>(new StringLiteralExpr("unchecked"), new StringLiteralExpr("cast")))))
             .addMarkerAnnotation(Override.class)
             .setType(TypeConverter.getAstType(method.getMethodReturnType()));
-        System.out.println("set method" + internalMethod.toString());
         method.getParameters()
             .forEach(param -> internalMethod
                 .addParameter(new Parameter(StaticJavaParser.parseType(param.getShortTypeName()), param.getName())));
@@ -350,10 +344,8 @@ public class JavaParserTemplateProcessor implements TemplateProcessor {
             .anyMatch(parameter -> "uri".equals(parameter.getName()) && "String".equals(parameter.getShortTypeName()));
 
         String urlStatement = useProvidedUri
-            ? String.format("String url = uri + %s + ;", method.getHost().replace("\"", "\\\""))
-            : String.format("String url = %s;", method.getHost().replace("\"", "\\\""));
-
-        System.out.println("url statement" + urlStatement);
+            ? String.format("String url = uri + \"/\" + %s;", method.getHost())
+            : String.format("String url = %s;", method.getHost());
 
         body.addStatement(StaticJavaParser.parseStatement(urlStatement));
 

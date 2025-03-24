@@ -20,9 +20,8 @@ public class HttpRequestInitializerTest {
 
     @ParameterizedTest
     @CsvSource({
-        //"GET, \"/my/uri/path\", key1, {value1}, key2, value2",
-        //"POST, \"/my/uri/path2\", key3, value3, key4, value4",
-        "GET, \"/anything/{path}\", key5, value5, key6, value6" })
+        "GET, \"/my/uri/path\", key1, {value1}, key2, value2",
+        "POST, \"/my/uri/path2\", key3, value3, key4, value4" })
     public void testInitializeHttpRequestWithParameterizedQueryParams(String httpMethod, String url, String queryKey1,
         String queryValue1, String queryKey2, String queryValue2) throws UnsupportedEncodingException {
 
@@ -56,6 +55,7 @@ public class HttpRequestInitializerTest {
             + "queryParamMap.put(\"" + queryKey1 + "\", \""
             + URLEncoder.encode(queryValue1, StandardCharsets.UTF_8.name()) + "\"); " + "queryParamMap.put(\""
             + queryKey2 + "\", " + queryValue2 + "); " + "newUrl = CoreUtils.appendQueryParams(url, queryParamMap);";
+
         assertTrue(normalizedBody.contains(expectedQueryStatement));
 
         // Ensure the final HttpRequest construction is correct

@@ -30,13 +30,14 @@ public final class PathBuilder {
      * @param rawHost The raw host string that contains {} delimited parameters.
      * @param method The HttpRequestContext object that contains the method's configuration, parameters, headers, and
      * other details.
-     * @param isEncoded
+     * @param isEncoded boolean indicating whether the query parameter value is URL encoded.
      *
      * @return The path of the request URL with the placeholders replaced with the actual values.
      *
      * @throws NullPointerException If the method is null.
      * @throws MissingSubstitutionException If a substitution is missing for a placeholder in the raw host string.
      * @throws IllegalArgumentException If the query parameter key or value is empty.
+     * @throws RuntimeException If an encoding error occurs.
      */
     public static String buildPath(String rawHost, HttpRequestContext method, boolean isEncoded) {
         if (method == null) {
@@ -54,12 +55,7 @@ public final class PathBuilder {
 
             if (substitution != null) {
                 String substitutionValue = substitution.getParameterVariableName();
-                System.out.println("subst" + substitutionValue);
-                //String replacementValue = substitutionValue != null ? Objects.toString(substitutionValue, "null") : "";
-                String replacementValue = null;
-                if (substitutionValue == null) {
-                    replacementValue = "";
-                }
+                String replacementValue;
                 if (isEncoded) {
                     try {
                         replacementValue = URLEncoder.encode(substitutionValue, StandardCharsets.UTF_8.name());
@@ -112,7 +108,6 @@ public final class PathBuilder {
         if (openingBracesCount != closingBracesCount) {
             throw new MissingSubstitutionException("Mismatched braces in raw host: " + rawHost);
         }
-        System.out.println("result " + result);
         return result;
     }
 
