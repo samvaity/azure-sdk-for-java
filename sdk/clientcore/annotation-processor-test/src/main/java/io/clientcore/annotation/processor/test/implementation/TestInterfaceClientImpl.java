@@ -75,12 +75,12 @@ public final class TestInterfaceClientImpl {
         @HttpRequestInformation(method = HttpMethod.GET, path = "my/uri/path", expectedStatusCodes = { 200 })
         Response<InputStream> testDownload();
 
-        @HttpRequestInformation(method = HttpMethod.GET, path = "/kv/{key}", expectedStatusCodes = { 200 })
+        @HttpRequestInformation(method = HttpMethod.GET, path = "kv/{key}", expectedStatusCodes = { 200 })
         @UnexpectedResponseExceptionDetail(exceptionBodyClass = Error.class)
         Response<Foo> getFoo(@PathParam("key") String key, @QueryParam("label") String label,
                              @HeaderParam("Sync-Token") String syncToken);
 
-        @HttpRequestInformation(method = HttpMethod.DELETE, path = "/kv/{key}", expectedStatusCodes = { 204, 404 })
+        @HttpRequestInformation(method = HttpMethod.DELETE, path = "kv/{key}", expectedStatusCodes = { 204, 404 })
         Response<Void> deleteFoo(@PathParam("key") String key, @QueryParam("label") String label,
                                  @HeaderParam("Sync-Token") String syncToken);
 
@@ -134,5 +134,18 @@ public final class TestInterfaceClientImpl {
         // Service 3
         @HttpRequestInformation(method = HttpMethod.GET, path = "bytes/100", expectedStatusCodes = { 200 })
         void getNothing(@HostParam("uri") String uri);
+
+        @HttpRequestInformation(method = HttpMethod.GET, path = "anything", expectedStatusCodes = { 200 })
+        HttpBinJSON getAnything(@HostParam("uri") String uri);
+
+        @HttpRequestInformation(method = HttpMethod.GET, path = "anything/with+plus", expectedStatusCodes = { 200 })
+        HttpBinJSON getAnythingWithPlus(@HostParam("uri") String uri);
+
+        @HttpRequestInformation(method = HttpMethod.GET, path = "anything/{path}", expectedStatusCodes = { 200 })
+        HttpBinJSON getAnythingWithPathParam(@HostParam("uri") String uri, @PathParam("path") String pathParam);
+
+        @HttpRequestInformation(method = HttpMethod.GET, path = "anything/{path}", expectedStatusCodes = { 200 })
+        HttpBinJSON getAnythingWithEncodedPathParam(@HostParam("uri") String uri,
+            @PathParam(value = "path", encoded = true) String pathParam);
     }
 }
