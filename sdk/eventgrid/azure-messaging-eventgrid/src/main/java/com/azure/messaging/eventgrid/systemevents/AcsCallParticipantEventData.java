@@ -45,6 +45,7 @@ public class AcsCallParticipantEventData extends AcsCallingEventProperties {
      */
     @Generated
     public AcsCallParticipantEventData() {
+        super();
     }
 
     /**

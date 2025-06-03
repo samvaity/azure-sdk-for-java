@@ -35,7 +35,7 @@ public final class AcsChatMemberRemovedFromThreadWithUserEventData extends AcsCh
      * Creates an instance of AcsChatMemberRemovedFromThreadWithUserEventData class
      */
     public AcsChatMemberRemovedFromThreadWithUserEventData() {
-
+        super();
     }
 
     /**

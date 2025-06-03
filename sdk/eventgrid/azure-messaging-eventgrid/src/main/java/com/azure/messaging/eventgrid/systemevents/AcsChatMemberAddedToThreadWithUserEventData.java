@@ -35,7 +35,7 @@ public final class AcsChatMemberAddedToThreadWithUserEventData extends AcsChatTh
      * Creates an instance of AcsChatMemberAddedToThreadWithUserEventData class
      */
     public AcsChatMemberAddedToThreadWithUserEventData() {
-
+        super();
     }
 
     /**
