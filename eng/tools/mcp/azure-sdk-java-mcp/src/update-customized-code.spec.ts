@@ -25,7 +25,7 @@ describe("update-customized-code", () => {
             // Mock file system operations
             mockFs.access.mockResolvedValue(undefined);
             mockFs.readFile.mockResolvedValue("mock content");
-            
+
             // Mock successful compilation (no errors)
             const mockExecAsync = vi.fn().mockResolvedValue({ stdout: "", stderr: "" });
             vi.doMock("util", () => ({
@@ -33,7 +33,7 @@ describe("update-customized-code", () => {
             }));
 
             const result = await updateCustomizedCode("/mock/module/directory");
-            
+
             expect(result.content[0].type).toBe("text");
             expect(result.content[0].text).toContain("✅ No compilation errors found");
         });
@@ -41,9 +41,9 @@ describe("update-customized-code", () => {
         it("should handle module directory parameter correctly", async () => {
             // Mock file access failure to trigger error path
             mockFs.access.mockRejectedValue(new Error("File not found"));
-            
+
             const result = await updateCustomizedCode("/invalid/path");
-            
+
             expect(result.content[0].type).toBe("text");
             expect(result.content[0].text).toContain("❌ Error updating customized code");
         });
@@ -51,7 +51,7 @@ describe("update-customized-code", () => {
         it("should analyze customization types correctly", async () => {
             // Mock tsp-location.yaml exists
             mockFs.access.mockResolvedValue(undefined);
-            
+
             // Mock tsp-location.yaml content
             mockFs.readFile.mockImplementation((path: any) => {
                 if (path.toString().endsWith("tsp-location.yaml")) {
@@ -78,7 +78,7 @@ options:
             }));
 
             const result = await updateCustomizedCode("/mock/module/directory");
-            
+
             // Should detect both partial-update and customization-class
             expect(result.content[0].text).toContain("Customization type: Partial Update + Customization Class");
         });
@@ -88,7 +88,7 @@ options:
         it("should categorize missing symbol errors correctly", async () => {
             mockFs.access.mockResolvedValue(undefined);
             mockFs.readFile.mockResolvedValue("mock tsp config");
-            
+
             const mockExecAsync = vi.fn().mockRejectedValue({
                 stdout: "[ERROR] /path/to/file.java:10: error: cannot find symbol - symbol: class BinaryData",
                 stderr: ""
@@ -98,7 +98,7 @@ options:
             }));
 
             const result = await updateCustomizedCode("/mock/module/directory");
-            
+
             // Should attempt to fix import-related errors
             expect(result.content[0].text).toContain("compilation errors");
         });
@@ -121,7 +121,7 @@ public class TestClass {
                 }
                 return Promise.resolve("mock content");
             });
-            
+
             mockFs.writeFile.mockResolvedValue(undefined);
 
             const mockExecAsync = vi.fn().mockRejectedValue({
@@ -133,7 +133,7 @@ public class TestClass {
             }));
 
             const result = await updateCustomizedCode("/mock/module/directory");
-            
+
             // Should attempt to add missing imports
             expect(result.content[0].text).toContain("errors");
         });

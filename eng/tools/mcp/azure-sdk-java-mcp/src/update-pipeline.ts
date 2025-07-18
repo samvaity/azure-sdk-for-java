@@ -2,10 +2,10 @@
 
 /**
  * SDK Generation Pipeline Integration Script
- * 
+ *
  * This script demonstrates how the customization updater would be integrated
  * into the SDK generation pipeline, triggered after TypeSpec regeneration.
- * 
+ *
  * Usage scenarios:
  * 1. Automated pipeline: Called after 'tsp compile' and before final build
  * 2. Manual invocation: Developer runs after pulling TypeSpec changes
@@ -72,7 +72,7 @@ async function runCustomizationUpdatePipeline(config: PipelineConfig): Promise<v
  */
 async function main(): Promise<void> {
     const args = process.argv.slice(2);
-    
+
     if (args.length === 0 || args.includes('--help')) {
         printUsage();
         return;
@@ -127,9 +127,9 @@ function validateEnvironment(moduleDirectory: string): void {
 
 async function buildModule(moduleDirectory: string): Promise<void> {
     try {
-        execSync('mvn compile -f pom.xml', { 
-            cwd: moduleDirectory, 
-            stdio: 'inherit' 
+        execSync('mvn compile -f pom.xml', {
+            cwd: moduleDirectory,
+            stdio: 'inherit'
         });
         console.log('✅ Build successful');
     } catch (error) {
@@ -140,9 +140,9 @@ async function buildModule(moduleDirectory: string): Promise<void> {
 async function validateModule(moduleDirectory: string): Promise<void> {
     try {
         // Run tests and quality checks
-        execSync('mvn test -f pom.xml', { 
-            cwd: moduleDirectory, 
-            stdio: 'inherit' 
+        execSync('mvn test -f pom.xml', {
+            cwd: moduleDirectory,
+            stdio: 'inherit'
         });
         console.log('✅ Validation successful');
     } catch (error) {

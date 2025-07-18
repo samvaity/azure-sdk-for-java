@@ -30,9 +30,45 @@ Rather than predetermining what might change, the tool:
 The tool supports multiple entry points depending on the workflow:
 
 #### 1. Pipeline Integration (Recommended)
+
+**Integration Point**: Extend existing `spec-gen-sdk-runner` workflow
+
 ```bash
-# Called automatically after TypeSpec regeneration
-node update-pipeline.js --module-dir ./sdk/face/azure-ai-vision-face --build --validate
+# Current Flow:
+spec-gen-sdk-runner → spec-gen-sdk → SDK generation → Build fails on customizations
+
+# Enhanced Flow:
+spec-gen-sdk-runner → spec-gen-sdk → SDK generation → customization-updater → Build succeeds
+```
+
+**Implementation Options:**
+
+**Option A: Extend spec-gen-sdk directly**
+```typescript
+// In azure-rest-api-specs/eng/tools/spec-gen-sdk-runner/src/commands.ts
+async function generateSdkForSpecPr(): Promise<number> {
+  // ... existing generation logic ...
+  
+  // NEW: After successful SDK generation, before build validation
+  if (executionResult === "succeeded") {
+    await updateCustomizationsForJava(stagedArtifactsFolder, changedSpecs);
+  }
+  
+  // ... rest of validation logic ...
+}
+```
+
+**Option B: Post-processing step in Azure DevOps pipeline**
+```yaml
+# After existing spec-gen-sdk step
+- script: |
+    # Run customization updater on generated SDK
+    node azure-sdk-for-java/eng/tools/mcp/azure-sdk-java-mcp/src/update-pipeline.js \
+      --module-dir $(StagedArtifactsFolder) \
+      --spec-changes $(ChangedSpecs) \
+      --build --validate
+  displayName: 'Update Customizations After SDK Generation'
+  condition: and(succeeded(), eq(variables['SDK_LANGUAGE'], 'azure-sdk-for-java'))
 ```
 
 #### 2. MCP Tool Integration
