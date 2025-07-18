@@ -12,6 +12,7 @@ import { buildJavaSdk } from "./build-java-sdk.js";
 import { getJavaSdkChangelog } from "./java-sdk-changelog.js";
 import { cleanJavaSource } from "./clean-java-source.js";
 import { updateChangelogMd } from "./update-changelog-md.js";
+import { updateCustomizedCodeAfterGeneration } from "./customization-updater.js";
 
 // Create the MCP server
 const server = new McpServer({
@@ -216,6 +217,32 @@ server.registerTool(
         logToolCall("update_client_name");
         const result = await clientNameUpdateCookbook();
         return result;
+    },
+);
+
+// Tool: update_customized_code
+server.registerTool(
+    "update_customized_code",
+    {
+        description:
+            "Update customized hand-written code after SDK generation to fix compilation errors and maintain compatibility. This tool analyzes compilation errors in data-plane SDKs with customizations (partial-update or customization-class) and attempts to automatically fix common issues like missing imports, changed method signatures, and type mismatches.",
+        inputSchema: {
+            moduleDirectory: z
+                .string()
+                .describe(
+                    "The absolute path to the module directory containing the customized code. Example: C:\\workspace\\azure-sdk-for-java\\sdk\\keyvault\\azure-security-keyvault-keys",
+                ),
+        },
+        annotations: {
+            title: "Update Customized Code",
+        },
+    },
+    async (args) => {
+        logToolCall("update_customized_code");
+        return await updateCustomizedCodeAfterGeneration({
+            moduleDirectory: args.moduleDirectory,
+            dryRun: false
+        });
     },
 );
 
