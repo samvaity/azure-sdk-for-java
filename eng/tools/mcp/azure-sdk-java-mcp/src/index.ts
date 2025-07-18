@@ -13,6 +13,7 @@ import { getJavaSdkChangelog } from "./java-sdk-changelog.js";
 import { cleanJavaSource } from "./clean-java-source.js";
 import { updateChangelogMd } from "./update-changelog-md.js";
 import { updateCustomizedCodeAfterGeneration } from "./customization-updater.js";
+import { fixJavaCustomizationErrors } from "./java-customization-fixer.js";
 
 // Create the MCP server
 const server = new McpServer({

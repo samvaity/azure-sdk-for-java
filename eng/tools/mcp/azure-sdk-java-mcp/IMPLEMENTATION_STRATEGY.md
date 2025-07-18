@@ -172,13 +172,171 @@ export async function fixJavaCustomizationErrors(moduleDirectory: string) {
 // - Integration with existing VSO logging
 ```
 
+## Unified Tool Architecture
+
+**Single Tool, Multiple Entry Points**: One codebase that serves all workflows:
+
+```typescript
+// Core logic in java-customization-fixer.ts
+export async function fixJavaCustomizationErrors(moduleDirectory: string): Promise<FixResult> {
+  // Common logic for both CI and local development
+}
+
+// CLI entry point (local development)
+export async function runCli(args: CliArgs): Promise<void> {
+  const result = await fixJavaCustomizationErrors(args.moduleDir);
+  displayResults(result);
+}
+
+// Integration function (CI/CD pipeline)
+export async function tryFixJavaCustomizations(options: IntegrationOptions): Promise<boolean> {
+  const result = await fixJavaCustomizationErrors(options.moduleDirectory);
+  return result.resolved;
+}
+```
+
+**Entry Points by Use Case:**
+
+1. **Local Development** → `npx java-customization-fixer --module-dir ./sdk/face/azure-ai-vision-face`
+2. **CI/CD Pipeline** → `import { tryFixJavaCustomizations } from './java-customization-fixer.js'`
+3. **MCP Server** → Exposed as MCP tool for AI assistants
+4. **PowerShell Integration** → `./fix-customizations.ps1` wrapper script
+
 ## Benefits of This Approach
 
-1. **Immediate Value**: Fixes real, current problems
-2. **Low Risk**: Only activates when builds already failing
-3. **Minimal Integration**: Small addition to existing pipeline
-4. **Iterative**: Can enhance sophistication over time
-5. **Measurable**: Clear success metrics (build failures → successes)
+1. **Single Codebase**: No duplication, easier maintenance
+2. **Immediate Value**: Fixes real, current problems
+3. **Low Risk**: Only activates when builds already failing
+4. **Minimal Integration**: Small addition to existing pipeline
+5. **Iterative**: Can enhance sophistication over time
+6. **Measurable**: Clear success metrics (build failures → successes)
+
+## Local Development Workflow
+
+### Daily Developer Scenarios
+
+#### Scenario 1: TypeSpec Update in Local Development
+
+```bash
+# Developer workflow after pulling TypeSpec changes:
+cd ./sdk/communication/azure-communication-messages
+
+# 1. Regenerate SDK (existing workflow)
+tsp compile
+
+# 2. Try to build (will likely fail with customization errors)
+mvn compile
+# ERROR: cannot find symbol: class BinaryData
+# ERROR: method createMessage(String) cannot be applied to createMessage(BinaryData)
+
+# 3. Run our customization fixer locally
+npx java-customization-fixer --module-dir .
+# ✅ Fixed 3 missing imports
+# ✅ Updated 2 method signatures  
+# ⚠️ 1 complex change needs manual review
+
+# 4. Build again to verify
+mvn compile
+# ✅ Build successful
+```
+
+#### Scenario 2: Quick Diagnosis
+
+```bash
+# Just want to see what's wrong without fixing
+npx java-customization-fixer --diagnose --module-dir ./sdk/face/azure-ai-vision-face
+
+# Output:
+# 📋 Customization Analysis:
+# ❌ 5 compilation errors found
+# 🔧 3 can be fixed automatically
+# ⚠️ 2 require manual review
+# 📝 Suggestions available
+```
+
+#### Scenario 3: Integration with Existing Scripts
+
+```bash
+# Existing azure-sdk-for-java repo scripts can call our tool
+./eng/scripts/TypeSpec-Project-Generate.ps1 MyService
+# After generation, automatically runs: 
+# .\eng\tools\mcp\azure-sdk-java-mcp\fix-customizations.ps1 -ModuleDirectory $ModuleDir
+```
+
+### Integration with azure-sdk-for-java Repository
+
+The tool integrates seamlessly with existing repository workflows:
+
+#### Package.json bin entry
+
+```json
+{
+  "bin": {
+    "java-customization-fixer": "dist/cli.js"
+  }
+}
+```
+
+#### PowerShell wrapper
+
+```powershell
+# fix-customizations.ps1 - Integrates with existing PS1 scripts
+./fix-customizations.ps1 -ModuleDirectory ./sdk/face/azure-ai-vision-face -Validate
+```
+
+#### Existing eng/ scripts
+
+```powershell
+# Could be added to TypeSpec-Project-Generate.ps1
+if (Test-Path "$ModuleDirectory/customization" -or $HasCustomizations) {
+    Write-Host "🔧 Checking for customization issues..."
+    & npx java-customization-fixer --module-dir $ModuleDirectory --validate
+}
+```
+
+This approach:
+
+- ✅ **Single tool** serves all use cases
+- ✅ **Zero duplication** between CI and local workflows  
+- ✅ **Familiar integration** with existing azure-sdk-for-java patterns
+- ✅ **Progressive adoption** - can be added to existing scripts gradually
+- ✅ **Consistent behavior** across all environments
+
+**Key Result**: Single unified codebase that works seamlessly across all development scenarios - no need for separate CI vs local tools!
+
+# Apply fixes step by step:
+npx @azure/java-customization-fixer --module-dir . --fix-imports
+npx @azure/java-customization-fixer --module-dir . --fix-types
+npx @azure/java-customization-fixer --module-dir . --validate
+```
+
+### Integration Points for Local Development
+
+#### Option A: Standalone NPM Package
+
+```json
+// Package could be published as standalone tool
+{
+  "name": "@azure/java-customization-fixer",
+  "bin": {
+    "java-customization-fixer": "./dist/cli.js"
+  }
+}
+```
+
+#### Option B: Integration with azure-sdk-for-java Scripts
+
+```bash
+# Add to existing eng/scripts/
+./eng/scripts/fix-customizations.ps1 -ModuleDirectory ./sdk/face/azure-ai-vision-face
+```
+
+#### Option C: VS Code Extension Integration
+
+```typescript
+// Command palette: "Azure SDK: Fix Customization Errors"
+// Automatically detects current Java module and applies fixes
+```
 
 ## Sample Integration with Existing Code
 
@@ -213,6 +371,7 @@ try {
 ```
 
 This approach:
+
 - ✅ Focuses on real compilation errors (not predictions)
 - ✅ Integrates with existing infrastructure minimally  
 - ✅ Provides immediate value for the most common pain points
