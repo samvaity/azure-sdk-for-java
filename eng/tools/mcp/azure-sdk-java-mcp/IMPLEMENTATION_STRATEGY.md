@@ -55,6 +55,572 @@ export async function fixJavaCustomizationErrors(moduleDirectory: string) {
 
 You're right to question JavaParser complexity. **Hybrid approach** is better:
 
+## Team Architecture Feedback Analysis
+
+**Key Insight from Weidong & Haoling**: We need to distinguish between:
+
+1. **SDK Validation Pipeline** (deterministic, no agent/LLM)
+2. **Dev Inner Loop** (agent-powered, LLM-enhanced)
+
+**Critical Decision**: Should customization fixing be purely deterministic scripts OR leverage LLM capabilities?
+
+### Option A: Pure Deterministic (Current Implementation)
+```typescript
+// spec-gen-sdk-runner integration - deterministic only
+if (compilationErrors.length > 0) {
+  const fixes = applyKnownPatterns(errors); // Fixed pattern matching
+  return fixes;
+}
+```
+
+### Option B: LLM-Enhanced (Agent-Powered)
+```typescript
+// MCP tool with LLM assistance
+export async function fixJavaCustomizationErrors(moduleDirectory: string) {
+  const errors = await getCompilationErrors(moduleDirectory);
+  
+  // Deterministic fixes first
+  const automaticFixes = await applyKnownPatterns(errors);
+  
+  // LLM-enhanced for complex cases
+  const complexErrors = errors.filter(e => !automaticFixes.includes(e));
+  if (complexErrors.length > 0) {
+    const llmSuggestions = await generateIntelligentFixes(complexErrors);
+    return { automaticFixes, llmSuggestions };
+  }
+  
+  return { automaticFixes };
+}
+```
+
+**Haoling's Point**: Language-specific tasks like "update customized SDK", "generate runnable tests" can leverage LLM power that scripts cannot provide.
+
+## Architectural Decision: Agent-Enhanced vs Pure Deterministic
+
+Based on the team feedback, we have **two distinct scenarios**:
+
+### Scenario 1: SDK Validation Pipeline (No Agent)
+- Runs in CI/CD without human interaction
+- Must be 100% deterministic and reliable
+- **Recommendation**: Pure script-based fixes with known patterns
+
+### Scenario 2: Dev Inner Loop (Agent-Powered)
+- Developer working with AI assistant (Copilot, etc.)
+- Can leverage LLM for complex reasoning
+- **Recommendation**: MCP tools with LLM enhancement capabilities
+
+## Recommended Hybrid Architecture
+
+```typescript
+// Core deterministic engine (shared by both scenarios)
+export async function fixJavaCustomizationErrors(
+  moduleDirectory: string, 
+  options: { enableLLM?: boolean }
+): Promise<FixResult> {
+  
+  // Always start with deterministic fixes
+  const deterministicFixes = await applyKnownPatterns(errors);
+  
+  // For dev inner loop, enhance with LLM
+  if (options.enableLLM && hasComplexErrors(errors)) {
+    const llmEnhanced = await generateIntelligentSuggestions(errors);
+    return { ...deterministicFixes, llmEnhanced };
+  }
+  
+  return deterministicFixes;
+}
+
+// SDK Validation usage (deterministic only)
+const pipelineResult = await fixJavaCustomizationErrors(moduleDir, { enableLLM: false });
+
+// Dev Inner Loop usage (LLM-enhanced)
+const devResult = await fixJavaCustomizationErrors(moduleDir, { enableLLM: true });
+```
+
+## Extended Contract: Modular Integration with spec-gen-sdk-runner
+
+**Answer to Haoling's Question**: Here's how we can extend the contract between `spec-gen-sdk` and language-specific tools to support modular, composable steps:
+
+### Current Contract (Basic)
+```json
+{
+  "generateOptions": {
+    "generateScript": {
+      "path": "./eng/scripts/TypeSpec-Project-Generate.ps1"
+    }
+  }
+}
+```
+
+### Extended Contract (Modular & Composable)
+```json
+{
+  "initOptions": {
+    "initScript": {
+      "path": "./eng/scripts/TypeSpec-Project-Init.ps1",
+      "description": "Initialize environment and dependencies"
+    },
+    "prepareEnvironment": {
+      "path": "./eng/tools/mcp/azure-sdk-java-mcp/dist/cli.js",
+      "args": ["prepare-environment", "--module-dir", "{moduleDirectory}"],
+      "description": "Prepare development environment with MCP assistance"
+    }
+  },
+  "generateOptions": {
+    "generateScript": {
+      "path": "./eng/scripts/TypeSpec-Project-Generate.ps1",
+      "description": "Core SDK generation from TypeSpec"
+    },
+    "updateCustomizations": {
+      "path": "./eng/tools/mcp/azure-sdk-java-mcp/dist/cli.js", 
+      "args": ["fix-customizations", "--module-dir", "{moduleDirectory}"],
+      "description": "Fix compilation errors in customized code",
+      "runAfter": ["generateScript"],
+      "optional": true
+    },
+    "updateChangeLog": {
+      "path": "./eng/tools/mcp/azure-sdk-java-mcp/dist/cli.js",
+      "args": ["update-changelog", "--module-dir", "{moduleDirectory}", "--jar-path", "{jarPath}"],
+      "description": "Update CHANGELOG.md with API changes",
+      "runAfter": ["generateScript"],
+      "optional": true
+    },
+    "generateTests": {
+      "path": "./eng/tools/mcp/azure-sdk-java-mcp/dist/cli.js",
+      "args": ["generate-tests", "--module-dir", "{moduleDirectory}"],
+      "description": "Generate runnable test cases with AI assistance",
+      "runAfter": ["generateScript", "updateCustomizations"],
+      "optional": true
+    },
+    "generateSamples": {
+      "path": "./eng/tools/mcp/azure-sdk-java-mcp/dist/cli.js",
+      "args": ["generate-samples", "--module-dir", "{moduleDirectory}"],
+      "description": "Generate code samples and documentation",
+      "runAfter": ["generateScript"],
+      "optional": true
+    }
+  },
+  "validateOptions": {
+    "buildSdk": {
+      "path": "./eng/tools/mcp/azure-sdk-java-mcp/dist/cli.js",
+      "args": ["build-sdk", "--module-dir", "{moduleDirectory}"],
+      "description": "Build and validate SDK compilation"
+    },
+    "runTests": {
+      "path": "mvn",
+      "args": ["test", "-f", "{moduleDirectory}/pom.xml"],
+      "description": "Execute test suite"
+    }
+  }
+}
+```
+
+## Implementation in spec-gen-sdk-runner
+
+### Enhanced Commands.ts Integration
+```typescript
+// In azure-rest-api-specs/eng/tools/spec-gen-sdk-runner/src/commands.ts
+
+interface ExtendedGenerateOptions {
+  generateScript?: ScriptConfig;
+  updateCustomizations?: ScriptConfig;
+  updateChangeLog?: ScriptConfig;
+  generateTests?: ScriptConfig;
+  generateSamples?: ScriptConfig;
+}
+
+interface ScriptConfig {
+  path: string;
+  args?: string[];
+  description?: string;
+  runAfter?: string[];
+  optional?: boolean;
+}
+
+async function executeModularGeneration(
+  language: string, 
+  moduleDirectory: string,
+  selectedSteps?: string[]
+): Promise<ExecutionResult> {
+  
+  const config = getLanguageConfig(language); // Loads the JSON config above
+  const executionPlan = buildExecutionPlan(config, selectedSteps);
+  
+  const results: StepResult[] = [];
+  
+  for (const step of executionPlan) {
+    console.log(`🔄 Executing: ${step.description}`);
+    
+    try {
+      const result = await executeStep(step, moduleDirectory);
+      results.push({ step: step.name, success: true, result });
+      
+      // If optional step fails, continue
+      if (!result.success && step.optional) {
+        console.log(`⚠️ Optional step ${step.name} failed, continuing...`);
+        continue;
+      }
+      
+      // If required step fails, stop
+      if (!result.success) {
+        throw new Error(`Required step ${step.name} failed`);
+      }
+      
+    } catch (error) {
+      if (step.optional) {
+        console.log(`⚠️ Optional step ${step.name} failed: ${error.message}`);
+        results.push({ step: step.name, success: false, error: error.message });
+      } else {
+        throw error;
+      }
+    }
+  }
+  
+  return { success: true, steps: results };
+}
+
+function buildExecutionPlan(config: any, selectedSteps?: string[]): StepConfig[] {
+  const allSteps = { ...config.initOptions, ...config.generateOptions };
+  
+  // If specific steps selected, filter to those
+  const stepsToRun = selectedSteps ? 
+    Object.entries(allSteps).filter(([name]) => selectedSteps.includes(name)) :
+    Object.entries(allSteps);
+  
+  // Sort by dependencies (runAfter)
+  return topologicalSort(stepsToRun);
+}
+
+async function executeStep(step: StepConfig, moduleDirectory: string): Promise<StepResult> {
+  // Replace template variables in args
+  const resolvedArgs = step.args?.map(arg => 
+    arg.replace('{moduleDirectory}', moduleDirectory)
+       .replace('{jarPath}', findJarPath(moduleDirectory))
+  ) || [];
+  
+  // Execute the script/command
+  const result = await runCommand(step.path, resolvedArgs, { cwd: moduleDirectory });
+  
+  return {
+    success: result.exitCode === 0,
+    output: result.stdout,
+    error: result.stderr
+  };
+}
+```
+
+## Benefits of This Modular Approach
+
+### 1. **Addresses Haoling's Integration Concern**
+- `prepareEnvironment` step can leverage MCP/LLM capabilities
+- Individual steps can be agent-enhanced while maintaining script compatibility
+- Existing PowerShell scripts work alongside new MCP tools
+
+### 2. **Flexible Composition**
+```bash
+# Run full generation pipeline
+spec-gen-sdk --language java --steps=all
+
+# Run only specific steps  
+spec-gen-sdk --language java --steps=generateScript,updateCustomizations
+
+# Run for development workflow
+spec-gen-sdk --language java --steps=generateScript,generateTests,generateSamples
+```
+
+### 3. **Incremental Adoption**
+- Start with existing `generateScript` (no changes needed)
+- Add new steps one by one as MCP tools are developed  
+- Maintain backward compatibility
+
+### 4. **Agent Integration Points**
+Each step can internally decide whether to use:
+- Pure deterministic scripts (pipeline mode)
+- LLM-enhanced processing (agent mode)
+
+Based on execution context and available capabilities.
+
+## Specific Example: Addressing Team Integration Concerns
+
+### How This Solves Haoling's "prepare-environment" Integration Question
+
+**Current Challenge**: How does the existing `prepare-environment.ts` MCP tool integrate with spec-gen-sdk-runner scripts?
+
+**Solution with Extended Contract**:
+
+```typescript
+// In prepare-environment.ts (existing MCP tool)
+export async function prepareEnvironment(moduleDirectory: string, options: PrepareOptions) {
+  // Existing logic that leverages LLM for intelligent environment setup
+  // ... complex analysis, dependency resolution, etc.
+  
+  // Return structured result for spec-gen-sdk-runner consumption
+  return {
+    success: true,
+    environmentReady: true,
+    dependenciesInstalled: ['@azure/core', '@azure/identity'],
+    recommendations: ['Consider upgrading TypeScript to 5.x'],
+    nextSteps: ['Ready for SDK generation']
+  };
+}
+
+// CLI wrapper for spec-gen-sdk-runner integration
+export async function prepareEnvironmentCli(args: string[]) {
+  const moduleDir = args[args.indexOf('--module-dir') + 1];
+  const result = await prepareEnvironment(moduleDir, { enableLLM: true });
+  
+  // Output in format expected by spec-gen-sdk-runner
+  if (result.success) {
+    console.log('✅ Environment preparation completed');
+    process.exit(0);
+  } else {
+    console.error('❌ Environment preparation failed');
+    process.exit(1);
+  }
+}
+```
+
+**Integration in spec-gen-sdk-runner**:
+```typescript
+// spec-gen-sdk-runner automatically calls our tool based on config
+const stepResult = await executeStep({
+  name: 'prepareEnvironment',
+  path: './eng/tools/mcp/azure-sdk-java-mcp/dist/cli.js',
+  args: ['prepare-environment', '--module-dir', moduleDirectory],
+  description: 'Prepare development environment with MCP assistance'
+}, moduleDirectory);
+
+// Result is seamlessly integrated into overall workflow
+if (stepResult.success) {
+  console.log('✅ Environment ready, proceeding to SDK generation...');
+}
+```
+
+### Complete Workflow Example
+
+```bash
+# Developer runs: 
+spec-gen-sdk --language java --module ./sdk/face/azure-ai-vision-face --steps=all
+
+# spec-gen-sdk-runner executes in order:
+# 1. prepareEnvironment (MCP + LLM)
+# 2. generateScript (existing PowerShell)  
+# 3. updateCustomizations (MCP + build error analysis)
+# 4. generateTests (MCP + LLM)
+# 5. updateChangeLog (MCP + existing logic)
+
+# Each step reports success/failure
+# Pipeline stops on required step failure
+# Optional steps can fail without breaking workflow
+```
+
+## Benefits Summary
+
+1. **No Breaking Changes**: Existing `generateScript` continues to work
+2. **Incremental Enhancement**: Add MCP tools one step at a time
+3. **Agent Integration**: Each step internally chooses deterministic vs LLM-enhanced mode
+4. **Composable Workflows**: Developers can run subsets of steps as needed
+5. **Error Isolation**: Step failures don't break entire pipeline if marked optional
+
+This directly addresses the team's concern about **how to integrate MCP tools with existing spec-gen-sdk infrastructure** while maintaining backward compatibility and providing a clear path for agent enhancement.
+```
+
+### Extended Contract (Modular & Composable)
+```json
+{
+  "initOptions": {
+    "initScript": {
+      "path": "./eng/scripts/TypeSpec-Project-Initialize.ps1",
+      "supportsAgentMode": true
+    }
+  },
+  "generateOptions": {
+    "generateScript": {
+      "path": "./eng/scripts/TypeSpec-Project-Generate.ps1",
+      "supportsAgentMode": false
+    },
+    "prepareEnvironment": {
+      "path": "./eng/tools/mcp/azure-sdk-java-mcp/dist/cli.js",
+      "command": "prepare-environment",
+      "supportsAgentMode": true,
+      "mcpTool": true
+    },
+    "updateCustomizations": {
+      "path": "./eng/tools/mcp/azure-sdk-java-mcp/dist/cli.js", 
+      "command": "fix-customizations",
+      "supportsAgentMode": true,
+      "mcpTool": true,
+      "runAfterGeneration": true
+    },
+    "updateChangeLog": {
+      "path": "./eng/tools/mcp/azure-sdk-java-mcp/dist/cli.js",
+      "command": "update-changelog", 
+      "supportsAgentMode": true,
+      "mcpTool": true
+    },
+    "generateTests": {
+      "path": "./eng/scripts/Generate-Tests.ps1",
+      "supportsAgentMode": true,
+      "experimental": true
+    },
+    "generateSamples": {
+      "path": "./eng/scripts/Generate-Samples.ps1", 
+      "supportsAgentMode": true,
+      "experimental": true
+    }
+  },
+  "releaseOptions": {
+    "prepareReleaseScript": {
+      "path": "./eng/scripts/Prepare-Release.ps1",
+      "dependencies": ["updateChangeLog", "generateTests", "generateSamples"]
+    }
+  }
+}
+```
+
+### How This Enables Modular Execution
+
+#### Individual Step Execution
+```bash
+# spec-gen-sdk-runner can call individual steps
+spec-gen-sdk --language java --step prepareEnvironment --module ./sdk/face/azure-ai-vision-face
+spec-gen-sdk --language java --step updateCustomizations --module ./sdk/face/azure-ai-vision-face  
+spec-gen-sdk --language java --step generateTests --module ./sdk/face/azure-ai-vision-face
+```
+
+#### Composed Execution
+```bash
+# Compose multiple steps together
+spec-gen-sdk --language java --steps generateScript,updateCustomizations,updateChangeLog
+```
+
+#### Agent-Enhanced Mode
+```bash
+# Enable agent mode for steps that support it
+spec-gen-sdk --language java --step prepareEnvironment --agent-mode --module ./sdk/face/azure-ai-vision-face
+```
+
+### Implementation in spec-gen-sdk-runner
+
+This extends the existing `commands.ts` to support modular execution:
+
+```typescript
+// In azure-rest-api-specs/eng/tools/spec-gen-sdk-runner/src/commands.ts
+
+interface LanguageConfig {
+  initOptions?: { [stepName: string]: StepConfig };
+  generateOptions: { [stepName: string]: StepConfig };
+  releaseOptions?: { [stepName: string]: StepConfig };
+}
+
+interface StepConfig {
+  path: string;
+  command?: string;
+  supportsAgentMode?: boolean;
+  mcpTool?: boolean;
+  runAfterGeneration?: boolean;
+  dependencies?: string[];
+}
+
+async function executeStep(
+  stepName: string, 
+  stepConfig: StepConfig, 
+  context: ExecutionContext
+): Promise<StepResult> {
+  
+  if (stepConfig.mcpTool) {
+    // Execute as MCP tool (supports agent mode)
+    return await executeMcpTool(stepConfig, context);
+  } else {
+    // Execute as traditional script
+    return await executeScript(stepConfig, context);
+  }
+}
+
+async function executeMcpTool(
+  stepConfig: StepConfig, 
+  context: ExecutionContext
+): Promise<StepResult> {
+  
+  const args = [
+    stepConfig.path,
+    stepConfig.command,
+    '--module-dir', context.moduleDirectory
+  ];
+  
+  // Enable agent mode if supported and requested
+  if (stepConfig.supportsAgentMode && context.agentMode) {
+    args.push('--agent-mode');
+  }
+  
+  return await executeCommand('node', args);
+}
+```
+
+### How This Solves Haoling's Concerns
+
+#### 1. **Prepare Environment Integration**
+
+```typescript
+// Instead of hardcoded script call:
+await executeScript('./eng/scripts/TypeSpec-Project-Generate.ps1');
+
+// Now modular:
+await executeStep('prepareEnvironment', languageConfig.generateOptions.prepareEnvironment, context);
+```
+
+#### 2. **Agent-Enhanced Steps**
+
+```json
+{
+  "prepareEnvironment": {
+    "path": "./eng/tools/mcp/azure-sdk-java-mcp/dist/cli.js",
+    "command": "prepare-environment", 
+    "supportsAgentMode": true,
+    "mcpTool": true
+  }
+}
+```
+
+The `prepare-environment` tool can now:
+- Run deterministically in pipeline mode
+- Leverage LLM for complex environment setup in agent mode
+- Be called individually or as part of larger workflows
+
+#### 3. **Composable Workflows**
+
+```typescript
+// High-level workflow that composes individual steps
+async function generateCompleteSDK(context: ExecutionContext): Promise<void> {
+  await executeStep('prepareEnvironment', config.generateOptions.prepareEnvironment, context);
+  await executeStep('generateScript', config.generateOptions.generateScript, context);
+  await executeStep('updateCustomizations', config.generateOptions.updateCustomizations, context);
+  await executeStep('updateChangeLog', config.generateOptions.updateChangeLog, context);
+}
+```
+
+### Benefits of This Approach
+
+1. **✅ Addresses Haoling's Concerns**: Language-specific tools can be MCP-enabled while maintaining script compatibility
+2. **✅ Maintains Deterministic Pipeline**: Steps can run in script mode for CI/CD reliability  
+3. **✅ Enables Agent Enhancement**: Same steps can leverage LLM in developer inner loop
+4. **✅ Modular & Reusable**: Individual steps can be composed into different workflows
+5. **✅ Backward Compatible**: Existing scripts continue to work unchanged
+6. **✅ Progressive Adoption**: Can migrate steps to MCP tools incrementally
+```
+
+## What This Means for Our Implementation
+
+**Immediate Focus**: Build the deterministic foundation that works in **both** scenarios:
+- Maven error parsing ✅ 
+- Common pattern fixes ✅
+- Integration with spec-gen-sdk-runner ✅
+
+**Future Enhancement**: Add LLM capabilities for dev inner loop:
+- Intelligent code analysis using context
+- Custom fix generation for complex cases  
+- Integration with MCP/agent workflows
+
 **Phase 1: Build Error Analysis + Simple Fixes** (Immediate value)
 - Parse Maven compilation errors
 - Apply common fixes for known patterns
