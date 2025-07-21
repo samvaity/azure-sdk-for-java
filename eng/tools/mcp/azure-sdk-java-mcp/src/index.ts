@@ -12,6 +12,7 @@ import { buildJavaSdk } from "./build-java-sdk.js";
 import { getJavaSdkChangelog } from "./java-sdk-changelog.js";
 import { cleanJavaSource } from "./clean-java-source.js";
 import { updateChangelogMd } from "./update-changelog-md.js";
+import { generateWithCustomizations } from "./generate-with-customizations.js";
 
 // Create the MCP server
 const server = new McpServer({
@@ -197,6 +198,59 @@ server.registerTool(
     async (args) => {
         logToolCall("generate_java_sdk");
         const result = await generateJavaSdk(args.cwd, true);
+        return result;
+    },
+);
+
+// Tool: generate_with_customizations
+server.registerTool(
+    "generate_with_customizations",
+    {
+        description:
+            "Advanced TypeSpec SDK generation that preserves and updates manual customizations. This tool addresses the critical gap where TypeSpec regeneration overwrites customizations, causing build failures. It implements a standardized cross-language contract for SDK generation with customization preservation, build validation, and interactive LLM assistance for customization updates.",
+        inputSchema: {
+            moduleDirectory: z
+                .string()
+                .describe(
+                    "The absolute path to the SDK module directory containing TypeSpec files and customizations. Example: C:\\workspace\\azure-sdk-for-java\\sdk\\communication\\azure-communication-messages",
+                ),
+            scope: z
+                .enum(["code-only", "code-with-changelog", "full-package"])
+                .default("code-with-changelog")
+                .describe(
+                    "Generation scope: 'code-only' (source files only), 'code-with-changelog' (source + changelog), 'full-package' (source + changelog + build validation + metadata)",
+                ),
+            preserveCustomizations: z
+                .boolean()
+                .default(true)
+                .describe(
+                    "Whether to backup, preserve, and intelligently update manual customizations during regeneration",
+                ),
+            validateBuild: z
+                .boolean()
+                .default(true)
+                .describe(
+                    "Whether to run build validation after generation to detect customization conflicts",
+                ),
+            interactiveMode: z
+                .boolean()
+                .default(true)
+                .describe(
+                    "Whether to enable LLM assistance for analyzing and updating customizations when build conflicts are detected",
+                ),
+        },
+        annotations: {
+            title: "Generate SDK with Customizations",
+        },
+    },
+    async (args) => {
+        logToolCall("generate_with_customizations");
+        const result = await generateWithCustomizations(args.moduleDirectory, {
+            scope: args.scope,
+            preserveCustomizations: args.preserveCustomizations,
+            validateBuild: args.validateBuild,
+            interactiveMode: args.interactiveMode,
+        });
         return result;
     },
 );
