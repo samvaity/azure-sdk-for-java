@@ -12,6 +12,9 @@ import { buildJavaSdk } from "./build-java-sdk.js";
 import { getJavaSdkChangelog } from "./java-sdk-changelog.js";
 import { cleanJavaSource } from "./clean-java-source.js";
 import { updateChangelogMd } from "./update-changelog-md.js";
+import { detectCompilationIssues } from "./detect-compilation-issues.js";
+import { updateCustomizationClass } from "./update-customization-class-v2.js";
+import { updateCustomizationClassHybrid } from "./update-customization-class-hybrid.js";
 
 // Create the MCP server
 const server = new McpServer({
@@ -198,6 +201,102 @@ server.registerTool(
         logToolCall("generate_java_sdk");
         const result = await generateJavaSdk(args.cwd, true);
         return result;
+    },
+);
+
+// Tool: detect_compilation_issues
+server.registerTool(
+    "detect_compilation_issues",
+    {
+        description:
+            "Detect compilation issues in Java SDK module after TypeSpec regeneration. This tool runs Maven compilation and analyzes errors to identify customization-related issues that can be automatically fixed. Use this tool first to understand what needs to be updated before running update_customization_class.",
+        inputSchema: {
+            moduleDirectory: z
+                .string()
+                .describe(
+                    "Absolute path to the SDK module directory containing pom.xml and source code.",
+                ),
+            buildOutput: z
+                .string()
+                .optional()
+                .describe(
+                    "Optional build log output for analysis. If not provided, Maven compilation will be run.",
+                ),
+            cleanFirst: z
+                .boolean()
+                .optional()
+                .describe(
+                    "Whether to run 'mvn clean' before compilation. Defaults to true.",
+                ),
+        },
+        annotations: {
+            title: "Detect Compilation Issues",
+        },
+    },
+    async (args) => {
+        logToolCall("detect_compilation_issues");
+        return await detectCompilationIssues({
+            moduleDirectory: args.moduleDirectory,
+            buildOutput: args.buildOutput,
+            cleanFirst: args.cleanFirst,
+        });
+    },
+);
+
+// Tool: update_customization_class
+server.registerTool(
+    "update_customization_class",
+    {
+        description:
+            "Update Java customization classes using deterministic cookbook patterns. This tool automatically fixes common compilation issues like parameter name changes (Options->Request), class renames, and method signature updates. Only applies high-confidence fixes automatically.",
+        inputSchema: {
+            customizationFile: z
+                .string()
+                .describe(
+                    "Absolute path to the Java customization class file (e.g., DocumentIntelligenceCustomizations.java).",
+                ),
+        },
+        annotations: {
+            title: "Update Customization Class (Cookbook)",
+        },
+    },
+    async (args) => {
+        logToolCall("update_customization_class");
+        return await updateCustomizationClass({
+            customizationFile: args.customizationFile,
+        });
+    },
+);
+
+// Tool: update_customization_class_hybrid
+server.registerTool(
+    "update_customization_class_hybrid",
+    {
+        description:
+            "🚀 HYBRID APPROACH: Update Java customization classes using cookbook pattern detection + intelligent code generation. Combines deterministic pattern matching (cookbook) with robust LLM-style reasoning for code generation. Includes full validation workflow with tsp-client update and mvn compile verification.",
+        inputSchema: {
+            customizationFile: z
+                .string()
+                .describe(
+                    "Absolute path to the Java customization class file (e.g., DocumentIntelligenceCustomizations.java).",
+                ),
+            validateWorkflow: z
+                .boolean()
+                .optional()
+                .describe(
+                    "Whether to run full validation workflow (tsp-client update + mvn compile) after applying fixes. Defaults to true.",
+                ),
+        },
+        annotations: {
+            title: "Update Customization Class (Hybrid: Cookbook + LLM)",
+        },
+    },
+    async (args) => {
+        logToolCall("update_customization_class_hybrid");
+        return await updateCustomizationClassHybrid({
+            customizationFile: args.customizationFile,
+            validateWorkflow: args.validateWorkflow,
+        });
     },
 );
 
