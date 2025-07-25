@@ -1,0 +1,168 @@
+ mvn clean compile
+[INFO] Scanning for projects...
+[INFO]
+[INFO] --------------< com.azure:azure-ai-documentintelligence >---------------
+[INFO] Building Microsoft Azure client library for Document Intelligence 1.1.0-beta.1
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- clean:3.4.0:clean (default-clean) @ azure-ai-documentintelligence ---
+[INFO] Deleting C:\Users\savaity\IdeaProjects\azure-sdk-for-java\sdk\documentintelligence\azure-ai-documentintelligence\target (includes = [**], excludes = [])
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (default-cli) @ azure-ai-documentintelligence ---
+[INFO] Rule 0: org.apache.maven.enforcer.rules.dependency.BannedDependencies passed
+[INFO] Rule 1: org.apache.maven.enforcer.rules.dependency.RequireReleaseDeps passed
+[INFO]
+[INFO] --- codesnippet:1.0.0-beta.10:update-codesnippet (update-codesnippets) @ azure-ai-documentintelligence ---
+[INFO]
+[INFO] --- spotless:2.30.0:apply (spotless-apply) @ azure-ai-documentintelligence ---
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ azure-ai-documentintelligence ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 5 resources from src\main\resources to target\classes
+[INFO] The encoding used to copy filtered properties files have not been set. This means that the same encoding will be used to copy filtered properties files as when copying other filtered resour
+ces. This might not be what you want! Run your build with --debug to see which files might be affected. Read more at https://maven.apache.org/plugins/maven-resources-plugin/examples/filtering-properties-files.html
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ azure-ai-documentintelligence ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 92 source files with javac [debug release 17 module-path] to target\classes
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR :
+[INFO] -------------------------------------------------------------
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[327,32] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[328,51] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[329,13] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[330,45] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[332,13] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[332,49] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[333,13] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[333,67] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[334,13] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[334,62] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[677,32] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[678,51] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[679,13] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[680,45] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[682,13] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[682,49] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[683,13] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[683,67] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[684,13] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[684,62] cannot find symbol
+  symbol:   variable analyzeDocumentOptions
+  location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[INFO] 20 errors
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  15.014 s
+[INFO] Finished at: 2025-07-23T17:42:37-07:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project azure-ai-documentintelligence: Compilation failure: Compilation failure:
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[327,32] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[328,51] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[329,13] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[330,45] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[332,13] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[332,49] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[333,13] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[333,67] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[334,13] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceAsyncClient.java:[334,62] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceAsyncClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[677,32] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[678,51] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[679,13] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[680,45] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[682,13] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[682,49] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[683,13] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[683,67] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[684,13] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] /C:/Users/savaity/IdeaProjects/azure-sdk-for-java/sdk/documentintelligence/azure-ai-documentintelligence/src/main/java/com/azure/ai/documentintelligence/DocumentIntelligenceClient.java:[684,62] cannot find symbol
+[ERROR]   symbol:   variable analyzeDocumentOptions
+[ERROR]   location: class com.azure.ai.documentintelligence.DocumentIntelligenceClient
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+PS C:\Users\savaity\IdeaProjects\azure-sdk-for-java\sdk\documentintelligence\azure-ai-documentintelligence>

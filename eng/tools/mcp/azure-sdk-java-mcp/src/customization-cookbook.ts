@@ -44,14 +44,14 @@ export const CUSTOMIZATION_COOKBOOK: CustomizationPattern[] = [
                             }
                         });
                     });
-                    
+
                     // Replace in variable declarations
                     ast.findAll(VariableDeclarator.class).forEach(var -> {
                         if ("{oldSymbol}".equals(var.getNameAsString())) {
                             var.setName("{newSymbol}");
                         }
                     });
-                    
+
                     // Replace in type references
                     ast.findAll(ClassOrInterfaceType.class).forEach(type -> {
                         if ("{oldSymbol}".equals(type.getNameAsString())) {
@@ -207,19 +207,19 @@ export const CUSTOMIZATION_COOKBOOK: CustomizationPattern[] = [
  */
 export function matchErrorToPattern(errorMessage: string, filePath: string): CustomizationPattern | null {
     const errorLower = errorMessage.toLowerCase();
-    
+
     for (const pattern of CUSTOMIZATION_COOKBOOK) {
         for (const signature of pattern.errorSignatures) {
             const signatureLower = signature.toLowerCase();
-            
+
             // Simple string matching for now - could be enhanced with regex
-            if (errorLower.includes(signatureLower.replace('.*', '')) || 
+            if (errorLower.includes(signatureLower.replace('.*', '')) ||
                 new RegExp(signature, 'i').test(errorMessage)) {
                 return pattern;
             }
         }
     }
-    
+
     return null;
 }
 
@@ -228,19 +228,19 @@ export function matchErrorToPattern(errorMessage: string, filePath: string): Cus
  */
 export function extractContextFromError(errorMessage: string, filePath: string, pattern: CustomizationPattern): Record<string, string> {
     const context: Record<string, string> = {};
-    
+
     // Extract package name from file path
     const packageMatch = filePath.match(/src[/\\]main[/\\]java[/\\](.*)[/\\]/);
     if (packageMatch) {
         context.packageName = packageMatch[1].replace(/[/\\]/g, '.');
     }
-    
+
     // Extract class name from file path
     const classMatch = filePath.match(/([^/\\]+)\.java$/);
     if (classMatch) {
         context.className = classMatch[1];
     }
-    
+
     // INTELLIGENT PATTERN LEARNING from Maven compilation errors
     if (pattern.name === 'generic_options_to_request_pattern') {
         // Extract the symbol that "cannot find"
@@ -250,12 +250,12 @@ export function extractContextFromError(errorMessage: string, filePath: string, 
             errorMessage.match(/symbol:\s*method:\s*(\w+)/),
             errorMessage.match(/cannot find symbol.*?(\w*Options\w*)/i)
         ];
-        
+
         for (const match of symbolMatches) {
             if (match && match[1]) {
                 const oldSymbol = match[1];
                 context.oldSymbol = oldSymbol;
-                
+
                 // LEARNED TRANSFORMATION RULES from TypeSpec patterns:
                 if (oldSymbol.includes('Options')) {
                     // Pattern 1: *Options -> *Request (most common)
@@ -270,13 +270,13 @@ export function extractContextFromError(errorMessage: string, filePath: string, 
                     // Fallback: try to infer from context
                     context.newSymbol = oldSymbol + 'Request';
                 }
-                
+
                 console.log(`🧠 LEARNED PATTERN: ${context.oldSymbol} → ${context.newSymbol}`);
                 break;
             }
         }
     }
-    
+
     // Pattern-specific extractions for other patterns
     switch (pattern.name) {
         case 'class_not_found_rename':
@@ -289,7 +289,7 @@ export function extractContextFromError(errorMessage: string, filePath: string, 
                 }
             }
             break;
-            
+
         case 'method_signature_change':
             const methodMatch = errorMessage.match(/method:\s*(\w+)/);
             if (methodMatch) {
@@ -300,7 +300,7 @@ export function extractContextFromError(errorMessage: string, filePath: string, 
             }
             break;
     }
-    
+
     return context;
 }
 
@@ -309,12 +309,12 @@ export function extractContextFromError(errorMessage: string, filePath: string, 
  */
 export function generateCustomizationFromPattern(pattern: CustomizationPattern, context: Record<string, string>): string {
     let code = pattern.solution.template;
-    
+
     // Replace all placeholders with context values
     for (const [placeholder, value] of Object.entries(context)) {
         code = code.replace(new RegExp(`{${placeholder}}`, 'g'), value);
     }
-    
+
     return code;
 }
 
@@ -337,11 +337,11 @@ export interface PatternFeedback {
 export function recordPatternFeedback(feedback: PatternFeedback): void {
     // This could log to a file or database for pattern improvement
     console.log(`📝 Pattern feedback for ${feedback.patternName}:`, feedback);
-    
+
     if (!feedback.success && feedback.suggestedImprovement) {
         console.log(`💡 Suggested improvement: ${feedback.suggestedImprovement}`);
     }
-    
+
     // Learn from successful transformations
     if (feedback.success && feedback.learnedTransformation) {
         console.log(`🎓 LEARNED: ${feedback.learnedTransformation.oldSymbol} → ${feedback.learnedTransformation.newSymbol} (${feedback.learnedTransformation.transformationType})`);
@@ -358,15 +358,15 @@ export function analyzeCompilationErrorsForPatterns(compilationErrors: string[])
     examples: Array<{old: string, new: string}>;
 }> {
     const patterns: Map<string, {count: number, examples: Array<{old: string, new: string}>}> = new Map();
-    
+
     console.log(`🔍 Starting pattern analysis on ${compilationErrors.length} errors...`);
-    
+
     for (const error of compilationErrors) {
         console.log(`  📋 Analyzing error: "${error.substring(0, 150)}..."`);
-        
+
         // Look for symbol information in different formats
         let oldSymbol: string | null = null;
-        
+
         // Pattern 1: "symbol: variable XXXX" (most detailed)
         let symbolMatch = error.match(/symbol:\s*variable\s+(\w+)/i);
         if (symbolMatch) {
@@ -389,10 +389,10 @@ export function analyzeCompilationErrorsForPatterns(compilationErrors: string[])
                 }
             }
         }
-        
+
         if (oldSymbol) {
             let newSymbol = '';
-            
+
             // Detect transformation pattern
             if (oldSymbol.includes('Options')) {
                 newSymbol = oldSymbol.replace(/Options/g, 'Request');
@@ -403,13 +403,13 @@ export function analyzeCompilationErrorsForPatterns(compilationErrors: string[])
             } else {
                 console.log(`    ❌ No recognized pattern for: ${oldSymbol}`);
             }
-            
+
             if (newSymbol) {
                 const patternKey = oldSymbol.includes('Options') ? 'Options→Request' : 'Option→Request';
                 if (!patterns.has(patternKey)) {
                     patterns.set(patternKey, {count: 0, examples: []});
                 }
-                
+
                 const pattern = patterns.get(patternKey)!;
                 pattern.count++;
                 pattern.examples.push({old: oldSymbol, new: newSymbol});
@@ -417,13 +417,13 @@ export function analyzeCompilationErrorsForPatterns(compilationErrors: string[])
             }
         }
     }
-    
+
     console.log(`🎓 Final pattern analysis: Found ${patterns.size} unique patterns`);
     patterns.forEach((data, key) => {
         console.log(`  📋 ${key}: ${data.count} occurrences, ${data.examples.length} examples`);
         data.examples.slice(0, 3).forEach(ex => console.log(`    - ${ex.old} → ${ex.new}`));
     });
-    
+
     // Convert to result format with confidence scores
     return Array.from(patterns.entries()).map(([pattern, data]) => ({
         pattern,
@@ -462,7 +462,7 @@ export function generateLearnedPattern(
                             }
                             super.visit(n, arg);
                         }
-                        
+
                         @Override
                         public void visit(ClassOrInterfaceType n, Void arg) {
                             if ("{oldSymbol}".equals(n.getNameAsString())) {

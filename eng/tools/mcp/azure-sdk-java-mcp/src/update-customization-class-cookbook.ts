@@ -47,7 +47,7 @@ export async function updateCustomizationClass(
         // Step 3: Apply fixes to customization file
         const originalContent = await fs.readFile(customizationFile, 'utf8');
         const updatedContent = applyCookbookFixes(originalContent, fixes);
-        
+
         await fs.writeFile(customizationFile, updatedContent, 'utf8');
 
         return {
@@ -167,7 +167,7 @@ function generateParameterReplaceRecipe(oldParam: string, newParam: string): str
                     });
                 });
             }));
-        
+
         customization.getClass("com.azure.ai.documentintelligence", "DocumentIntelligenceClient")
             .customizeAst(ast -> ast.getClassByName("DocumentIntelligenceClient").ifPresent(clazz -> {
                 clazz.getMethods().forEach(method -> {
@@ -248,7 +248,7 @@ function applyCookbookFixes(content: string, fixes: CookbookFix[]): string {
     // Find the customize method and add the AutoRest code
     const customizeMethodRegex = /(\s*public\s+void\s+customize\s*\([^)]+\)\s*\{)([\s\S]*?)(\s*\}\s*$)/m;
     const match = content.match(customizeMethodRegex);
-    
+
     if (!match) {
         // If no customize method found, add one
         const classEndRegex = /(\n\s*}\s*)$/;
@@ -267,7 +267,7 @@ ${classMatch[1]}`;
     // Add fixes to existing customize method
     const [, methodStart, methodBody, methodEnd] = match;
     const newMethodBody = methodBody + '\n' + fixes.map(fix => fix.autoRestCode).join('\n');
-    
+
     return content.replace(customizeMethodRegex, methodStart + newMethodBody + methodEnd);
 }
 

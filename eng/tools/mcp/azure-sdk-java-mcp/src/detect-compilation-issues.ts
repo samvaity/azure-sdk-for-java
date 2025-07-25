@@ -47,7 +47,7 @@ export async function detectCompilationIssues(
         const compilationResult = await runMavenCompilation(moduleDirectory, cleanFirst);
         const compilationTime = Date.now() - startTime;
         console.log(`⏱️ Maven compilation completed in ${compilationTime}ms`);
-        
+
         if (compilationResult.success) {
             return {
                 content: [
@@ -64,7 +64,7 @@ export async function detectCompilationIssues(
         const combinedOutput = compilationResult.stdout + '\n' + compilationResult.stderr;
         const issues = await parseCompilationErrors(combinedOutput, moduleDirectory);
         const totalTime = Date.now() - startTime;
-        
+
         if (issues.length === 0) {
             return {
                 content: [
@@ -173,7 +173,7 @@ async function validateModuleDirectory(moduleDirectory: string): Promise<{isVali
 async function runMavenCompilation(moduleDirectory: string, cleanFirst: boolean): Promise<{success: boolean, stdout: string, stderr: string}> {
     try {
         const commands = ['clean', 'compile'];
-        
+
         // Try different Maven command names for cross-platform compatibility
         const mavenCmd = process.platform === 'win32' ? 'mvn.cmd' : 'mvn';
 
@@ -207,7 +207,7 @@ async function runMavenCompilation(moduleDirectory: string, cleanFirst: boolean)
                     shell: true,
                     env: process.env,
                 });
-                
+
                 return {
                     success: result.success,
                     stdout: result.stdout,
@@ -221,7 +221,7 @@ async function runMavenCompilation(moduleDirectory: string, cleanFirst: boolean)
                 };
             }
         }
-        
+
         return {
             success: false,
             stdout: '',
@@ -233,39 +233,39 @@ async function runMavenCompilation(moduleDirectory: string, cleanFirst: boolean)
 async function parseCompilationErrors(combinedOutput: string, moduleDirectory: string): Promise<CompilationIssue[]> {
     const issues: CompilationIssue[] = [];
     const lines = combinedOutput.split('\n');
-    
+
     console.log(`🔍 Parsing compilation errors from ${lines.length} lines of output`);
-    
+
     // Find lines that contain [ERROR] and .java for debugging
     const errorLines = lines.filter(line => line.includes('[ERROR]') && line.includes('.java'));
     console.log(`🔍 Found ${errorLines.length} potential error lines:`);
     errorLines.slice(0, 5).forEach((line, i) => {
         console.log(`  ${i + 1}. ${line.substring(0, 150)}...`);
     });
-    
+
     // Normalize module directory for consistent path matching
     const normalizedModuleDir = moduleDirectory.replace(/\\/g, '/');
-    
+
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
-        
+
         // Skip non-error lines
         if (!line.includes('[ERROR]')) continue;
-        
+
         // Parse Maven compilation error format
         // Format: [ERROR] /c:/Users/... or [ERROR] /C:/Users/... or [ERROR] C:\Users\...
         // Note: Maven on Windows can use different path formats
         const errorMatch = line.match(/\[ERROR\]\s*(?:\/[a-zA-Z]:)?([^:]*\.java):\[(\d+),(\d+)\]\s*(.+)/);
-        
+
         if (errorMatch) {
             const [, fullPath, lineNum, colNum, message] = errorMatch;
-            
+
             // Normalize the path for comparison
             const normalizedPath = fullPath.replace(/\\/g, '/');
-            
+
             // Convert to relative path from module directory
             let relativePath = normalizedPath.replace(normalizedModuleDir, '').replace(/^[\\\/]/, '');
-            
+
             // If the path wasn't relative to module directory, use just the filename
             if (relativePath === normalizedPath || relativePath.length === 0) {
                 // Extract just the filename with path within src/
@@ -276,9 +276,9 @@ async function parseCompilationErrors(combinedOutput: string, moduleDirectory: s
                     relativePath = fullPath.split(/[\\\/]/).pop() || fullPath;
                 }
             }
-            
+
             console.log(`🔍 Parsed error: ${relativePath}:${lineNum}:${colNum} - ${message.substring(0, 50)}...`);
-            
+
             const issue: CompilationIssue = {
                 type: categorizeError(message),
                 file: relativePath,
@@ -287,11 +287,11 @@ async function parseCompilationErrors(combinedOutput: string, moduleDirectory: s
                 message: message.trim(),
                 suggestedFix: generateSuggestedFix(message, relativePath),
             };
-            
+
             issues.push(issue);
             continue;
         }
-        
+
         // Also check for continued error messages that provide more context
         if (line.includes('symbol:') || line.includes('location:')) {
             // Add context to the last issue if available
@@ -301,7 +301,7 @@ async function parseCompilationErrors(combinedOutput: string, moduleDirectory: s
             }
         }
     }
-    
+
     console.log(`🔍 Successfully parsed ${issues.length} compilation issues`);
     return issues;
 }
