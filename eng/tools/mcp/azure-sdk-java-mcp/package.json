@@ -15,7 +15,13 @@
     "lint:fix": "eslint src/**/*.{ts,js} --fix",
     "test": "vitest",
     "test:run": "vitest run",
-    "test:watch": "vitest watch"
+    "test:watch": "vitest watch",
+    "demo:typespec-sync": "npx tsx src/demo-typespec-sync.ts",
+    "typespec:analyze": "tsx src/typespec-sync-mcp-tools.ts",
+    "typespec:sync": "tsx src/mcp-server-integration.ts",
+    "typespec:server": "npx tsx src/mcp-typespec-sync-server.ts",
+    "test:mcp": "npx tsx src/simple-test-client.ts",
+    "test:mcp-interactive": "npx tsx src/simple-test-client.ts --interactive"
   },
   "keywords": [
     "mcp",
@@ -40,6 +46,7 @@
     "eslint": "^9.30.0",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
   },

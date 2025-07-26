@@ -1,0 +1,10 @@
+{
+  "mcp.servers": {
+    "azure-typespec-sync": {
+      "command": "npx",
+      "args": ["tsx", "src/mcp-typespec-sync-server.ts"],
+      "cwd": "${workspaceFolder}",
+      "env": {}
+    }
+  }
+}
