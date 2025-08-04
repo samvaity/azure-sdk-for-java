@@ -323,7 +323,7 @@ public final class DocumentIntelligenceAsyncClient {
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<AnalyzeOperationDetails, AnalyzeResult> beginAnalyzeDocument(String modelId,
-        AnalyzeDocumentOptions analyzeDocumentOptions) {
+        AnalyzeDocumentOptions analyzeDocumentRequest) {
         Objects.requireNonNull(analyzeDocumentOptions, "'analyzeDocumentOptions' cannot be null.");
         return this.beginAnalyzeDocument(modelId, analyzeDocumentOptions,
             analyzeDocumentOptions.getPages() != null
@@ -561,7 +561,7 @@ public final class DocumentIntelligenceAsyncClient {
      * </pre>
      *
      * @param modelId Unique document model name.
-     * @param analyzeRequest Analyze request parameters.
+     * @param analyzeDocumentRequest Analyze request parameters.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -571,9 +571,9 @@ public final class DocumentIntelligenceAsyncClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<BinaryData, BinaryData> beginAnalyzeDocument(String modelId, BinaryData analyzeRequest,
+    public PollerFlux<BinaryData, BinaryData> beginAnalyzeDocument(String modelId, BinaryData analyzeDocumentRequest,
         RequestOptions requestOptions) {
-        return this.serviceClient.beginAnalyzeDocumentAsync(modelId, analyzeRequest, requestOptions);
+        return this.serviceClient.beginAnalyzeDocumentAsync(modelId, analyzeDocumentRequest, requestOptions);
     }
 
     /**
@@ -638,7 +638,7 @@ public final class DocumentIntelligenceAsyncClient {
      * Analyzes document with document model.
      *
      * @param modelId Unique document model name.
-     * @param analyzeRequest Analyze request parameters.
+     * @param analyzeDocumentRequest Analyze request parameters.
      * @param pages 1-based page numbers to analyze. Ex. "1-3,5,7-9".
      * @param locale Locale hint for text recognition and document analysis. Value may contain only
      * the language code (ex. "en", "fr") or BCP 47 language tag (ex. "en-US").
@@ -658,7 +658,7 @@ public final class DocumentIntelligenceAsyncClient {
     @Generated
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     PollerFlux<AnalyzeOperationDetails, AnalyzeResult> beginAnalyzeDocument(String modelId,
-        AnalyzeDocumentOptions analyzeRequest, String pages, String locale, StringIndexType stringIndexType,
+        AnalyzeDocumentOptions analyzeDocumentRequest, String pages, String locale, StringIndexType stringIndexType,
         List<DocumentAnalysisFeature> features, List<String> queryFields, DocumentContentFormat outputContentFormat,
         List<AnalyzeOutputFormat> output) {
         // Generated convenience method for beginAnalyzeDocumentWithModel
@@ -696,7 +696,7 @@ public final class DocumentIntelligenceAsyncClient {
                     .collect(Collectors.joining(",")),
                 false);
         }
-        return serviceClient.beginAnalyzeDocumentWithModelAsync(modelId, BinaryData.fromObject(analyzeRequest),
+        return serviceClient.beginAnalyzeDocumentWithModelAsync(modelId, BinaryData.fromObject(analyzeDocumentRequest),
             requestOptions);
     }
 

@@ -175,7 +175,8 @@ public final class DocumentIntelligenceClientImpl {
         Mono<Response<Void>> analyzeDocument(@HostParam("endpoint") String endpoint,
             @QueryParam("api-version") String apiVersion, @PathParam("modelId") String modelId,
             @HeaderParam("content-type") String contentType, @HeaderParam("Accept") String accept,
-            @BodyParam("application/json") BinaryData analyzeRequest, RequestOptions requestOptions, Context context);
+            @BodyParam("application/json") BinaryData analyzeDocumentRequest, RequestOptions requestOptions,
+            Context context);
 
         @Post("/documentModels/{modelId}:analyze")
         @ExpectedResponses({ 202 })
@@ -186,7 +187,8 @@ public final class DocumentIntelligenceClientImpl {
         Response<Void> analyzeDocumentSync(@HostParam("endpoint") String endpoint,
             @QueryParam("api-version") String apiVersion, @PathParam("modelId") String modelId,
             @HeaderParam("content-type") String contentType, @HeaderParam("Accept") String accept,
-            @BodyParam("application/json") BinaryData analyzeRequest, RequestOptions requestOptions, Context context);
+            @BodyParam("application/json") BinaryData analyzeDocumentRequest, RequestOptions requestOptions,
+            Context context);
 
         @Get("/documentModels/{modelId}/analyzeResults/{resultId}/pdf")
         @ExpectedResponses({ 200 })
@@ -419,7 +421,7 @@ public final class DocumentIntelligenceClientImpl {
      * </pre>
      * 
      * @param modelId Unique document model name.
-     * @param analyzeRequest Analyze request parameters.
+     * @param analyzeDocumentRequest Analyze request parameters.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -428,13 +430,13 @@ public final class DocumentIntelligenceClientImpl {
      * @return the {@link Response} on successful completion of {@link Mono}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Mono<Response<Void>> analyzeDocumentWithResponseAsync(String modelId, BinaryData analyzeRequest,
+    private Mono<Response<Void>> analyzeDocumentWithResponseAsync(String modelId, BinaryData analyzeDocumentRequest,
         RequestOptions requestOptions) {
         final String contentType = "application/json";
         final String accept = "application/json";
         return FluxUtil
             .withContext(context -> service.analyzeDocument(this.getEndpoint(), this.getServiceVersion().getVersion(),
-                modelId, contentType, accept, analyzeRequest, requestOptions, context));
+                modelId, contentType, accept, analyzeDocumentRequest, requestOptions, context));
     }
 
     /**
@@ -471,7 +473,7 @@ public final class DocumentIntelligenceClientImpl {
      * </pre>
      * 
      * @param modelId Unique document model name.
-     * @param analyzeRequest Analyze request parameters.
+     * @param analyzeDocumentRequest Analyze request parameters.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -480,12 +482,12 @@ public final class DocumentIntelligenceClientImpl {
      * @return the {@link Response}.
      */
     @ServiceMethod(returns = ReturnType.SINGLE)
-    private Response<Void> analyzeDocumentWithResponse(String modelId, BinaryData analyzeRequest,
+    private Response<Void> analyzeDocumentWithResponse(String modelId, BinaryData analyzeDocumentRequest,
         RequestOptions requestOptions) {
         final String contentType = "application/json";
         final String accept = "application/json";
         return service.analyzeDocumentSync(this.getEndpoint(), this.getServiceVersion().getVersion(), modelId,
-            contentType, accept, analyzeRequest, requestOptions, Context.NONE);
+            contentType, accept, analyzeDocumentRequest, requestOptions, Context.NONE);
     }
 
     /**
@@ -522,7 +524,7 @@ public final class DocumentIntelligenceClientImpl {
      * </pre>
      * 
      * @param modelId Unique document model name.
-     * @param analyzeRequest Analyze request parameters.
+     * @param analyzeDocumentRequest Analyze request parameters.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -532,9 +534,9 @@ public final class DocumentIntelligenceClientImpl {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public PollerFlux<AnalyzeOperationDetails, AnalyzeResult> beginAnalyzeDocumentWithModelAsync(String modelId,
-        BinaryData analyzeRequest, RequestOptions requestOptions) {
+        BinaryData analyzeDocumentRequest, RequestOptions requestOptions) {
         return PollerFlux.create(Duration.ofSeconds(1),
-            () -> this.analyzeDocumentWithResponseAsync(modelId, analyzeRequest, requestOptions),
+            () -> this.analyzeDocumentWithResponseAsync(modelId, analyzeDocumentRequest, requestOptions),
             new com.azure.ai.documentintelligence.implementation.OperationLocationPollingStrategy<>(
                 new PollingStrategyOptions(this.getHttpPipeline())
                     .setEndpoint("{endpoint}/documentintelligence".replace("{endpoint}", this.getEndpoint()))
@@ -581,7 +583,7 @@ public final class DocumentIntelligenceClientImpl {
      * </pre>
      * 
      * @param modelId Unique document model name.
-     * @param analyzeRequest Analyze request parameters.
+     * @param analyzeDocumentRequest Analyze request parameters.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -591,9 +593,9 @@ public final class DocumentIntelligenceClientImpl {
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
     public SyncPoller<AnalyzeOperationDetails, AnalyzeResult> beginAnalyzeDocumentWithModel(String modelId,
-        BinaryData analyzeRequest, RequestOptions requestOptions) {
+        BinaryData analyzeDocumentRequest, RequestOptions requestOptions) {
         return SyncPoller.createPoller(Duration.ofSeconds(1),
-            () -> this.analyzeDocumentWithResponse(modelId, analyzeRequest, requestOptions),
+            () -> this.analyzeDocumentWithResponse(modelId, analyzeDocumentRequest, requestOptions),
             new com.azure.ai.documentintelligence.implementation.SyncOperationLocationPollingStrategy<>(
                 new PollingStrategyOptions(this.getHttpPipeline())
                     .setEndpoint("{endpoint}/documentintelligence".replace("{endpoint}", this.getEndpoint()))
@@ -640,7 +642,7 @@ public final class DocumentIntelligenceClientImpl {
      * </pre>
      * 
      * @param modelId Unique document model name.
-     * @param analyzeRequest Analyze request parameters.
+     * @param analyzeDocumentRequest Analyze request parameters.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -649,10 +651,10 @@ public final class DocumentIntelligenceClientImpl {
      * @return the {@link PollerFlux} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public PollerFlux<BinaryData, BinaryData> beginAnalyzeDocumentAsync(String modelId, BinaryData analyzeRequest,
-        RequestOptions requestOptions) {
+    public PollerFlux<BinaryData, BinaryData> beginAnalyzeDocumentAsync(String modelId,
+        BinaryData analyzeDocumentRequest, RequestOptions requestOptions) {
         return PollerFlux.create(Duration.ofSeconds(1),
-            () -> this.analyzeDocumentWithResponseAsync(modelId, analyzeRequest, requestOptions),
+            () -> this.analyzeDocumentWithResponseAsync(modelId, analyzeDocumentRequest, requestOptions),
             new com.azure.ai.documentintelligence.implementation.OperationLocationPollingStrategy<>(
                 new PollingStrategyOptions(this.getHttpPipeline())
                     .setEndpoint("{endpoint}/documentintelligence".replace("{endpoint}", this.getEndpoint()))
@@ -698,7 +700,7 @@ public final class DocumentIntelligenceClientImpl {
      * </pre>
      * 
      * @param modelId Unique document model name.
-     * @param analyzeRequest Analyze request parameters.
+     * @param analyzeDocumentRequest Analyze request parameters.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -707,10 +709,10 @@ public final class DocumentIntelligenceClientImpl {
      * @return the {@link SyncPoller} for polling of long-running operation.
      */
     @ServiceMethod(returns = ReturnType.LONG_RUNNING_OPERATION)
-    public SyncPoller<BinaryData, BinaryData> beginAnalyzeDocument(String modelId, BinaryData analyzeRequest,
+    public SyncPoller<BinaryData, BinaryData> beginAnalyzeDocument(String modelId, BinaryData analyzeDocumentRequest,
         RequestOptions requestOptions) {
         return SyncPoller.createPoller(Duration.ofSeconds(1),
-            () -> this.analyzeDocumentWithResponse(modelId, analyzeRequest, requestOptions),
+            () -> this.analyzeDocumentWithResponse(modelId, analyzeDocumentRequest, requestOptions),
             new com.azure.ai.documentintelligence.implementation.SyncOperationLocationPollingStrategy<>(
                 new PollingStrategyOptions(this.getHttpPipeline())
                     .setEndpoint("{endpoint}/documentintelligence".replace("{endpoint}", this.getEndpoint()))
