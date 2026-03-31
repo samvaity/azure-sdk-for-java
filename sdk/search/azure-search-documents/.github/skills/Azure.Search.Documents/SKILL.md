@@ -52,7 +52,7 @@ tsp-client update
 3. **Critical**: Compilation errors after regeneration fall into two categories:
    - **Errors in generated files** → likely a stale customization in `SearchCustomizations.java`. Update the AST queries to match the new generated code.
    - **Errors in hand-written files** (`SearchUtils.java`, `SearchPagedResponse.java`, `FieldBuilder.java`, batching classes, tests) → these reference removed/renamed types from the generated code. Update the hand-written code to match.
-4. **Accept-header type renumbering**: The numbered `CreateOrUpdateRequestAccept*` types change numbering between spec versions (e.g., `CreateOrUpdateRequestAccept40` → `CreateOrUpdateRequestAccept35`). If you see import errors for these types, remove the stale imports — the generator produces new ones with different numbers.
+4. **Cross-package import errors in generated client files**: The `hideWithResponseBinaryDataApis` customization rewires method bodies between generated (BinaryData) and convenience (typed) APIs. This can create imports referencing types in the wrong package (e.g., importing from `implementation.models` when the type is in `models`, or vice versa). These are **customization bugs** — fix in `SearchCustomizations.java`, not by editing the generated file (it will be overwritten on next regen).
 4. If customization errors occur, update `customizations/src/main/java/SearchCustomizations.java` — see customizations reference for patterns.
 5. Run `mvn clean compile` after every fix to check for remaining errors.
 
