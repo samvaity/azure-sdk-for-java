@@ -52,6 +52,7 @@ tsp-client update
 3. **Critical**: Compilation errors after regeneration fall into two categories:
    - **Errors in generated files** → likely a stale customization in `SearchCustomizations.java`. Update the AST queries to match the new generated code.
    - **Errors in hand-written files** (`SearchUtils.java`, `SearchPagedResponse.java`, `FieldBuilder.java`, batching classes, tests) → these reference removed/renamed types from the generated code. Update the hand-written code to match.
+4. **Accept-header type renumbering**: The numbered `CreateOrUpdateRequestAccept*` types change numbering between spec versions (e.g., `CreateOrUpdateRequestAccept40` → `CreateOrUpdateRequestAccept35`). If you see import errors for these types, remove the stale imports — the generator produces new ones with different numbers.
 4. If customization errors occur, update `customizations/src/main/java/SearchCustomizations.java` — see customizations reference for patterns.
 5. Run `mvn clean compile` after every fix to check for remaining errors.
 
@@ -64,9 +65,11 @@ tsp-client update
 1. **`SearchCustomizations.includeOldApiVersions()`** — add the previous latest version to the list of old versions
 2. **`SearchServiceVersion.getLatest()`** — verify it returns the new version (this is handled by the generator)
 
-For example, if moving from `2025-11-01-preview` to `2026-04-01`:
-- The generator produces the `V2026_04_01` constant and `getLatest()` returning it
+For example, if moving from `2025-11-01-preview` to `2026-05-01-preview`:
+- The generator produces the `V2026_05_01_PREVIEW` constant and `getLatest()` returning it
 - Add `"2025-11-01-preview"` to the version list in `includeOldApiVersions()` if not already present
+
+> **IMPORTANT**: Before adding a version to `includeOldApiVersions()`, check whether the generator already produces it. If the previous version is now included by the generator, do NOT add it to the customization list — doing so creates a duplicate enum constant and a compilation error. Only add versions that the generator does NOT produce.
 
 **Gate:** `SearchServiceVersion` enum contains all required versions, `getLatest()` returns the new version.
 

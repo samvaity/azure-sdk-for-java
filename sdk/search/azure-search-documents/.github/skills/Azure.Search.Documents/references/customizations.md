@@ -132,18 +132,23 @@ private static void addSearchAudienceScopeHandling(ClassCustomization customizat
 private static void includeOldApiVersions(ClassCustomization customization) {
     customization.customizeAst(ast -> ast.getEnumByName(customization.getClassName()).ifPresent(enumDeclaration -> {
         NodeList<EnumConstantDeclaration> entries = enumDeclaration.getEntries();
-        for (String version : Arrays.asList("2025-09-01", "2024-07-01", "2023-11-01", "2020-06-30")) {
-            String enumName = "V" + version.replace("-", "_");
-            entries.add(0, new EnumConstantDeclaration(enumName)
-                .addArgument(new StringLiteralExpr(version))
-                .setJavadocComment("Enum value " + version + "."));
+        for (String version : Arrays.asList("2025-11-01-preview", "2025-09-01", "2024-07-01", "2023-11-01", "2020-06-30")) {
+            String enumName = ("V" + version.replace("-", "_")).toUpperCase();
+            // Guard: skip if the generator already produced this constant
+            boolean alreadyExists = entries.stream()
+                .anyMatch(entry -> entry.getNameAsString().equals(enumName));
+            if (!alreadyExists) {
+                entries.add(0, new EnumConstantDeclaration(enumName)
+                    .addArgument(new StringLiteralExpr(version))
+                    .setJavadocComment("Enum value " + version + "."));
+            }
         }
         enumDeclaration.setEntries(entries);
     }));
 }
 ```
 
-**When to update**: When a new GA API version is released — add the previous latest version to the list.
+**When to update**: When a new GA API version is released — add the previous latest version to the list. Always include the dedup guard to avoid duplicate enum constants when the generator starts producing a version that was previously only in the customization list.
 
 ---
 
