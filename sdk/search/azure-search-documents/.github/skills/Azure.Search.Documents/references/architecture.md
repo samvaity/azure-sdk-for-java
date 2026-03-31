@@ -265,6 +265,12 @@ All generated members are annotated with `@Generated`. This annotation is used b
 - `SearchCustomizations.java` to identify which methods to modify
 - Code review to distinguish generated from hand-written code
 
+**Critical for post-regeneration fixes**: Generated files can contain BOTH `@Generated` methods and hand-written methods (without `@Generated`). After regeneration:
+- `@Generated` methods are updated automatically by the generator
+- Methods WITHOUT `@Generated` are hand-written convenience wrappers — the generator preserves them but does NOT update them
+- If a generated type's constructor or signature changed, the hand-written methods referencing it will break
+- **Look at how the `@Generated` method was updated** — the hand-written method should follow the same pattern
+
 ---
 
 ## Buffered Indexing (`implementation/batching/`)
