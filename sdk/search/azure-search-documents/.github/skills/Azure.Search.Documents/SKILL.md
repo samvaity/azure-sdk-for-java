@@ -1,6 +1,6 @@
 ---
-name: Azure.Search.Documents
-description: "**WORKFLOW SKILL** — Orchestrate the full release cycle for azure-search-documents Java SDK including TypeSpec generation, customization fixes, testing, and versioning. WHEN: \"search SDK release\", \"regenerate search SDK\", \"update search API version\", \"fix search customization errors\", \"search pre-release validation\". FOR SINGLE OPERATIONS: Use Maven commands directly for one-off builds or generation."
+name: search-documents
+description: "Post-regeneration customization guide for azure-search-documents Java SDK. After running tsp-client update, consult this skill to re-apply search-specific customizations and produce a production-ready SDK. WHEN: \"regenerate search SDK\", \"search tsp-client update\", \"fix search customization errors\", \"search API version update\", \"search SDK release\", \"update search service version\"."
 ---
 
 # azure-search-documents — Package Skill (Java)
@@ -8,10 +8,10 @@ description: "**WORKFLOW SKILL** — Orchestrate the full release cycle for azur
 ## When to Use This Skill
 
 Activate when user wants to:
-- Prepare a new GA or preview release of azure-search-documents
+- Regenerate the search SDK from TypeSpec (`tsp-client update`)
 - Update to a new API spec version (new commit SHA)
-- Regenerate SDK from TypeSpec and fix customization errors
-- Run pre-release validation (build, test)
+- Fix compilation errors after regeneration
+- Prepare a new GA or preview release of azure-search-documents
 - Understand the SDK architecture or customization patterns
 
 ## Prerequisites
@@ -49,8 +49,11 @@ tsp-client update
 
 1. Run `mvn clean compile -f sdk/search/azure-search-documents/pom.xml`
 2. Check [references/architecture.md](references/architecture.md) and [references/customizations.md](references/customizations.md) for error patterns and fix guidance.
-3. Prefer model renames, property renames, model visibility changes, and type changes directly updated in TypeSpec `client.tsp` rather than in SDK code. Inform user of any such patterns detected in code and recommend TypeSpec update for better long-term maintenance.
+3. **Critical**: Compilation errors after regeneration fall into two categories:
+   - **Errors in generated files** → likely a stale customization in `SearchCustomizations.java`. Update the AST queries to match the new generated code.
+   - **Errors in hand-written files** (`SearchUtils.java`, `SearchPagedResponse.java`, `FieldBuilder.java`, batching classes, tests) → these reference removed/renamed types from the generated code. Update the hand-written code to match.
 4. If customization errors occur, update `customizations/src/main/java/SearchCustomizations.java` — see customizations reference for patterns.
+5. Run `mvn clean compile` after every fix to check for remaining errors.
 
 **Gate:** Clean build — zero errors from `mvn clean compile`.
 
@@ -61,22 +64,77 @@ tsp-client update
 1. **`SearchCustomizations.includeOldApiVersions()`** — add the previous latest version to the list of old versions
 2. **`SearchServiceVersion.getLatest()`** — verify it returns the new version (this is handled by the generator)
 
-For example, if moving from `2025-09-01` to `2026-04-01`:
+For example, if moving from `2025-11-01-preview` to `2026-04-01`:
 - The generator produces the `V2026_04_01` constant and `getLatest()` returning it
-- Add `"2025-09-01"` to the version list in `includeOldApiVersions()` if not already present
+- Add `"2025-11-01-preview"` to the version list in `includeOldApiVersions()` if not already present
 
 **Gate:** `SearchServiceVersion` enum contains all required versions, `getLatest()` returns the new version.
+
+### Phase 3.6 — Detect Breaking Changes
+
+Compare the API surface before and after regeneration to identify breaking changes:
+
+```powershell
+# List removed/renamed public types
+git diff --name-status HEAD -- sdk/search/azure-search-documents/src/main/java/ | Select-String "^D"
+
+# Check for renamed enum constants or changed method signatures
+git diff HEAD -- sdk/search/azure-search-documents/src/main/java/ | Select-String "^-.*public static final|^-.*public.*(" | head -30
+```
+
+Watch for:
+- **Removed types** — classes/enums deleted by the new spec
+- **Renamed constants** — enum values that changed name (need `@Deprecated` aliases for backward compat)
+- **Changed property types** — e.g., `String` → enum type (source-breaking for callers)
+- **Removed method overloads** — existing callers will break
+
+Document all breaking changes for the changelog. For renamed constants, consider adding deprecated aliases via `SearchCustomizations.java` to preserve backward compatibility.
+
+### Phase 3.7 — Clean Up Imports
+
+After fixing compilation errors, remove unused imports:
+
+```powershell
+# Build with warnings to find unused imports
+mvn clean compile -f sdk/search/azure-search-documents/pom.xml 2>&1 | Select-String "unused import"
+```
+
+Check hand-written files especially: `SearchUtils.java`, test files, and sample files.
 
 ### Phase 4 — Run Tests
 
 1. Run `mvn test -f sdk/search/azure-search-documents/pom.xml`
-2. Live tests only if provisioned service is available (requires environment variables).
+2. If tests reference removed types/methods, update the tests to match the new API.
+3. If test recordings are stale (tests fail with HTTP mismatch), update `assets.json` and re-record:
+   - Update the tag in `assets.json` to point to new recordings
+   - Remove tests for features that no longer exist in the API
+4. Live tests only if provisioned service is available (requires environment variables).
 
 **Gate:** All non-live tests pass.
 
 ### Phase 5 — Update Changelog
 
-Fill "Features Added", "Breaking Changes", "Bugs Fixed", "Other Changes" in `CHANGELOG.md` from generated code and API diffs. Write from the user's perspective.
+Fill `CHANGELOG.md` under the current unreleased version. Structure by category:
+
+```markdown
+## X.Y.Z-beta.N (Unreleased)
+
+### Features Added
+- Added `NewModel` for ...
+- Added `newOperation()` to `SearchIndexClient`
+
+### Breaking Changes
+- Removed `OldModel` (replaced by ...)
+- Renamed `OLD_CONSTANT` to `NEW_CONSTANT` on `SomeEnum`
+- Changed `property` type from `String` to `PropertyEnum` on `SomeModel`
+
+### Bugs Fixed
+
+### Other Changes
+- Updated service API version to `2026-XX-XX`
+```
+
+Use `git diff` to identify all changes. Write from the user's perspective.
 
 ### Phase 6 — Update Version
 
@@ -94,7 +152,8 @@ Re-run any step whose outputs changed:
 
 - [ ] `mvn clean compile` if `src/` or `customizations/` changed since Phase 3
 - [ ] `mvn test` if any source changed since Phase 4
-- [ ] Verify `CHANGELOG.md` entry is complete
+- [ ] Verify `CHANGELOG.md` entry is complete and all breaking changes documented
+- [ ] Verify no unused imports remain
 
 **Gate:** Clean build, all non-live tests pass.
 
@@ -107,8 +166,10 @@ Re-run any step whose outputs changed:
 | 2 | Generate SDK (`tsp-client update`) | — |
 | 3 | Build and fix errors (`mvn clean compile`) | Zero errors |
 | 3.5 | Update `SearchServiceVersion` via `SearchCustomizations.java` | All versions present, `getLatest()` correct |
-| 4 | Run tests (`mvn test`) | All non-live tests pass |
-| 5 | Update changelog | All changes documented |
+| 3.6 | Detect breaking changes | All breaking changes documented |
+| 3.7 | Clean up imports | No unused imports |
+| 4 | Run tests (`mvn test`) + update recordings if needed | All non-live tests pass |
+| 5 | Update changelog | All changes documented by category |
 | 6 | Bump version in `pom.xml` | — |
 | 7 | Final validation | Clean build + tests |
 
