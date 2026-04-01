@@ -22,3 +22,4 @@ you already know the package well.
 
 | Package                    | Path                                                                                              |
 | -------------------------- | ------------------------------------------------------------------------------------------------- |
+| `azure-search-documents`   | `sdk/search/azure-search-documents/.github/skills/search-documents/SKILL.md`                      |
