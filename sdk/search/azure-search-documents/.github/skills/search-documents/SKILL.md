@@ -1,13 +1,12 @@
 ---
 name: search-documents
-description: 'Post-regeneration customization guide for azure-search-documents Java SDK. After running tsp-client update, consult this skill to re-apply search-specific customizations and produce a production-ready SDK. WHEN: regenerate search SDK; search tsp-client update; fix search customization errors; search API version update; search SDK release; update search service version.'
+description: 'Post-regeneration customization guide for azure-search-documents SDK. After running tsp-client update, consult this skill to re-apply search-specific customizations and produce a production-ready SDK. WHEN: regenerate search SDK; search tsp-client update; fix search customization errors; search API version update; search SDK release; update search service version.'
 ---
 
-# azure-search-documents — Package Skill (Java)
+# azure-search-documents — Package Skill
 
 <!-- TODO: Domain experts should fill in the sections below with tribal knowledge
-     specific to this package. See the @azure/search-documents skill in azure-sdk-for-js
-     and azure-search-documents skill in azure-sdk-for-python as references. -->
+     specific to this package. -->
 
 ## Common Pitfalls
 
@@ -52,11 +51,6 @@ description: 'Post-regeneration customization guide for azure-search-documents J
      - includeOldApiVersions
      - removeGetApis
      - hideWithResponseBinaryDataApis (the most fragile one) -->
-
-## Type Mappings
-
-<!-- TODO: Property name differences between public API and wire format,
-     any type conversions, null handling patterns. -->
 
 ## Testing Notes
 
