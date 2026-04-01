@@ -6,6 +6,12 @@
 
 ### Breaking Changes
 
+- TypeSpec spec PR Azure/azure-rest-api-specs#41879 restored version gating decorators that were accidentally removed.
+  This causes SDK generation changes: FineTuning-related types are now properly excluded from stable API versions
+  (2025-12-01, 2026-03-01) and preview-only features are restored in 2026-01-15-preview.
+- After regeneration, the Java SDK build fails with compilation errors due to customization drift:
+  existing customization classes reference types/operations that are no longer generated for stable versions.
+
 ### Bugs Fixed
 
 ### Other Changes
