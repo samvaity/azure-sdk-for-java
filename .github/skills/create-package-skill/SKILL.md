@@ -43,6 +43,12 @@ Run each phase in order. **Progressive loading:** Read only the current phase fi
 - References under 1000 tokens each. Split if larger.
 - Never duplicate what's already in copilot-instructions.md or AGENTS.md.
 
+**Relationship to existing SDK tools:**
+- Package skills **complement** the Azure SDK MCP tools (`azsdk_package_generate_code`, `azsdk_package_build_code`, etc.) and the `generate-sdk-locally` shared skill — they do NOT replace them.
+- MCP tools handle deterministic operations (generate, build, test). Package skills provide the reasoning context an agent needs to use those tools correctly for a specific package.
+- Never redefine how generation, building, or testing works — reference the existing tools instead (e.g., "Run `tsp-client update`", not custom generation steps).
+- If a workflow step is already handled by an MCP tool or shared skill, just reference it — don't re-document it.
+
 **Structure:**
 - Skill directory: `sdk/<service>/<package>/.github/skills/<skill-name>/`
 - Directory name MUST match `name` field in frontmatter (vally lint enforces this).

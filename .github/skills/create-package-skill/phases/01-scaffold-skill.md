@@ -41,10 +41,16 @@ This is the highest-impact section based on eval data. List the most dangerous m
 
 ### 4. Regeneration Workflow (if TypeSpec-generated)
 
-Phased workflow with gates:
+Phased workflow with gates. **Reference existing tools, don't redefine them:**
+- Use `tsp-client update` for generation (or `azsdk_package_generate_code` MCP tool)
+- Use `mvn clean compile` for build (or `azsdk_package_build_code` MCP tool)
+- Use `mvn test` for testing (or `azsdk_package_run_tests` MCP tool)
+
+The package skill adds what these tools DON'T know — package-specific error categorization, customization patterns, and fix guidance:
+
 1. Update `tsp-location.yaml`
 2. `tsp-client update`
-3. `mvn clean compile` → fix errors (with error categorization table)
+3. `mvn clean compile` → fix errors (with error categorization table showing where to fix each type)
 4. Update service version
 5. Detect breaking changes
 6. Run tests
