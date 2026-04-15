@@ -2,10 +2,9 @@
 
 ## Overview
 
-- **Maven**: `com.azure:azure-search-documents:12.0.0-beta.1`
+- **Maven**: `com.azure:azure-search-documents`
 - **Java target**: Java 8+
 - **Generation**: TypeSpec via `@azure-tools/typespec-java` emitter
-- **Source files**: 446 .java files (mostly generated)
 
 ## Source Layout
 
@@ -55,18 +54,9 @@ Generated methods have `@Generated` annotation. Some generated files contain BOT
 
 ## Service Version
 
-```java
-// SearchServiceVersion.java
-V2020_06_30("2020-06-30"),     // Added by SearchCustomizations
-V2023_11_01("2023-11-01"),     // Added by SearchCustomizations
-V2024_07_01("2024-07-01"),     // Added by SearchCustomizations
-V2025_09_01("2025-09-01"),     // Added by SearchCustomizations
-V2025_11_01_PREVIEW("2025-11-01-preview");  // Generated
+`SearchServiceVersion.java` is generated but customized. The generator produces only the latest version constant. Older versions are added by `includeOldApiVersions()` in `SearchCustomizations.java`.
 
-getLatest() returns V2025_11_01_PREVIEW
-```
-
-Older versions added by `includeOldApiVersions()` in `SearchCustomizations.java`.
+When a new API version is released, the generator produces a new constant and updates `getLatest()`. The previous latest must be added to the customization list -- but only if the generator does NOT also produce it (otherwise you get duplicate enum constants).
 
 ## Key Hand-Written Files
 
@@ -84,13 +74,13 @@ Older versions added by `includeOldApiVersions()` in `SearchCustomizations.java`
 
 | Dependency | Scope |
 |---|---|
-| `azure-core:1.57.1` | compile |
-| `azure-json:1.5.1` | compile |
-| `azure-core-http-netty:1.16.3` | compile |
+| `azure-core` | compile |
+| `azure-json` | compile |
+| `azure-core-http-netty` | compile |
 | `azure-core-test` | test |
 | `azure-identity` | test |
 
 ## Tests
 
-60 test files in `src/test/java/`. Base class: `SearchTestBase` extends `TestProxyTestBase`.
+Test files in `src/test/java/`. Base class: `SearchTestBase` extends `TestProxyTestBase`.
 Test recordings via `assets.json` pointing to `Azure/azure-sdk-assets`.

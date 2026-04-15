@@ -1,11 +1,11 @@
 ---
-name: search-documents
-description: 'Post-regeneration customization guide for azure-search-documents SDK. Covers error diagnosis, customization patterns, and search-specific fixes after tsp-client update. WHEN: regenerate search SDK; fix search build errors; search customization errors; search API version update; update search service version.'
+name: azure-search-documents
+description: 'Post-regeneration customization guide for azure-search-documents SDK. Covers error diagnosis, customization patterns, and search-specific fixes after tsp-client update. WHEN: regenerate azure-search-documents; fix azure-search-documents build errors; azure-search-documents customization errors; azure-search-documents API version update; update azure-search-documents service version.'
 ---
 
 # azure-search-documents -- Package Skill
 
-> For generation, build, and test: use the `generate-sdk-locally` shared skill or Azure SDK MCP tools (`azsdk_package_generate_code`, `azsdk_package_build_code`, `azsdk_package_run_tests`). This skill covers what those tools don't know -- search-specific error diagnosis, customization patterns, and post-regeneration fixes.
+> For generation, build, and test: use the `generate-sdk-locally` shared skill or Azure SDK MCP tools (`azsdk_package_generate_code`, `azsdk_package_build_code`, `azsdk_package_run_tests`). For applying customization fixes: use `azsdk_customized_code_update`. This skill covers what those tools don't know -- search-specific error diagnosis, customization patterns, and convenience layer design.
 
 ## Common Pitfalls
 

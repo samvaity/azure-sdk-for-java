@@ -141,7 +141,8 @@ def extract_method_anchors(content: str) -> Set[str]:
                      "getNameAsString", "isAnnotationPresent", "isPublic", "getType",
                      "getPackage", "getClass", "addMember", "addMarkerAnnotation",
                      "addVariable", "setInitializer", "parseBlock", "addArgument",
-                     "setJavadocComment", "addExtendedType"}:
+                     "setJavadocComment", "addExtendedType",
+                     "createHttpPipeline", "buildHttpPipeline"}:
             continue
         anchors.add(name)
     return anchors

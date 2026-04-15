@@ -2,6 +2,10 @@
 
 All post-generation modifications live in `customizations/src/main/java/SearchCustomizations.java`. This file extends `Customization` and uses JavaParser AST manipulation at code-generation time.
 
+**Use Java customizations when TypeSpec cannot express the desired behavior, or when the behavior is Java-specific.** For TypeSpec-level customizations (preferred when possible), see [TypeSpec Client Customizations Reference](https://github.com/Azure/azure-sdk-for-java/blob/main/eng/common/knowledge/customizing-client-tsp.md).
+
+Note: The `azsdk_customized_code_update` MCP tool can apply many customization fixes automatically (TypeSpec decorators first, then code patches). The documentation below covers what that tool does NOT handle -- search-specific patterns that require manual understanding.
+
 ## Customization Methods
 
 ### 1. hideGeneratedSearchApis
