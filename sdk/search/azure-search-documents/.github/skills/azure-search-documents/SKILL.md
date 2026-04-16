@@ -5,7 +5,7 @@ description: 'Post-regeneration customization guide for azure-search-documents S
 
 # azure-search-documents -- Package Skill
 
-> For generation, build, and test: use the `generate-sdk-locally` shared skill or Azure SDK MCP tools (`azsdk_package_generate_code`, `azsdk_package_build_code`, `azsdk_package_run_tests`). For applying customization fixes: use `azsdk_customized_code_update`. This skill covers what those tools don't know -- search-specific error diagnosis, customization patterns, and convenience layer design.
+> The `generate-sdk-locally` shared skill handles generation, build, test, and customization workflows -- including running `azsdk_customized_code_update` when builds fail. **This skill activates after those tools have been tried.** It covers what they can't solve: search-specific error diagnosis, customization fragility patterns, and convenience layer design.
 
 ## Common Pitfalls
 
