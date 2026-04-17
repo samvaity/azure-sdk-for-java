@@ -8,7 +8,7 @@ Ask the user: "Which SDK package should I create a skill for?"
 
 The user should provide either:
 - A package name (e.g., `azure-search-documents`, `azure-cosmos`)
-- A path (e.g., `sdk/search/azure-search-documents`)
+- A path (e.g., `sdk/search/azure-search-documents`, `sdk/cosmos/azure-cosmos`)
 
 Resolve to the package root directory. Verify it exists and contains `pom.xml` or `tsp-location.yaml`.
 
