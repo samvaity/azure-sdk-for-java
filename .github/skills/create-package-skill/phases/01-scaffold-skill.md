@@ -14,7 +14,7 @@ The skill directory name MUST match the Maven package identifier (e.g., `com.azu
 ## Content Principles
 
 - **Keep it static.** Document architecture, design patterns, and convenience layer patterns -- things that rarely change. Do NOT include version numbers, current API versions, or anything that changes every release. The skill should be valid for years, not months.
-- **Point to source code, not hardcoded lists.** When referencing things that change (version lists, method names, enum values), point the agent to the authoritative source file instead of enumerating values in the skill. For example: "See `includeOldApiVersions()` in `SearchCustomizations.java` for the version list" -- NOT a hardcoded list of versions.
+- **Point to source code, not hardcoded lists.** When referencing things that change (version lists, method names, enum values), point the agent to the authoritative source file instead of enumerating values in the skill.
 - **Prefer TypeSpec customizations over Java customizations.** When documenting customization patterns, always note: "Use Java customizations when TypeSpec cannot express the desired behavior, or when the behavior is Java-specific. For TypeSpec-level customizations (preferred when possible), see [TypeSpec Client Customizations Reference](https://github.com/Azure/azure-sdk-for-java/blob/main/eng/common/knowledge/customizing-client-tsp.md)."
 - **Don't re-document MCP tools.** The `generate-sdk-locally` shared skill and `azsdk_customized_code_update` MCP tool already handle generation, build, customization application, and testing workflows. The package skill adds only what those tools don't know.
 - **Focus on the convenience layer.** The highest-value content is: how is the package designed, what convenience patterns exist, what does the agent need to know to write/maintain the convenience layer correctly.
@@ -54,9 +54,9 @@ List the most dangerous mistakes:
 - **Error categorization table** -- which file to fix based on error type (generated/@Generated, generated/non-@Generated, hand-written)
 - **Package-specific customization patterns** -- what each customization method does and when it needs updating
 - **Service version management** -- how the version enum works with the customization layer
-- **Breaking change detection** -- what to look for after spec changes (our eval found 29 removed types that were not caught without this guidance)
+- **Breaking change detection** -- what to look for after spec changes
 
-Note: The `azsdk_customized_code_update` MCP tool handles many customization fixes automatically (TypeSpec decorators first, then code patches). The package skill documents what that tool does NOT know -- package-specific patterns like `hideWithResponseBinaryDataApis` fragility or `includeOldApiVersions` dedup guards.
+Note: The `azsdk_customized_code_update` MCP tool handles many customization fixes automatically (TypeSpec decorators first, then code patches). The package skill documents what that tool does NOT know -- package-specific patterns.
 
 ### 5. Post-Regeneration Customizations (if customizations exist)
 
