@@ -41,7 +41,7 @@ tools:
   github:
     toolsets: [issues, pull_requests]
     lockdown: false
-    allowed-repos: [samvaity/azure-sdk-for-java]
+    allowed-repos: [samvaity/azure-sdk-for-java, azure/azure-sdk-for-java]
     min-integrity: none
 
 timeout-minutes: 10
@@ -62,11 +62,11 @@ You are a triage assistant for GitHub issues in the Azure SDK for Java repositor
 
    - Do not run shell commands like `gh label list` - rely on labels inferred from repo context
    - Fetch comments using `get_issue_comments`
-   - Find similar issues using `search_issues` — search using key error messages, exception class names, method names, and affected SDK package names from the issue
-   - For each similar issue found, check if it was closed with a linked/merged pull request using `search_pull_requests`
+   - Find similar issues using `search_issues` — search using key error messages, exception class names, method names, and affected SDK package names from the issue. Search both this repository AND `Azure/azure-sdk-for-java` (the upstream repo) to find past issues and fixes
+   - For each similar issue found, check if it was closed with a linked/merged pull request using `search_pull_requests` (search in `Azure/azure-sdk-for-java` as well)
    - Find linked pull requests using `search_pull_requests`
    - List open issues using `list_issues`
-   - Pay special attention to closed issues that had associated PRs — these represent previously fixed bugs that may indicate a pattern or regression
+   - Pay special attention to closed issues in `Azure/azure-sdk-for-java` that had associated PRs — these represent previously fixed bugs that may indicate a pattern or regression
 
 3. Analyze issue content
 
